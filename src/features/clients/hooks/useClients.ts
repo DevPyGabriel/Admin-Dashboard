@@ -4,11 +4,15 @@ import {
   deleteClient,
   listClientServices,
   registerPayment,
+  saveClientWithServices,
   unregisterPayment,
   updateClientService,
   type ClientService,
 } from '@/features/clients/api/clients.api'
-import type { ClientFormValues } from '@/features/clients/schemas/client.schema'
+import type {
+  ClientFormValues,
+  ClientServiceValues,
+} from '@/features/clients/schemas/client.schema'
 
 export const clientServicesQueryKey = ['client-services'] as const
 
@@ -24,10 +28,19 @@ export function useClientServices() {
   })
 }
 
+export function useSaveClient() {
+  const invalidate = useInvalidateServices()
+  return useMutation({
+    mutationFn: (values: ClientFormValues) => saveClientWithServices(values),
+    onSuccess: invalidate,
+  })
+}
+
 export function useCreateClientService() {
   const invalidate = useInvalidateServices()
   return useMutation({
-    mutationFn: (values: ClientFormValues) => createClientService(values),
+    mutationFn: ({ clientId, service }: { clientId: string; service: ClientServiceValues }) =>
+      createClientService(clientId, service),
     onSuccess: invalidate,
   })
 }
@@ -35,15 +48,7 @@ export function useCreateClientService() {
 export function useUpdateClientService() {
   const invalidate = useInvalidateServices()
   return useMutation({
-    mutationFn: ({
-      clientId,
-      subscriptionId,
-      values,
-    }: {
-      clientId: string
-      subscriptionId: string
-      values: ClientFormValues
-    }) => updateClientService(clientId, subscriptionId, values),
+    mutationFn: (service: ClientService) => updateClientService(service),
     onSuccess: invalidate,
   })
 }
@@ -67,7 +72,7 @@ export function useRegisterPayment() {
 export function useUnregisterPayment() {
   const invalidate = useInvalidateServices()
   return useMutation({
-    mutationFn: (paymentId: string) => unregisterPayment(paymentId),
+    mutationFn: (service: ClientService) => unregisterPayment(service),
     onSuccess: invalidate,
   })
 }

@@ -5,8 +5,8 @@ import {
   CalendarDays,
   Car,
   CheckCircle2,
-  Clock3,
   Package,
+  Plus,
   Search,
   Truck,
   UsersRound,
@@ -56,6 +56,19 @@ import { cn } from '@/lib/utils/cn'
 interface Notice {
   text: string
   tone: 'success' | 'danger'
+}
+
+interface ClientGroup {
+  id: string
+  name: string
+  email: string | null
+  services: ClientService[]
+}
+
+interface DialogState {
+  anchor: ClientService | null
+  clientServices: ClientService[]
+  addService: boolean
 }
 
 const stateBadgeTone: Record<ServicePaymentState, string> = {
@@ -128,14 +141,31 @@ function DueDate({
   )
 }
 
+function groupByClient(services: ClientService[]): ClientGroup[] {
+  const groups = new Map<string, ClientGroup>()
+  services.forEach((service) => {
+    const group = groups.get(service.clientId)
+    if (group) {
+      group.services.push(service)
+      return
+    }
+    groups.set(service.clientId, {
+      id: service.clientId,
+      name: service.clientName,
+      email: service.email,
+      services: [service],
+    })
+  })
+  return Array.from(groups.values())
+}
+
 export default function ClientsPage() {
   const { data: services = [], isLoading, error } = useClientServices()
   const deleteClient = useDeleteClient()
   const registerPayment = useRegisterPayment()
   const unregisterPayment = useUnregisterPayment()
 
-  const [dialogOpen, setDialogOpen] = useState(false)
-  const [editing, setEditing] = useState<ClientService | null>(null)
+  const [dialog, setDialog] = useState<DialogState | null>(null)
   const [notice, setNotice] = useState<Notice | null>(null)
   const [query, setQuery] = useState('')
   const [date, setDate] = useState('')
@@ -147,35 +177,44 @@ export default function ClientsPage() {
     () => selectServices(services, { query, date, filter, sort }, today),
     [services, query, date, filter, sort, today],
   )
+  const groups = useMemo(() => groupByClient(visible), [visible])
 
   const stats = useMemo(() => {
     const count = (state: ServicePaymentState) =>
       services.filter((service) => getServiceState(service, today) === state).length
     return {
       total: services.length,
+      clients: new Set(services.map((service) => service.clientId)).size,
       paid: count('paid'),
       pending: count('pending'),
       overdue: count('overdue'),
     }
   }, [services, today])
 
-  const openCreate = () => {
-    setEditing(null)
-    setDialogOpen(true)
-  }
+  const openCreate = () => setDialog({ anchor: null, clientServices: [], addService: false })
 
-  const openEdit = (service: ClientService) => {
-    setEditing(service)
-    setDialogOpen(true)
-  }
+  const openEdit = (group: ClientGroup) =>
+    setDialog({
+      anchor: group.services[0],
+      clientServices: group.services,
+      addService: false,
+    })
 
-  const handleDelete = async (service: ClientService) => {
-    if (!window.confirm(`¿Eliminar a "${service.clientName}"?`)) return
+  const openAddService = (group: ClientGroup) =>
+    setDialog({
+      anchor: group.services[0],
+      clientServices: group.services,
+      addService: true,
+    })
+
+  const handleDelete = async (group: ClientGroup) => {
+    const detail = group.services.length > 1 ? ` y sus ${group.services.length} servicios` : ''
+    if (!window.confirm(`¿Eliminar a "${group.name}"${detail}?`)) return
 
     setNotice(null)
     try {
-      await deleteClient.mutateAsync(service.clientId)
-      setNotice({ text: 'Cliente eliminado correctamente.', tone: 'success' })
+      await deleteClient.mutateAsync(group.id)
+      setNotice({ text: 'Cliente y servicios eliminados correctamente.', tone: 'success' })
     } catch (deleteError) {
       setNotice({
         text: deleteError instanceof Error ? deleteError.message : 'No se pudo eliminar el cliente',
@@ -190,9 +229,7 @@ export default function ClientsPage() {
 
     try {
       if (state === 'paid') {
-        const payment = service.payments.find((item) => item.status === 'paid')
-        if (!payment) return
-        await unregisterPayment.mutateAsync(payment.id)
+        await unregisterPayment.mutateAsync(service)
         setNotice({ text: 'El servicio volvió a estar sin pagar.', tone: 'success' })
       } else {
         await registerPayment.mutateAsync(service)
@@ -215,9 +252,9 @@ export default function ClientsPage() {
   }
 
   const statsCards = [
-    { label: 'Servicios', value: stats.total, icon: UsersRound, tone: 'text-foreground' },
+    { label: 'Clientes', value: stats.clients, icon: UsersRound, tone: 'text-foreground' },
+    { label: 'Servicios', value: stats.total, icon: Package, tone: 'text-primary' },
     { label: 'Pagados', value: stats.paid, icon: CheckCircle2, tone: 'text-success' },
-    { label: 'Pendientes', value: stats.pending, icon: Clock3, tone: 'text-warning' },
     { label: 'Por cobrar', value: stats.overdue, icon: AlertCircle, tone: 'text-danger' },
   ]
 
@@ -226,7 +263,7 @@ export default function ClientsPage() {
       <div className="space-y-6">
         <PageHeader
           title="Clientes"
-          description="Administra tus servicios, cobros y fechas de vencimiento."
+          description="Cada cliente puede tener varios servicios con monto, vencimiento y estado propios."
           actions={
             <Button variant="white" size="sm" onClick={openCreate}>
               Nuevo cliente
@@ -342,8 +379,7 @@ export default function ClientsPage() {
           <div className="border-border flex items-center justify-between border-b px-4 py-3">
             <h2 className="text-sm font-semibold">Listado</h2>
             <span className="text-secondary tabular-data text-xs">
-              {visible.length} de {services.length}{' '}
-              {services.length === 1 ? 'servicio' : 'servicios'}
+              {groups.length} de {stats.clients} clientes · {visible.length} servicios
             </span>
           </div>
 
@@ -355,7 +391,7 @@ export default function ClientsPage() {
               <p className="mt-3 text-sm font-medium">Aún no hay clientes</p>
               <p className="text-secondary mt-1 text-xs">Crea el primero con «Nuevo cliente».</p>
             </div>
-          ) : visible.length === 0 ? (
+          ) : groups.length === 0 ? (
             <div className="flex flex-col items-center px-6 py-14 text-center">
               <Search className="text-secondary size-5" aria-hidden="true" />
               <p className="mt-3 text-sm font-medium">Sin resultados</p>
@@ -374,150 +410,219 @@ export default function ClientsPage() {
             </div>
           ) : (
             <>
-              {/* Phone: one card per service, with the actions inside thumb reach. */}
+              {/* Phone: one card per client, every service keeps its own state. */}
               <ul className="divide-border divide-y md:hidden">
-                {visible.map((service) => {
-                  const state = getServiceState(service, today)
-                  return (
-                    <li key={service.id} className="space-y-4 p-4">
-                      <div className="flex items-start justify-between gap-4">
-                        <div className="min-w-0 space-y-1">
-                          <p className="truncate font-medium">{service.clientName}</p>
-                          <p className="text-secondary truncate text-xs">
-                            {service.email || 'Sin correo'}
-                          </p>
-                        </div>
-                        <StateBadge state={state} />
+                {groups.map((group) => (
+                  <li key={group.id} className="space-y-3 p-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0 space-y-1">
+                        <p className="truncate font-medium" title={group.name}>
+                          {group.name}
+                        </p>
+                        <p
+                          className="text-secondary truncate text-xs"
+                          title={group.email ?? undefined}
+                        >
+                          {group.email || 'Sin correo'} · {group.services.length}{' '}
+                          {group.services.length === 1 ? 'servicio' : 'servicios'}
+                        </p>
                       </div>
+                      <Button
+                        variant="outline"
+                        size="icon-sm"
+                        aria-label={`Agregar servicio a ${group.name}`}
+                        onClick={() => openAddService(group)}
+                      >
+                        <Plus aria-hidden="true" />
+                      </Button>
+                    </div>
 
-                      <dl className="grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
-                        <div className="min-w-0">
-                          <dt className="text-secondary pb-1 text-xs font-medium">Servicio</dt>
-                          <dd>
-                            <ServiceTypeTag type={service.serviceType} />
-                          </dd>
-                        </div>
-                        <div className="min-w-0">
-                          <dt className="text-secondary pb-1 text-xs font-medium">Monto</dt>
-                          <dd className="tabular-data truncate font-medium">
-                            {formatServiceAmount(service)}
-                          </dd>
-                        </div>
-                        <div className="col-span-2 min-w-0">
-                          <dt className="text-secondary pb-1 text-xs font-medium">Vencimiento</dt>
-                          <dd>
-                            <DueDate service={service} state={state} today={today} />
-                          </dd>
-                        </div>
-                        {service.description && (
-                          <div className="col-span-2 min-w-0">
-                            <dt className="text-secondary pb-1 text-xs font-medium">Descripción</dt>
-                            <dd className="text-sm break-words whitespace-pre-wrap">
-                              {service.description}
-                            </dd>
-                          </div>
-                        )}
-                      </dl>
+                    <ul className="divide-border border-border/70 divide-y rounded-lg border">
+                      {group.services.map((service) => {
+                        const state = getServiceState(service, today)
+                        return (
+                          <li key={service.id} className="space-y-3 p-3">
+                            <div className="flex flex-wrap items-center justify-between gap-2">
+                              <ServiceTypeTag type={service.serviceType} />
+                              <StateBadge state={state} />
+                            </div>
+                            <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+                              <div>
+                                <dt className="text-secondary pb-1 text-xs font-medium">Monto</dt>
+                                <dd className="tabular-data font-medium">
+                                  {formatServiceAmount(service)}
+                                </dd>
+                              </div>
+                              <div>
+                                <dt className="text-secondary pb-1 text-xs font-medium">
+                                  Vencimiento
+                                </dt>
+                                <dd>
+                                  <DueDate service={service} state={state} today={today} />
+                                </dd>
+                              </div>
+                              {service.description && (
+                                <div className="col-span-2">
+                                  <dt className="text-secondary pb-1 text-xs font-medium">
+                                    Descripción
+                                  </dt>
+                                  <dd
+                                    className="break-words whitespace-pre-wrap"
+                                    title={service.description}
+                                  >
+                                    {service.description}
+                                  </dd>
+                                </div>
+                              )}
+                            </dl>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="w-full"
+                              onClick={() => void handleTogglePayment(service)}
+                            >
+                              {state === 'paid' ? 'Marcar sin pagar' : 'Marcar pagado'}
+                            </Button>
+                          </li>
+                        )
+                      })}
+                    </ul>
 
-                      <div className="flex flex-wrap gap-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="flex-1"
-                          onClick={() => openEdit(service)}
-                        >
-                          Editar
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="flex-1 px-4"
-                          onClick={() => void handleTogglePayment(service)}
-                        >
-                          {state === 'paid' ? 'Marcar sin pagar' : 'Marcar pagado'}
-                        </Button>
-                        <Button
-                          variant="destructive"
-                          size="sm"
-                          className="flex-1"
-                          onClick={() => void handleDelete(service)}
-                        >
-                          Eliminar
-                        </Button>
-                      </div>
-                    </li>
-                  )
-                })}
+                    <div className="flex flex-wrap gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="flex-1"
+                        onClick={() => openEdit(group)}
+                      >
+                        Editar cliente
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="flex-1"
+                        onClick={() => openAddService(group)}
+                      >
+                        <Plus aria-hidden="true" />
+                        Agregar servicio
+                      </Button>
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        className="flex-1"
+                        onClick={() => void handleDelete(group)}
+                      >
+                        Eliminar
+                      </Button>
+                    </div>
+                  </li>
+                ))}
               </ul>
 
-              {/* Desktop: dense table, same data and the same handlers. */}
+              {/* Desktop: dense table, one row per client. */}
               <div className="hidden overflow-x-auto md:block">
                 <Table>
                   <TableHeader>
                     <TableRow>
                       <TableHead>Cliente</TableHead>
-                      <TableHead>Servicio</TableHead>
-                      <TableHead>Vencimiento</TableHead>
-                      <TableHead>Monto</TableHead>
-                      <TableHead>Estado</TableHead>
+                      <TableHead>Servicios</TableHead>
                       <TableHead className="text-right">Acciones</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {visible.map((service) => {
-                      const state = getServiceState(service, today)
-                      return (
-                        <TableRow key={service.id}>
-                          <TableCell>
-                            <div className="min-w-0">
-                              <p className="font-medium">{service.clientName}</p>
-                              <p className="text-secondary truncate text-xs">
-                                {service.email || 'Sin correo'}
-                              </p>
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            <div className="min-w-0">
-                              <ServiceTypeTag type={service.serviceType} />
-                              {service.description && (
-                                <p className="text-secondary max-w-48 truncate text-xs">
-                                  {service.description}
-                                </p>
-                              )}
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            <DueDate service={service} state={state} today={today} />
-                          </TableCell>
-                          <TableCell className="tabular-data whitespace-nowrap">
-                            {formatServiceAmount(service)}
-                          </TableCell>
-                          <TableCell>
-                            <StateBadge state={state} />
-                          </TableCell>
-                          <TableCell className="space-x-2 text-right whitespace-nowrap">
-                            <Button variant="ghost" size="sm" onClick={() => openEdit(service)}>
-                              Editar
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => void handleTogglePayment(service)}
+                    {groups.map((group) => (
+                      <TableRow key={group.id}>
+                        <TableCell className="align-top">
+                          <div className="min-w-0">
+                            <p className="font-medium" title={group.name}>
+                              {group.name}
+                            </p>
+                            <p
+                              className="text-secondary max-w-48 truncate text-xs"
+                              title={group.email ?? undefined}
                             >
-                              {state === 'paid' ? 'Sin pagar' : 'Marcar pagado'}
-                            </Button>
-                            <Button
-                              variant="destructive"
-                              size="sm"
-                              className=""
-                              onClick={() => void handleDelete(service)}
-                            >
-                              Eliminar
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                      )
-                    })}
+                              {group.email || 'Sin correo'}
+                            </p>
+                            <p className="text-secondary tabular-data mt-1 text-xs">
+                              {group.services.length}{' '}
+                              {group.services.length === 1 ? 'servicio' : 'servicios'}
+                            </p>
+                          </div>
+                        </TableCell>
+                        <TableCell className="align-top">
+                          <ul className="min-w-72 space-y-2">
+                            {group.services.map((service) => {
+                              const state = getServiceState(service, today)
+                              return (
+                                <li
+                                  key={service.id}
+                                  className="border-border/70 flex flex-wrap items-center gap-x-4 gap-y-2 rounded-lg border px-3 py-2"
+                                >
+                                  <div className="min-w-28">
+                                    <ServiceTypeTag type={service.serviceType} />
+                                  </div>
+                                  <div className="min-w-20">
+                                    <p className="text-secondary text-xs">Monto</p>
+                                    <p className="tabular-data text-sm font-medium">
+                                      {formatServiceAmount(service)}
+                                    </p>
+                                  </div>
+                                  <div className="min-w-24">
+                                    <p className="text-secondary text-xs">Vencimiento</p>
+                                    <p className="tabular-data text-sm font-medium">
+                                      {service.dueDate
+                                        ? format(parseISO(service.dueDate), 'dd/MM/yyyy')
+                                        : '—'}
+                                    </p>
+                                  </div>
+                                  <div className="min-w-24">
+                                    <StateBadge state={state} />
+                                    <p className="text-secondary mt-1 text-xs">
+                                      {getServiceCountdown(service, today)}
+                                    </p>
+                                  </div>
+                                  <Button
+                                    variant="ghost"
+                                    size="xs"
+                                    onClick={() => void handleTogglePayment(service)}
+                                  >
+                                    {state === 'paid' ? 'Sin pagar' : 'Marcar pagado'}
+                                  </Button>
+                                </li>
+                              )
+                            })}
+                          </ul>
+                        </TableCell>
+                        <TableCell className="text-right align-top whitespace-nowrap">
+                          <div className="space-y-2">
+                            <div>
+                              <Button variant="ghost" size="sm" onClick={() => openEdit(group)}>
+                                Editar cliente
+                              </Button>
+                            </div>
+                            <div>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => openAddService(group)}
+                              >
+                                <Plus aria-hidden="true" />
+                                Agregar servicio
+                              </Button>
+                            </div>
+                            <div>
+                              <Button
+                                variant="destructive"
+                                size="sm"
+                                onClick={() => void handleDelete(group)}
+                              >
+                                Eliminar
+                              </Button>
+                            </div>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
                   </TableBody>
                 </Table>
               </div>
@@ -526,12 +631,16 @@ export default function ClientsPage() {
         </section>
       </div>
 
-      {dialogOpen && (
+      {dialog && (
         <ClientFormDialog
-          key={editing?.id ?? 'new'}
-          open={dialogOpen}
-          onOpenChange={setDialogOpen}
-          service={editing}
+          key={`${dialog.anchor?.id ?? 'new'}-${dialog.addService ? 'add' : 'edit'}`}
+          open
+          onOpenChange={(open) => {
+            if (!open) setDialog(null)
+          }}
+          service={dialog.anchor}
+          additionalServices={dialog.clientServices.filter((item) => item.id !== dialog.anchor?.id)}
+          startWithNewService={dialog.addService}
         />
       )}
     </main>

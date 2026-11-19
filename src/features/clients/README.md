@@ -10,9 +10,13 @@ Client services dashboard backed by `clients` + `subscriptions` + `payments`.
 
 ## Data model
 
-The form stores the client name and optional email on `clients`, and the service
-type, optional due date, amount and optional description on `subscriptions`.
-Payments remain on `payments`, so RLS and history are unchanged.
+The form stores the client name and optional email on `clients`, and any number
+of services on `subscriptions`; each service has its own type, amount, optional
+due date and optional description. `save_client_with_services` writes the client
+and all of its services in one transaction, so adding or removing rows from the
+form cannot leave a partial save. Payments remain on `payments`, so RLS and
+history are unchanged. The list groups services by client and offers **Agregar
+servicio** both in the form and as a quick action on each client.
 
 | Label en la UI       | Columna                                                      |
 | -------------------- | ------------------------------------------------------------ |

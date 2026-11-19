@@ -254,6 +254,15 @@ export type Database = {
     }
     Functions: {
       is_operator: { Args: never; Returns: boolean }
+      save_client_with_services: {
+        Args: {
+          p_client_id: string
+          p_email: string
+          p_full_name: string
+          p_services: Json
+        }
+        Returns: string
+      }
     }
     Enums: {
       billing_cycle: "monthly" | "quarterly" | "annual"
