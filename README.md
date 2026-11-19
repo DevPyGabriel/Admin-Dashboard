@@ -9,6 +9,7 @@ logic have been implemented yet.
 - React + TypeScript (strict mode)
 - Vite with the `@` → `src/` alias
 - Tailwind CSS v4 via `@tailwindcss/vite` (CSS-first configuration)
+- shadcn/ui primitives (Radix base, Nova preset) in `src/components/ui`
 - Inter Variable, self-hosted through `@fontsource-variable/inter`
 - TanStack Query for server state, React Router for routing
 - React Hook Form + Zod for future forms
@@ -53,6 +54,18 @@ Each feature owns its components, hooks, services, schemas and types. Cross-feat
 reusable code belongs in `components/shared`, primitives in `components/ui`, and
 generic helpers in `lib/utils`.
 
+## UI components
+
+shadcn/ui is configured through `components.json`. Add primitives with:
+
+```bash
+npx shadcn@latest add <component>
+```
+
+Generated components live in `src/components/ui`. shadcn variables are mapped
+to the project's neutral tokens in `src/styles/index.css`; `cn()` is shared
+through `@/lib/utils`. No business UI has been built yet.
+
 ## Scripts
 
 | Command                            | Description                                      |
@@ -68,10 +81,17 @@ generic helpers in `lib/utils`.
 | `npm run supabase:stop`            | Stop the local Supabase stack                    |
 | `npm run supabase:functions:serve` | Serve Edge Functions locally                     |
 | `npm run supabase:db:types`        | Generate `src/types/database.types.ts` locally   |
+| `npm run supabase:db:push`         | Apply pending migrations to the linked project   |
+| `npm run supabase:db:types:remote` | Generate types from the linked remote project    |
 
 ## Supabase
 
-Run `npm run supabase:start`, then `npm run supabase:db:types` once migrations
-exist. Configure private backend secrets with `supabase secrets set ...`; they
-are never part of the frontend bundle. Edge Functions live under
-`supabase/functions/` and use the Deno runtime.
+Run `npm run supabase:start`, then `npm run supabase:db:reset` to apply migrations
+and local seed data, then `npm run supabase:db:types` to regenerate
+`src/types/database.types.ts`.
+
+The initial single-tenant schema creates `company_settings`, `operators`,
+`clients`, `subscriptions` (free-text `plan_name`), `payments` and
+`reminder_logs`, all protected by RLS. Configure private backend secrets with
+`supabase secrets set ...`; they are never part of the frontend bundle. Edge
+Functions live under `supabase/functions/` and use the Deno runtime.

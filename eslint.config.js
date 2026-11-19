@@ -31,6 +31,20 @@ export default defineConfig(
     },
   },
   {
+    // shadcn/ui primitives export `className` variant helpers next to components.
+    files: ['src/components/ui/**/*.tsx'],
+    rules: {
+      'react-refresh/only-export-components': [
+        'error',
+        {
+          allowConstantExport: true,
+          allowCompoundComponents: true,
+          allowExportNames: ['buttonVariants', 'badgeVariants'],
+        },
+      ],
+    },
+  },
+  {
     files: ['vite.config.ts'],
     languageOptions: {
       globals: globals.node,
