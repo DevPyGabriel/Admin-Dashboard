@@ -64,6 +64,12 @@ const stateBadgeTone: Record<ServicePaymentState, string> = {
   overdue: 'bg-danger-soft text-danger-soft-foreground',
 }
 
+const stateBadgeVariant: Record<ServicePaymentState, 'success' | 'warning' | 'danger'> = {
+  paid: 'success',
+  pending: 'warning',
+  overdue: 'danger',
+}
+
 const serviceTypeTone: Record<ServiceType, string> = {
   transporte: 'bg-info-soft text-info-soft-foreground',
   taxi: 'bg-warning-soft text-warning-soft-foreground',
@@ -93,11 +99,7 @@ function ServiceTypeTag({ type }: { type: string }) {
 }
 
 function StateBadge({ state }: { state: ServicePaymentState }) {
-  return (
-    <Badge className={cn('border-transparent', stateBadgeTone[state])}>
-      {serviceStateLabels[state]}
-    </Badge>
-  )
+  return <Badge variant={stateBadgeVariant[state]}>{serviceStateLabels[state]}</Badge>
 }
 
 function DueDate({
