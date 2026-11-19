@@ -27,8 +27,9 @@ One company, one dataset, one identity boundary: every table is protected by RLS
 
 ## Capabilities and Constraints
 
-- Existing tables: `company_settings`, `operators`, `clients`, `subscriptions` (free-text `plan_name`), `payments`, `reminder_logs`.
-- Client CRUD is implemented and verified against Supabase. Other modules are exposed as navigation but are not implemented yet; they must be labelled as upcoming, never as working features.
+- Existing tables: `company_settings`, `operators`, `clients`, `subscriptions` (free-text `plan_name`, now with optional `next_billing_date` and `description`), `payments` (now with `billing_date`), `reminder_logs`.
+- The client form captures name, optional email, service type, amount, optional due date and optional description. It writes `clients` and `subscriptions` together; `payments` records collection state. Implemented and verified against Supabase.
+- The dashboard shows live counts, a countdown to the due date and the states `pagado`, `pendiente` and `por cobrar`, with search, date and quick filters plus sorting. Other modules remain honestly labelled as upcoming.
 - Only two frontend env vars are allowed: `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY`. No `sb_secret_*`, service-role key, DB password or `RESEND_API_KEY` may reach the bundle.
 - Auth, data, RLS policies and the working CRUD flow must remain untouched by the visual/navigation work.
 - Stack: strict TypeScript, `@/` alias, Tailwind CSS v4 CSS-first, shadcn/ui (Radix base, Nova preset), Inter Variable, TanStack Query, React Router.
@@ -44,10 +45,10 @@ One company, one dataset, one identity boundary: every table is protected by RLS
 ## Evidence on Hand
 
 - `src/types/database.types.ts` generated from the linked remote project.
-- Applied migrations: `20261119000000_core_schema.sql`, `20261119000100_grant_authenticated_access.sql`.
+- Applied migrations: `20261119000000_core_schema.sql`, `20261119000100_grant_authenticated_access.sql`, `20261119000200_client_service_fields.sql`.
 - `supabase/seed.test.sql` with `TEST_` rows and cleanup SQL.
 - Visual system documented in `DESIGN.md`; implementation in `src/styles/index.css`, `src/app/layouts` and `src/components/ui`.
-- Working auth and client CRUD in `src/features/auth` and `src/features/clients`.
+- Working auth and service CRUD in `src/features/auth` and `src/features/clients`; pure state/filter logic in `src/features/clients/lib`.
 
 ## Product Principles
 

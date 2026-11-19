@@ -1,45 +1,73 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
-  createClient,
+  createClientService,
   deleteClient,
-  listClients,
-  updateClient,
+  listClientServices,
+  registerPayment,
+  unregisterPayment,
+  updateClientService,
+  type ClientService,
 } from '@/features/clients/api/clients.api'
 import type { ClientFormValues } from '@/features/clients/schemas/client.schema'
 
-export const clientsQueryKey = ['clients'] as const
+export const clientServicesQueryKey = ['client-services'] as const
 
-export function useClients() {
+function useInvalidateServices() {
+  const queryClient = useQueryClient()
+  return () => queryClient.invalidateQueries({ queryKey: clientServicesQueryKey })
+}
+
+export function useClientServices() {
   return useQuery({
-    queryKey: clientsQueryKey,
-    queryFn: listClients,
+    queryKey: clientServicesQueryKey,
+    queryFn: listClientServices,
   })
 }
 
-export function useCreateClient() {
-  const queryClient = useQueryClient()
-
+export function useCreateClientService() {
+  const invalidate = useInvalidateServices()
   return useMutation({
-    mutationFn: (values: ClientFormValues) => createClient(values),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: clientsQueryKey }),
+    mutationFn: (values: ClientFormValues) => createClientService(values),
+    onSuccess: invalidate,
   })
 }
 
-export function useUpdateClient() {
-  const queryClient = useQueryClient()
-
+export function useUpdateClientService() {
+  const invalidate = useInvalidateServices()
   return useMutation({
-    mutationFn: ({ id, values }: { id: string; values: ClientFormValues }) =>
-      updateClient(id, values),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: clientsQueryKey }),
+    mutationFn: ({
+      clientId,
+      subscriptionId,
+      values,
+    }: {
+      clientId: string
+      subscriptionId: string
+      values: ClientFormValues
+    }) => updateClientService(clientId, subscriptionId, values),
+    onSuccess: invalidate,
   })
 }
 
 export function useDeleteClient() {
-  const queryClient = useQueryClient()
-
+  const invalidate = useInvalidateServices()
   return useMutation({
-    mutationFn: (id: string) => deleteClient(id),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: clientsQueryKey }),
+    mutationFn: (clientId: string) => deleteClient(clientId),
+    onSuccess: invalidate,
+  })
+}
+
+export function useRegisterPayment() {
+  const invalidate = useInvalidateServices()
+  return useMutation({
+    mutationFn: (service: ClientService) => registerPayment(service),
+    onSuccess: invalidate,
+  })
+}
+
+export function useUnregisterPayment() {
+  const invalidate = useInvalidateServices()
+  return useMutation({
+    mutationFn: (paymentId: string) => unregisterPayment(paymentId),
+    onSuccess: invalidate,
   })
 }

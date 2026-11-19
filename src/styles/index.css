@@ -350,6 +350,9 @@
   /* Touch devices get larger controls without changing the desktop density. */
   @media (pointer: coarse) {
     button,
+    input,
+    select,
+    textarea,
     a[role='button'],
     [data-slot='button'] {
       min-height: 2.75rem;

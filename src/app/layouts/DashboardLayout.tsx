@@ -51,7 +51,7 @@ export default function DashboardLayout() {
             <button
               type="button"
               aria-label="Abrir menú"
-              className="focus-visible:ring-ring flex size-9 shrink-0 items-center justify-center rounded-md outline-none focus-visible:ring-2 lg:hidden hover:bg-surface-muted/40 transition-colors duration-200"
+              className="focus-visible:ring-ring hover:bg-surface-muted/40 flex size-9 shrink-0 items-center justify-center rounded-md transition-colors duration-200 outline-none focus-visible:ring-2 lg:hidden"
             >
               <Menu className="size-5" aria-hidden="true" />
             </button>

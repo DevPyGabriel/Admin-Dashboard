@@ -17,7 +17,7 @@ export type Database = {
       clients: {
         Row: {
           created_at: string
-          email: string
+          email: string | null
           full_name: string
           id: string
           notes: string | null
@@ -28,7 +28,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
-          email: string
+          email?: string | null
           full_name: string
           id?: string
           notes?: string | null
@@ -39,7 +39,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
-          email?: string
+          email?: string | null
           full_name?: string
           id?: string
           notes?: string | null
@@ -104,6 +104,7 @@ export type Database = {
       payments: {
         Row: {
           amount: number
+          billing_date: string | null
           created_at: string
           external_reference: string | null
           id: string
@@ -114,6 +115,7 @@ export type Database = {
         }
         Insert: {
           amount: number
+          billing_date?: string | null
           created_at?: string
           external_reference?: string | null
           id?: string
@@ -124,6 +126,7 @@ export type Database = {
         }
         Update: {
           amount?: number
+          billing_date?: string | null
           created_at?: string
           external_reference?: string | null
           id?: string
@@ -191,8 +194,9 @@ export type Database = {
           client_id: string
           created_at: string
           currency: string
+          description: string | null
           id: string
-          next_billing_date: string
+          next_billing_date: string | null
           plan_name: string
           start_date: string
           status: Database["public"]["Enums"]["subscription_status"]
@@ -201,12 +205,13 @@ export type Database = {
         Insert: {
           amount: number
           auto_remind?: boolean
-          billing_cycle: Database["public"]["Enums"]["billing_cycle"]
+          billing_cycle?: Database["public"]["Enums"]["billing_cycle"]
           client_id: string
           created_at?: string
           currency?: string
+          description?: string | null
           id?: string
-          next_billing_date: string
+          next_billing_date?: string | null
           plan_name: string
           start_date?: string
           status?: Database["public"]["Enums"]["subscription_status"]
@@ -219,8 +224,9 @@ export type Database = {
           client_id?: string
           created_at?: string
           currency?: string
+          description?: string | null
           id?: string
-          next_billing_date?: string
+          next_billing_date?: string | null
           plan_name?: string
           start_date?: string
           status?: Database["public"]["Enums"]["subscription_status"]
