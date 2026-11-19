@@ -22,6 +22,12 @@ export function useUpdateCompanySettings() {
   })
 }
 
+export interface DeliveryResult {
+  to: string
+  ok: boolean
+  error: string | null
+}
+
 export interface ReminderResult {
   scanned: number
   sent: number
@@ -33,6 +39,10 @@ export interface ReminderResult {
   from?: string
   message?: string
   error?: string | null
+  results?: DeliveryResult[]
+  operatorSent?: number
+  operatorFailed?: number
+  operatorRecipients?: string[]
 }
 
 export function useSendReminders() {

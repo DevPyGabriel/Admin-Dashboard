@@ -56,6 +56,7 @@ export type Database = {
           created_at: string
           currency: string
           id: boolean
+          operator_emails: string[]
           reminder_days_before: number
           sender_email: string | null
           support_email: string
@@ -67,6 +68,7 @@ export type Database = {
           created_at?: string
           currency?: string
           id?: boolean
+          operator_emails?: string[]
           reminder_days_before?: number
           sender_email?: string | null
           support_email: string
@@ -78,6 +80,7 @@ export type Database = {
           created_at?: string
           currency?: string
           id?: boolean
+          operator_emails?: string[]
           reminder_days_before?: number
           sender_email?: string | null
           support_email?: string

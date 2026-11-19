@@ -35,6 +35,7 @@ export default function SettingsPage() {
           company_name: settingsQuery.data.company_name,
           support_email: settingsQuery.data.support_email,
           sender_email: settingsQuery.data.sender_email ?? '',
+          operator_emails: (settingsQuery.data.operator_emails ?? []).join(', '),
           currency: settingsQuery.data.currency,
           timezone: settingsQuery.data.timezone,
           reminder_days_before: settingsQuery.data.reminder_days_before,
@@ -59,11 +60,19 @@ export default function SettingsPage() {
           setNotice({ text: result.error, tone: 'danger' })
           return
         }
+        if (result.test) {
+          const details = (result.results ?? [])
+            .map((delivery) => `${delivery.to}: ${delivery.ok ? 'enviado' : delivery.error}`)
+            .join(' · ')
+          setNotice({
+            text: `Correo de prueba → ${details || 'sin destinatarios'}.`,
+            tone: result.failed > 0 ? 'danger' : 'success',
+          })
+          return
+        }
         setNotice({
-          text: result.test
-            ? `Correo de prueba enviado a ${result.recipient}.`
-            : `Recordatorios: ${result.sent} enviados, ${result.skipped} ya registrados, ${result.failed} con error.`,
-          tone: result.failed > 0 ? 'danger' : 'success',
+          text: `Recordatorios: ${result.sent} enviados, ${result.skipped} ya registrados, ${result.failed} con error. Copias al operador: ${result.operatorSent ?? 0} enviadas${result.operatorFailed ? `, ${result.operatorFailed} fallidas` : ''}.`,
+          tone: result.failed > 0 || (result.operatorFailed ?? 0) > 0 ? 'danger' : 'success',
         })
       },
       onError: (error) => setNotice({ text: error.message, tone: 'danger' }),
@@ -129,6 +138,27 @@ export default function SettingsPage() {
               {form.formState.errors.support_email && (
                 <p className="text-destructive text-xs">
                   {form.formState.errors.support_email.message}
+                </p>
+              )}
+            </div>
+
+            <div className="space-y-2 sm:col-span-2">
+              <Label htmlFor="operator_emails">Correos de operadores (copia)</Label>
+              <Input
+                id="operator_emails"
+                type="text"
+                placeholder="operador@ejemplo.com, otro@ejemplo.com"
+                aria-describedby="operator_emails_help"
+                aria-invalid={!!form.formState.errors.operator_emails}
+                {...form.register('operator_emails')}
+              />
+              <p id="operator_emails_help" className="text-secondary text-xs">
+                El correo de soporte también recibe una copia de cada recordatorio. Separa varios
+                correos con comas.
+              </p>
+              {form.formState.errors.operator_emails && (
+                <p className="text-destructive text-xs">
+                  {form.formState.errors.operator_emails.message}
                 </p>
               )}
             </div>
@@ -241,7 +271,11 @@ export default function SettingsPage() {
             <p className="text-secondary mt-3 text-xs">
               Último envío: {sendReminders.data.scanned} servicios revisados ·{' '}
               {sendReminders.data.sent} enviados · {sendReminders.data.skipped} omitidos ·{' '}
-              {sendReminders.data.failed} fallidos
+              {sendReminders.data.failed} fallidos · Copias al operador:{' '}
+              {sendReminders.data.operatorSent ?? 0} enviadas
+              {sendReminders.data.operatorRecipients?.length
+                ? ` (${sendReminders.data.operatorRecipients.join(', ')})`
+                : ''}
               {sendReminders.data.from && ` · Remitente: ${sendReminders.data.from}`}
             </p>
           )}

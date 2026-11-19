@@ -29,8 +29,15 @@ interface SettingsRow {
   company_name: string
   support_email: string
   sender_email: string | null
+  operator_emails: string[] | null
   currency: string
   reminder_days_before: number
+}
+
+interface DeliveryResult {
+  to: string
+  ok: boolean
+  error: string | null
 }
 
 const corsHeaders = {
@@ -57,6 +64,21 @@ function escapeHtml(value: string): string {
     /[&<>"']/g,
     (char) =>
       ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char] ?? char,
+  )
+}
+
+function normalizeEmail(value: string): string {
+  return value.trim().toLowerCase()
+}
+
+function getOperatorRecipients(settings: SettingsRow, exclude?: string): string[] {
+  const excluded = exclude ? normalizeEmail(exclude) : ''
+  return Array.from(
+    new Set(
+      [settings.support_email, ...(settings.operator_emails ?? [])]
+        .map(normalizeEmail)
+        .filter((email) => email && email !== excluded),
+    ),
   )
 }
 
@@ -148,23 +170,29 @@ function buildTargets(
   return targets.sort((a, b) => a.daysUntilDue - b.daysUntilDue)
 }
 
-function buildEmail(target: ReminderTarget, settings: SettingsRow) {
+function buildEmail(target: ReminderTarget, settings: SettingsRow, operatorCopy = false) {
   const service = serviceLabels[target.serviceType] ?? target.serviceType
   const amount = formatAmount(target.amount, target.currency)
   const company = escapeHtml(settings.company_name || 'NovaDrive')
-  const client = escapeHtml(target.clientName)
-  const subject =
+  const baseSubject =
     target.kind === 'payment_due'
       ? `Recordatorio de pago: ${service} vencido`
-      : `Recordatorio: ${service} vence en ${target.daysUntilDue} ${target.daysUntilDue === 1 ? 'día' : 'días'}`
+      : `Recordatorio: ${service} vence en ${target.daysUntilDue} ${
+          target.daysUntilDue === 1 ? 'día' : 'días'
+        }`
+  const subject = operatorCopy ? `Copia operador: ${baseSubject}` : baseSubject
 
   const detail =
     target.kind === 'payment_due'
       ? `Su servicio de ${escapeHtml(service)} venció el ${escapeHtml(target.dueDate)} y aún no registramos el pago.`
       : `Su servicio de ${escapeHtml(service)} vence el ${escapeHtml(target.dueDate)}.`
 
+  const greeting = operatorCopy
+    ? `<p>Recordatorio enviado a <strong>${escapeHtml(target.email)}</strong>:</p>`
+    : `<p>Hola ${escapeHtml(target.clientName)},</p>`
+
   const html = `<div style="font-family:Arial,sans-serif;line-height:1.5;color:#18181b">
-  <p>Hola ${client},</p>
+  ${greeting}
   <p>${detail}</p>
   <table cellpadding="8" cellspacing="0" style="border-collapse:collapse;margin:16px 0">
     <tr><td><strong>Servicio</strong></td><td>${escapeHtml(service)}</td></tr>
@@ -175,7 +203,10 @@ function buildEmail(target: ReminderTarget, settings: SettingsRow) {
   <p>Saludos,<br />${company}</p>
 </div>`
 
-  const text = `Hola ${target.clientName},\n\n${detail}\n\nServicio: ${service}\nMonto: ${amount}\nVencimiento: ${target.dueDate}\n\nSi ya realizaste el pago, ignora este mensaje. Consultas: ${settings.support_email}.\n\nSaludos,\n${settings.company_name || 'NovaDrive'}`
+  const textGreeting = operatorCopy
+    ? `Recordatorio enviado a ${target.email}:\n\n`
+    : `Hola ${target.clientName},\n\n`
+  const text = `${textGreeting}${detail}\n\nServicio: ${service}\nMonto: ${amount}\nVencimiento: ${target.dueDate}\n\nSi ya realizaste el pago, ignora este mensaje. Consultas: ${settings.support_email}.\n\nSaludos,\n${settings.company_name || 'NovaDrive'}`
 
   return { subject, html, text }
 }
@@ -226,7 +257,9 @@ Deno.serve(async (req) => {
 
   const { data: settings, error: settingsError } = await admin
     .from('company_settings')
-    .select('company_name, support_email, sender_email, currency, reminder_days_before')
+    .select(
+      'company_name, support_email, sender_email, operator_emails, currency, reminder_days_before',
+    )
     .eq('id', true)
     .maybeSingle()
 
@@ -241,6 +274,7 @@ Deno.serve(async (req) => {
 
   const fromAddress = config.sender_email?.trim() || 'onboarding@resend.dev'
   const from = `${config.company_name || 'NovaDrive'} <${fromAddress}>`
+  const operatorRecipients = getOperatorRecipients(config)
 
   const { data: rows, error: rowsError } = await admin
     .from('subscriptions')
@@ -268,23 +302,56 @@ Deno.serve(async (req) => {
         message: 'No hay servicios pendientes ni por cobrar para enviar',
       })
     }
+
     const email = buildEmail(target, config)
-    const result = await sendViaResend(from, auth.testEmail, email.subject, email.html, email.text)
-    return json(result.ok ? 200 : 502, {
+    const deliveries: DeliveryResult[] = []
+    const clientResult = await sendViaResend(
+      from,
+      auth.testEmail,
+      email.subject,
+      email.html,
+      email.text,
+    )
+    deliveries.push({
+      to: auth.testEmail,
+      ok: clientResult.ok,
+      error: clientResult.ok ? null : clientResult.error,
+    })
+
+    for (const operator of getOperatorRecipients(config, auth.testEmail)) {
+      const operatorEmail = buildEmail(target, config, true)
+      const result = await sendViaResend(
+        from,
+        operator,
+        operatorEmail.subject,
+        operatorEmail.html,
+        operatorEmail.text,
+      )
+      deliveries.push({
+        to: operator,
+        ok: result.ok,
+        error: result.ok ? null : result.error,
+      })
+    }
+
+    const sent = deliveries.filter((delivery) => delivery.ok).length
+    return json(sent > 0 ? 200 : 502, {
       scanned: targets.length,
-      sent: result.ok ? 1 : 0,
-      failed: result.ok ? 0 : 1,
+      sent,
+      failed: deliveries.length - sent,
       skipped: 0,
       test: true,
       recipient: auth.testEmail,
       service: target.serviceType,
-      error: result.ok ? null : result.error,
+      results: deliveries,
     })
   }
 
   let sent = 0
   let failed = 0
   let skipped = 0
+  let operatorSent = 0
+  let operatorFailed = 0
 
   for (const target of targets) {
     const { data: previous } = await admin
@@ -318,6 +385,23 @@ Deno.serve(async (req) => {
     if (logError) {
       console.error('No se pudo registrar el recordatorio:', logError.message)
     }
+
+    for (const operator of operatorRecipients) {
+      const operatorEmail = buildEmail(target, config, true)
+      const operatorResult = await sendViaResend(
+        from,
+        operator,
+        operatorEmail.subject,
+        operatorEmail.html,
+        operatorEmail.text,
+      )
+      if (operatorResult.ok) {
+        operatorSent += 1
+      } else {
+        operatorFailed += 1
+        console.error(`No se pudo enviar la copia al operador ${operator}:`, operatorResult.error)
+      }
+    }
   }
 
   return json(200, {
@@ -325,6 +409,9 @@ Deno.serve(async (req) => {
     sent,
     failed,
     skipped,
+    operatorSent,
+    operatorFailed,
+    operatorRecipients,
     from: fromAddress,
   })
 })

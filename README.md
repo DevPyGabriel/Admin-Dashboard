@@ -169,8 +169,20 @@ npx supabase functions deploy process-subscription-reminders --project-ref <proj
 The `pg_cron` job uses `pg_net` and reads both the function URL and `CRON_SECRET`
 from `supabase_vault`, so no credential is stored in the repository. The page's
 "Enviar correo de prueba" button invokes the same function with the operator's
-JWT and a `testEmail`, sending one sample without writing a `reminder_logs` row.
+JWT and a `testEmail`, sending one sample to that address and a copy to every
+configured operator inbox without writing a `reminder_logs` row. "Enviar todos
+ahora" runs the exact batch path used by the cron job, so it is the fastest way
+to test the automatic sender on demand.
+
+Every reminder is sent to the client and copied to `support_email` plus any
+addresses in `company_settings.operator_emails` (comma-separated field in the
+settings page). Operator copies are deduplicated, exclude the client address and
+have the subject prefix `Copia operador:`. A failed operator copy is reported in
+the response but does not change the client's `reminder_logs` status, so retries
+never resend a reminder already recorded as sent.
 
 Until a domain is verified in **Resend → Domains**, set `sender_email` to
-`onboarding@resend.dev`; Resend will only deliver to addresses verified on your
-Resend account.
+`onboarding@resend.dev`; Resend will only deliver to the email address associated
+with your Resend account. To receive the client copy as well, verify your own
+domain and use a `From` address on it, or temporarily point a test client's
+`email` at that account address when testing.
