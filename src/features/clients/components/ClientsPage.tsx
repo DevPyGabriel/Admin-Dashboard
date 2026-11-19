@@ -3,11 +3,15 @@ import { format, parseISO } from 'date-fns'
 import {
   AlertCircle,
   CalendarDays,
+  Car,
   CheckCircle2,
   Clock3,
+  Package,
   Search,
+  Truck,
   UsersRound,
   X,
+  type LucideIcon,
 } from 'lucide-react'
 import { PageHeader } from '@/components/shared/PageHeader'
 import { Badge } from '@/components/ui/badge'
@@ -37,6 +41,11 @@ import {
   type ServiceSort,
 } from '@/features/clients/lib/client-services'
 import {
+  serviceTypeLabels,
+  serviceTypes,
+  type ServiceType,
+} from '@/features/clients/schemas/client.schema'
+import {
   useClientServices,
   useDeleteClient,
   useRegisterPayment,
@@ -59,6 +68,34 @@ const countdownTone: Record<ServicePaymentState, string> = {
   paid: 'text-success',
   pending: 'text-secondary',
   overdue: 'text-danger',
+}
+
+const serviceTypeTone: Record<ServiceType, string> = {
+  transporte: 'bg-info-soft text-info-soft-foreground',
+  taxi: 'bg-warning-soft text-warning-soft-foreground',
+  delivery: 'bg-primary-soft text-primary-soft-foreground',
+}
+
+const serviceTypeIcon: Record<ServiceType, LucideIcon> = {
+  transporte: Truck,
+  taxi: Car,
+  delivery: Package,
+}
+
+function ServiceTypeTag({ type }: { type: string }) {
+  const normalized = serviceTypes.find((item) => item === type)
+
+  if (!normalized) {
+    return <Badge variant="outline">{type}</Badge>
+  }
+
+  const Icon = serviceTypeIcon[normalized]
+  return (
+    <Badge className={cn('border-transparent', serviceTypeTone[normalized])}>
+      <Icon aria-hidden="true" />
+      {serviceTypeLabels[normalized]}
+    </Badge>
+  )
 }
 
 function StateBadge({ state }: { state: ServicePaymentState }) {
@@ -355,7 +392,9 @@ export default function ClientsPage() {
                       <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 text-xs">
                         <div className="min-w-0">
                           <dt className="text-secondary">Servicio</dt>
-                          <dd className="truncate">{service.serviceType}</dd>
+                          <dd>
+                            <ServiceTypeTag type={service.serviceType} />
+                          </dd>
                         </div>
                         <div className="min-w-0">
                           <dt className="text-secondary">Monto</dt>
@@ -436,7 +475,7 @@ export default function ClientsPage() {
                           </TableCell>
                           <TableCell>
                             <div className="min-w-0">
-                              <p>{service.serviceType}</p>
+                              <ServiceTypeTag type={service.serviceType} />
                               {service.description && (
                                 <p className="text-secondary max-w-48 truncate text-xs">
                                   {service.description}
