@@ -96,7 +96,7 @@ export function ClientFormDialog({ open, onOpenChange, service }: ClientFormDial
             <div className="space-y-2 overflow-visible">
               <Label htmlFor="full_name">Nombre del cliente</Label>
               <Input
-                className="text-base md:text-sm"
+                className="text-[13px]"
                 id="full_name"
                 autoComplete="name"
                 aria-invalid={!!errors.full_name}
@@ -112,7 +112,7 @@ export function ClientFormDialog({ open, onOpenChange, service }: ClientFormDial
                 Correo electrónico <span className="text-secondary font-normal">(opcional)</span>
               </Label>
               <Input
-                className="text-base md:text-sm"
+                className="text-[13px]"
                 id="email"
                 type="email"
                 autoComplete="email"
@@ -126,7 +126,7 @@ export function ClientFormDialog({ open, onOpenChange, service }: ClientFormDial
               <div className="space-y-2">
                 <Label htmlFor="service_type">Tipo de servicio</Label>
                 <Select
-                  className="border-input bg-input/30 text-secondary h-9 rounded-md text-base md:text-sm"
+                  className="border-input bg-input/30 text-secondary h-9 rounded-md text-[13px]"
                   id="service_type"
                   aria-invalid={!!errors.service_type}
                   {...register('service_type')}
@@ -147,12 +147,12 @@ export function ClientFormDialog({ open, onOpenChange, service }: ClientFormDial
                 <div className="relative">
                   <span
                     aria-hidden="true"
-                    className="text-muted-foreground pointer-events-none absolute inset-y-0 left-3 flex items-center text-base md:text-sm"
+                    className="text-muted-foreground pointer-events-none absolute inset-y-0 left-3 flex items-center text-[13px]"
                   >
                     {currencyPrefix}
                   </span>
                   <Input
-                    className="pl-6 text-base md:text-sm"
+                    className="pl-6 text-[13px]"
                     id="amount"
                     type="number"
                     min="0"
@@ -173,7 +173,7 @@ export function ClientFormDialog({ open, onOpenChange, service }: ClientFormDial
                 Fecha de vencimiento <span className="text-secondary font-normal">(opcional)</span>
               </Label>
               <Input
-                className="text-secondary text-base md:text-sm"
+                className="text-secondary text-[13px]"
                 id="due_date"
                 type="date"
                 aria-invalid={!!errors.due_date}
@@ -189,7 +189,7 @@ export function ClientFormDialog({ open, onOpenChange, service }: ClientFormDial
                 Descripción <span className="text-secondary font-normal">(opcional)</span>
               </Label>
               <Textarea
-                className="text-base md:text-sm"
+                className="text-[13px]"
                 id="description"
                 rows={3}
                 placeholder="Detalles del servicio o de la cobranza"
