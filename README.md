@@ -64,7 +64,47 @@ npx shadcn@latest add <component>
 
 Generated components live in `src/components/ui`. shadcn variables are mapped
 to the project's neutral tokens in `src/styles/index.css`; `cn()` is shared
-through `@/lib/utils`. No business UI has been built yet.
+through `@/lib/utils`.
+
+## Test CRUD flow
+
+The app now includes a minimal authenticated CRUD against the existing Supabase
+project:
+
+```text
+/login     sign in with an operator user
+/clients   list, create, edit and delete rows from public.clients
+```
+
+- `src/features/auth` provides `useAuthSession` and `RequireAuth`.
+- `src/features/clients` uses TanStack Query + Zod + React Hook Form with the
+  generated types from `src/types/database.types.ts`.
+- `supabase/seed.test.sql` creates `TEST_`-prefixed demo rows. Run it in the
+  Supabase SQL Editor after creating `test.operator@example.com` in Auth.
+
+> This writes to the currently linked NovaDrive project. Use clearly prefixed
+> test rows and remove them when finished.
+
+## Vercel
+
+`vercel.json` adds the SPA fallback for React Router. Import the repo with the
+Vite preset (`npm run build`, output `dist`, install `npm ci`) and set only:
+
+```text
+VITE_SUPABASE_URL
+VITE_SUPABASE_PUBLISHABLE_KEY
+```
+
+in Vercel **Settings → Environment Variables**. Vite embeds these values at
+build time, so redeploy after changing them. Add `https://*.vercel.app/**` to
+the Supabase project's **Authentication → URL Configuration → Additional
+Redirect URLs**.
+
+`@emnapi/core` and `@emnapi/runtime` are pinned in `devDependencies`: npm on
+Windows omits these optional WASM peer dependencies from the lockfile, which
+makes `npm ci` fail on Vercel's Linux builders with `EUSAGE`. Keeping them
+explicit makes the lockfile portable. Alternatively, set Vercel's install
+command to `npm install`.
 
 ## Scripts
 

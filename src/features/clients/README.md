@@ -1,11 +1,12 @@
 # Clients feature
 
-Customer CRUD.
+Customer CRUD used to verify the Supabase connection end to end.
 
-- `components/` — client-specific components
-- `hooks/` — React Query hooks such as `useClients`, `useCreateClient`
-- `services/` — Supabase data access
-- `schemas/` — Zod schemas for client forms
-- `types/` — client domain types
+- `components/` — `ClientsPage` table and `ClientFormDialog`
+- `hooks/` — `useClients`, `useCreateClient`, `useUpdateClient`, `useDeleteClient`
+- `api/` — typed Supabase queries keyed by `Database['public']['Tables']['clients']`
+- `schemas/` — Zod validation for the client form
+- `types/` — feature-local types (reserved)
 
-Nothing implemented yet.
+Rows are read/written through RLS as an authenticated operator. Use
+`supabase/seed.test.sql` to create clearly prefixed `TEST_` demo data.

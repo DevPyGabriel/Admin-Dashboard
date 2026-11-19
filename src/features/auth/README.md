@@ -2,10 +2,11 @@
 
 Authentication and session handling.
 
-- `components/` — auth-specific views and form pieces
-- `hooks/` — React Query hooks for session/auth state
-- `services/` — Supabase Auth calls
-- `schemas/` — Zod validation schemas
-- `types/` — feature-local types
+- `components/` — `LoginForm` and the `RequireAuth` route guard
+- `hooks/` — `useAuthSession`, backed by `supabase.auth.onAuthStateChange`
+- `pages/` — `LoginPage`
+- `schemas/` — Zod validation for the login form
+- `types/` — feature-local types (reserved)
 
-Nothing implemented yet.
+Supabase Auth calls currently live in `LoginForm`; extract them into `services/`
+when more than one caller needs them.
