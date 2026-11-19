@@ -83,128 +83,132 @@ export function ClientFormDialog({ open, onOpenChange, service }: ClientFormDial
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="py-8 sm:max-w-lg">
-        <DialogHeader>
+      <DialogContent className="sm:max-w-lg">
+        <DialogHeader className="pr-10">
           <DialogTitle>{service ? 'Editar cliente' : 'Nuevo cliente'}</DialogTitle>
-          <DialogDescription className="pt-2 pb-2 text-xs">
+          <DialogDescription className="text-xs">
             Los cambios se guardan directamente en Supabase y se reflejan al instante.
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={onSubmit} className="space-y-4" noValidate>
-          <div className="space-y-2">
-            <Label htmlFor="full_name">Nombre del cliente</Label>
-            <Input
-              className="text-[13px]"
-              id="full_name"
-              autoComplete="name"
-              aria-invalid={!!errors.full_name}
-              {...register('full_name')}
-            />
-            {errors.full_name && (
-              <p className="text-destructive text-xs">{errors.full_name.message}</p>
-            )}
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="email">
-              Correo electrónico <span className="text-secondary font-normal">(opcional)</span>
-            </Label>
-            <Input
-              className="text-[13px]"
-              id="email"
-              type="email"
-              autoComplete="email"
-              aria-invalid={!!errors.email}
-              {...register('email')}
-            />
-            {errors.email && <p className="text-destructive text-xs">{errors.email.message}</p>}
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-2">
+        <form onSubmit={onSubmit} className="flex min-h-0 flex-1 flex-col" noValidate>
+          <div className="min-h-0 flex-1 space-y-4 overflow-y-auto overscroll-contain pr-1">
             <div className="space-y-2">
-              <Label htmlFor="service_type">Tipo de servicio</Label>
-              <Select
-                className="border-input bg-input/30 text-secondary h-9 rounded-md text-[13px]"
-                id="service_type"
-                aria-invalid={!!errors.service_type}
-                {...register('service_type')}
-              >
-                <option value="">Selecciona un tipo de servicio</option>
-                {serviceTypes.map((type) => (
-                  <option key={type} value={type}>
-                    {serviceTypeLabels[type]}
-                  </option>
-                ))}
-              </Select>
-              {errors.service_type && (
-                <p className="text-destructive text-xs">{errors.service_type.message}</p>
+              <Label htmlFor="full_name">Nombre del cliente</Label>
+              <Input
+                className="text-[13px]"
+                id="full_name"
+                autoComplete="name"
+                aria-invalid={!!errors.full_name}
+                {...register('full_name')}
+              />
+              {errors.full_name && (
+                <p className="text-destructive text-xs">{errors.full_name.message}</p>
               )}
             </div>
+
             <div className="space-y-2">
-              <Label htmlFor="amount">Monto ({currency})</Label>
-              <div className="relative">
-                <span
-                  aria-hidden="true"
-                  className="text-muted-foreground pointer-events-none absolute inset-y-0 left-3 flex items-center text-[13px]"
-                >
-                  {currencyPrefix}
-                </span>
-                <Input
-                  className="pl-6 text-[13px]"
-                  id="amount"
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  inputMode="decimal"
-                  aria-invalid={!!errors.amount}
-                  {...register('amount', { valueAsNumber: true })}
-                />
-              </div>
-              {errors.amount && <p className="text-destructive text-xs">{errors.amount.message}</p>}
+              <Label htmlFor="email">
+                Correo electrónico <span className="text-secondary font-normal">(opcional)</span>
+              </Label>
+              <Input
+                className="text-[13px]"
+                id="email"
+                type="email"
+                autoComplete="email"
+                aria-invalid={!!errors.email}
+                {...register('email')}
+              />
+              {errors.email && <p className="text-destructive text-xs">{errors.email.message}</p>}
             </div>
-          </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="due_date">
-              Fecha de vencimiento <span className="text-secondary font-normal">(opcional)</span>
-            </Label>
-            <Input
-              className="text-secondary text-[13px]"
-              id="due_date"
-              type="date"
-              aria-invalid={!!errors.due_date}
-              {...register('due_date')}
-            />
-            {errors.due_date && (
-              <p className="text-destructive text-xs">{errors.due_date.message}</p>
-            )}
-          </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="service_type">Tipo de servicio</Label>
+                <Select
+                  className="border-input bg-input/30 text-secondary h-9 rounded-md text-[13px]"
+                  id="service_type"
+                  aria-invalid={!!errors.service_type}
+                  {...register('service_type')}
+                >
+                  <option value="">Selecciona un tipo de servicio</option>
+                  {serviceTypes.map((type) => (
+                    <option key={type} value={type}>
+                      {serviceTypeLabels[type]}
+                    </option>
+                  ))}
+                </Select>
+                {errors.service_type && (
+                  <p className="text-destructive text-xs">{errors.service_type.message}</p>
+                )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="amount">Monto ({currency})</Label>
+                <div className="relative">
+                  <span
+                    aria-hidden="true"
+                    className="text-muted-foreground pointer-events-none absolute inset-y-0 left-3 flex items-center text-[13px]"
+                  >
+                    {currencyPrefix}
+                  </span>
+                  <Input
+                    className="pl-6 text-[13px]"
+                    id="amount"
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    inputMode="decimal"
+                    aria-invalid={!!errors.amount}
+                    {...register('amount', { valueAsNumber: true })}
+                  />
+                </div>
+                {errors.amount && (
+                  <p className="text-destructive text-xs">{errors.amount.message}</p>
+                )}
+              </div>
+            </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="description">
-              Descripción <span className="text-secondary font-normal">(opcional)</span>
-            </Label>
-            <Textarea
-              className="text-[13px]"
-              id="description"
-              rows={3}
-              placeholder="Detalles del servicio o de la cobranza"
-              aria-invalid={!!errors.description}
-              {...register('description')}
-            />
-            {errors.description && (
-              <p className="text-destructive text-xs">{errors.description.message}</p>
-            )}
+            <div className="space-y-2">
+              <Label htmlFor="due_date">
+                Fecha de vencimiento <span className="text-secondary font-normal">(opcional)</span>
+              </Label>
+              <Input
+                className="text-secondary text-[13px]"
+                id="due_date"
+                type="date"
+                aria-invalid={!!errors.due_date}
+                {...register('due_date')}
+              />
+              {errors.due_date && (
+                <p className="text-destructive text-xs">{errors.due_date.message}</p>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="description">
+                Descripción <span className="text-secondary font-normal">(opcional)</span>
+              </Label>
+              <Textarea
+                className="text-[13px]"
+                id="description"
+                rows={3}
+                placeholder="Detalles del servicio o de la cobranza"
+                aria-invalid={!!errors.description}
+                {...register('description')}
+              />
+              {errors.description && (
+                <p className="text-destructive text-xs">{errors.description.message}</p>
+              )}
+            </div>
           </div>
 
           {error && (
-            <p className="text-destructive text-sm" role="alert">
+            <p className="text-destructive shrink-0 pt-3 text-sm" role="alert">
               {error}
             </p>
           )}
 
-          <DialogFooter className="pt-0">
+          <DialogFooter>
             <DialogClose asChild>
               <Button type="button" variant="outline" size="sm">
                 Cancelar
