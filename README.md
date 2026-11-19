@@ -1,15 +1,16 @@
 # Subscription Admin
 
-Frontend foundation for the subscription management dashboard. This repository
-currently contains **infrastructure only** — no pages, features or business
-logic have been implemented yet.
+Frontend for the NovaDrive subscription management dashboard. It includes
+Supabase Auth, a working client CRUD flow, a responsive dashboard shell and an
+honest set of placeholder routes for upcoming modules. Product truth lives in
+`PRODUCT.md`; the visual system lives in `DESIGN.md`.
 
 ## Stack
 
 - React + TypeScript (strict mode)
 - Vite with the `@` → `src/` alias
 - Tailwind CSS v4 via `@tailwindcss/vite` (CSS-first configuration)
-- Accessible neutral + green design system documented in `DESIGN.md`
+- Compact Supabase/Vercel-aligned design system documented in `DESIGN.md`
 - shadcn/ui primitives (Radix base, Nova preset) in `src/components/ui`
 - Inter Variable, self-hosted through `@fontsource-variable/inter`
 - TanStack Query for server state, React Router for routing
@@ -40,7 +41,7 @@ belong in Supabase Secrets and are used only by Edge Functions.
 
 ```text
 src/
-├── app/          # providers, router and future shared layouts
+├── app/          # providers, router and the authenticated dashboard shell
 ├── components/   # in-house ui primitives and shared components
 ├── features/     # business domains (auth, clients, subscriptions, ...)
 ├── hooks/        # global React hooks
@@ -64,8 +65,12 @@ npx shadcn@latest add <component>
 ```
 
 Generated components live in `src/components/ui`. shadcn variables are mapped
-to the project's neutral tokens in `src/styles/index.css`; `cn()` is shared
-through `@/lib/utils`.
+to the compact neutral/green tokens in `src/styles/index.css`; `cn()` is
+re-exported through `@/lib/utils/cn`.
+
+Authenticated screens render inside `src/app/layouts/DashboardLayout.tsx`: a
+240px rail on `lg+` and a Radix drawer below `lg`. Navigation and its honest
+`upcoming` status are defined once in `src/app/layouts/navigation.ts`.
 
 ## Test CRUD flow
 
@@ -73,8 +78,12 @@ The app now includes a minimal authenticated CRUD against the existing Supabase
 project:
 
 ```text
-/login     sign in with an operator user
-/clients   list, create, edit and delete rows from public.clients
+/login          sign in with an operator user
+/clients        list, create, edit and delete rows from public.clients
+/subscriptions  placeholder — upcoming module
+/payments       placeholder — upcoming module
+/reminders      placeholder — upcoming module
+/settings       placeholder — upcoming module
 ```
 
 - `src/features/auth` provides `useAuthSession` and `RequireAuth`.

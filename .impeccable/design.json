@@ -1,0 +1,280 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-19T00:00:00.000Z",
+  "title": "Design System: NovaDrive",
+  "extensions": {
+    "colorMeta": {
+      "primary": {
+        "role": "primary",
+        "displayName": "Operator Green",
+        "canonical": "#00722e",
+        "tonalRamp": [
+          "#01270d",
+          "#01421a",
+          "#005823",
+          "#00722e",
+          "#008a3e",
+          "#00a34a",
+          "#45bb68",
+          "#7bd890",
+          "#b3e4c2",
+          "#d8f0df",
+          "#eef9f1"
+        ]
+      },
+      "canvas": {
+        "role": "neutral",
+        "displayName": "Near-White Canvas",
+        "canonical": "#fafafa",
+        "tonalRamp": [
+          "#0a0a0a",
+          "#171717",
+          "#262626",
+          "#444444",
+          "#666666",
+          "#9ca3af",
+          "#e2e5e8",
+          "#e6e8eb",
+          "#f5f6f7",
+          "#fafafa",
+          "#ffffff"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Paper White",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "#0a0a0a",
+          "#171717",
+          "#262626",
+          "#444444",
+          "#666666",
+          "#9ca3af",
+          "#e2e5e8",
+          "#e6e8eb",
+          "#f5f6f7",
+          "#fafafa",
+          "#ffffff"
+        ]
+      },
+      "foreground": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "#171717",
+        "tonalRamp": [
+          "#0a0a0a",
+          "#171717",
+          "#262626",
+          "#444444",
+          "#666666",
+          "#9ca3af",
+          "#e2e5e8",
+          "#e6e8eb",
+          "#f5f6f7",
+          "#fafafa",
+          "#ffffff"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Secondary Ink",
+        "canonical": "#666666",
+        "tonalRamp": [
+          "#0a0a0a",
+          "#171717",
+          "#262626",
+          "#444444",
+          "#666666",
+          "#9ca3af",
+          "#e2e5e8",
+          "#e6e8eb",
+          "#f5f6f7",
+          "#fafafa",
+          "#ffffff"
+        ]
+      },
+      "border": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "canonical": "#e6e8eb",
+        "tonalRamp": [
+          "#0a0a0a",
+          "#171717",
+          "#262626",
+          "#444444",
+          "#666666",
+          "#9ca3af",
+          "#e2e5e8",
+          "#e6e8eb",
+          "#f5f6f7",
+          "#fafafa",
+          "#ffffff"
+        ]
+      },
+      "danger": {
+        "role": "semantic",
+        "displayName": "Signal Red",
+        "canonical": "#b91c1c",
+        "tonalRamp": [
+          "#450a0a",
+          "#7f1d1d",
+          "#991b1b",
+          "#b91c1c",
+          "#dc2626",
+          "#f87171",
+          "#fca5a5",
+          "#fecaca",
+          "#fee2e2",
+          "#fef2f2"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "title": {
+        "displayName": "Page title",
+        "purpose": "The single H1 at the top of each dashboard screen."
+      },
+      "body": {
+        "displayName": "Interface body",
+        "purpose": "Controls, table cells and supporting copy at 14px."
+      },
+      "label": {
+        "displayName": "Kicker / label",
+        "purpose": "Navigation group headings, badges and meta text."
+      },
+      "meta": {
+        "displayName": "Meta",
+        "purpose": "10px upcoming chips and 11px sidebar subtitles or email."
+      }
+    },
+    "shadows": [
+      {
+        "name": "popover",
+        "value": "0 1px 2px oklch(0.15 0.01 150 / 0.06), 0 12px 32px oklch(0.15 0.01 150 / 0.12)",
+        "purpose": "Dialogs and the mobile navigation drawer only."
+      },
+      {
+        "name": "focus",
+        "value": "0 0 0 3px color-mix(in oklch, var(--primary-ring) 28%, transparent)",
+        "purpose": "Keyboard focus on interactive controls."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out",
+        "value": "cubic-bezier(0.22, 1, 0.36, 1)",
+        "purpose": "All interface state transitions."
+      },
+      {
+        "name": "fast",
+        "value": "120ms",
+        "purpose": "Controls, hovers and focus."
+      },
+      {
+        "name": "base",
+        "value": "180ms",
+        "purpose": "Overlay entry and exit."
+      }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The single green action on a dashboard view.",
+      "html": "<button class=\"ds-btn-primary\" type=\"button\">Nuevo cliente</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 0.375rem; height: 2rem; padding: 0 0.625rem; border: 1px solid transparent; border-radius: 6px; background: var(--primary); color: var(--surface); font: 500 14px/1.25 'Inter Variable', Inter, sans-serif; cursor: pointer; transition: background 120ms cubic-bezier(0.22, 1, 0.36, 1); } .ds-btn-primary:hover { background: var(--primary-hover); } .ds-btn-primary:active { background: var(--primary-active); } .ds-btn-primary:focus-visible { outline: 3px solid color-mix(in oklch, var(--primary-ring) 28%, transparent); outline-offset: 2px; } @media (pointer: coarse) { .ds-btn-primary { min-height: 44px; } }"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Secondary and row actions on white panels.",
+      "html": "<button class=\"ds-btn-outline\" type=\"button\">Editar</button>",
+      "css": ".ds-btn-outline { display: inline-flex; align-items: center; justify-content: center; height: 2rem; padding: 0 0.625rem; border: 1px solid var(--border); border-radius: 6px; background: var(--surface); color: var(--text-primary); font: 500 14px/1.25 'Inter Variable', Inter, sans-serif; cursor: pointer; transition: background 120ms cubic-bezier(0.22, 1, 0.36, 1); } .ds-btn-outline:hover { background: var(--surface-muted); } .ds-btn-outline:focus-visible { outline: 3px solid color-mix(in oklch, var(--primary-ring) 28%, transparent); outline-offset: 2px; } @media (pointer: coarse) { .ds-btn-outline { min-height: 44px; } }"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Compact form field with a hairline outline.",
+      "html": "<input class=\"ds-input\" type=\"email\" placeholder=\"nombre@ejemplo.com\" />",
+      "css": ".ds-input { width: 100%; height: 2rem; padding: 0.25rem 0.625rem; border: 1px solid var(--border-strong); border-radius: 8px; background: var(--surface); color: var(--text-primary); font: 400 14px/1.25 'Inter Variable', Inter, sans-serif; outline: none; transition: border-color 120ms cubic-bezier(0.22, 1, 0.36, 1); } .ds-input::placeholder { color: var(--text-tertiary); } .ds-input:focus { border-color: var(--primary); box-shadow: var(--shadow-focus); } .ds-input:disabled { cursor: not-allowed; opacity: 0.6; }"
+    },
+    {
+      "name": "Surface Panel",
+      "kind": "card",
+      "refersTo": "card-surface",
+      "description": "Flat bordered container for lists and table data.",
+      "html": "<section class=\"ds-panel\"><h2 class=\"ds-panel-title\">Listado</h2></section>",
+      "css": ".ds-panel { overflow: hidden; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); color: var(--text-primary); } .ds-panel-title { margin: 0; padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); font: 600 14px/1.25 'Inter Variable', Inter, sans-serif; }"
+    },
+    {
+      "name": "Status Badge",
+      "kind": "chip",
+      "refersTo": "status-badge",
+      "description": "Text-labelled active/inactive state.",
+      "html": "<span class=\"ds-badge\">active</span>",
+      "css": ".ds-badge { display: inline-flex; align-items: center; height: 1.25rem; padding: 0 0.5rem; border: 1px solid transparent; border-radius: 9999px; background: var(--primary-soft); color: var(--primary-soft-foreground); font: 500 12px/1 'Inter Variable', Inter, sans-serif; }"
+    },
+    {
+      "name": "Active Navigation Item",
+      "kind": "nav",
+      "refersTo": "nav-active",
+      "description": "Sidebar link with the 2px green selection rail.",
+      "html": "<a class=\"ds-nav-active\" href=\"/clients\" aria-current=\"page\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2\"/><circle cx=\"9\" cy=\"7\" r=\"4\"/><path d=\"M22 21v-2a4 4 0 0 0-3-3.87\"/><path d=\"M16 3.13a4 4 0 0 1 0 7.75\"/></svg><span>Clientes</span></a>",
+      "css": ".ds-nav-active { position: relative; display: flex; align-items: center; gap: 0.625rem; height: 2.25rem; padding: 0 0.625rem; border-radius: 6px; background: var(--nav-active-bg); color: var(--nav-active-foreground); font: 500 14px/1.25 'Inter Variable', Inter, sans-serif; text-decoration: none; } .ds-nav-active::before { content: ''; position: absolute; top: 0.375rem; bottom: 0.375rem; left: 0; width: 2px; border-radius: 9999px; background: var(--primary); } .ds-nav-active:hover { background: var(--nav-active-bg); } .ds-nav-active:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; } @media (pointer: coarse) { .ds-nav-active { height: 44px; } }"
+    },
+    {
+      "name": "Mobile Client Card",
+      "kind": "custom",
+      "refersTo": "card-surface",
+      "description": "The primary phone-only record pattern with actions in thumb reach.",
+      "html": "<article class=\"ds-client-card\"><div class=\"ds-client-head\"><strong>María López</strong><span class=\"ds-badge\">active</span></div><p class=\"ds-client-meta\">maria@example.com</p><div class=\"ds-client-actions\"><button class=\"ds-btn-outline\" type=\"button\">Editar</button><button class=\"ds-btn-outline\" type=\"button\">Eliminar</button></div></article>",
+      "css": ".ds-client-card { padding: 1rem; border-bottom: 1px solid var(--border); background: var(--surface); color: var(--text-primary); font: 400 14px/1.5 'Inter Variable', Inter, sans-serif; } .ds-client-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.75rem; } .ds-client-meta { margin: 0.25rem 0 0; color: var(--text-secondary); font-size: 12px; } .ds-client-actions { display: flex; gap: 0.5rem; margin-top: 0.75rem; } .ds-client-actions .ds-btn-outline { flex: 1; min-height: 44px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Operator's Console",
+    "overview": "This is a compact, product-grade control surface in the lineage of Supabase and Vercel dashboards: near-white ground, paper-white panels, hairline separators, small radii, 14px type and almost no shadow. It is built for an owner checking records on a phone in short sessions, so the hierarchy is flattened and the frequent action stays close to the thumb. Brand expression is restricted to one green used for action, selection, focus and success.\n\nThe system deliberately refuses the padded, floating-card dashboard and the desktop sidebar that simply vanishes on mobile. Navigation is always reachable: a 240px rail on large screens, the same content in a slide-in drawer below lg. Modules that are not implemented are labelled Pronto instead of pretending to work.",
+    "keyCharacteristics": [
+      "Hairline-first surfaces, flat at rest, with depth reserved for overlays.",
+      "One accent green; neutral grays, black and white carry everything else.",
+      "Compact desktop density, 44px touch targets on phones, one primary action per view.",
+      "Honest navigation and text-labelled status in every state."
+    ],
+    "rules": [
+      {
+        "name": "The One Voice Rule",
+        "body": "Green is the only accent. Do not introduce a second brand hue for decoration; status colors are semantic exceptions with text labels, not alternate accents.",
+        "section": "colors"
+      },
+      {
+        "name": "The Flat-By-Default Rule",
+        "body": "A resting panel gets one hairline border and no shadow. Never stack a border with a large ambient halo.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do use semantic utilities such as bg-surface, text-muted-foreground, bg-primary and border-border.",
+      "Do keep one primary green action per view and make it full-width on phones.",
+      "Do give every control a visible focus ring and every touch target at least 44px on coarse pointers.",
+      "Do label upcoming modules and empty states with plain Spanish copy.",
+      "Do use tabular-data for anything numeric or date-based."
+    ],
+    "donts": [
+      "Don't add shadows to resting cards or panels; depth is for overlays only.",
+      "Don't use color alone for state, or introduce a second accent hue.",
+      "Don't hide navigation on mobile without providing the drawer equivalent.",
+      "Don't use raw --brand-* or --neutral-* values in feature code.",
+      "Don't claim an unimplemented module works; route it to the honest placeholder."
+    ]
+  }
+}

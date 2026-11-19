@@ -1,121 +1,292 @@
-# NovaDrive design system
+---
+name: NovaDrive
+description: Compact Supabase/Vercel-style admin shell for subscription operations.
+colors:
+  primary: '#00722e'
+  primary-hover: '#005823'
+  primary-soft: '#eef9f1'
+  nav-active-foreground: '#005823'
+  canvas: '#fafafa'
+  surface: '#ffffff'
+  surface-muted: '#f5f6f7'
+  foreground: '#171717'
+  muted: '#666666'
+  subtle: '#6b7280'
+  border: '#e6e8eb'
+  border-strong: '#e2e5e8'
+  success: '#00722e'
+  warning: '#b45309'
+  danger: '#b91c1c'
+  info: '#1d4ed8'
+typography:
+  title:
+    fontFamily: 'Inter Variable, Inter, ui-sans-serif, system-ui, sans-serif'
+    fontSize: '1.25rem'
+    fontWeight: 600
+    lineHeight: 1.3
+    letterSpacing: '-0.02em'
+  body:
+    fontFamily: 'Inter Variable, Inter, ui-sans-serif, system-ui, sans-serif'
+    fontSize: '0.875rem'
+    fontWeight: 400
+    lineHeight: 1.5
+  label:
+    fontFamily: 'Inter Variable, Inter, ui-sans-serif, system-ui, sans-serif'
+    fontSize: '0.75rem'
+    fontWeight: 500
+    lineHeight: 1.25
+    letterSpacing: '0'
+  meta:
+    fontFamily: 'Inter Variable, Inter, ui-sans-serif, system-ui, sans-serif'
+    fontSize: '0.625rem'
+    fontWeight: 500
+    lineHeight: 1.25
+    letterSpacing: '0.05em'
+  meta-relaxed:
+    fontFamily: 'Inter Variable, Inter, ui-sans-serif, system-ui, sans-serif'
+    fontSize: '0.6875rem'
+    fontWeight: 400
+    lineHeight: 1.25
+    letterSpacing: '0'
+rounded:
+  sm: '4px'
+  md: '6px'
+  lg: '8px'
+  xl: '10px'
+  '2xl': '12px'
+spacing:
+  page-x-sm: '1rem'
+  page-x-md: '1.5rem'
+  page-x-lg: '2rem'
+  topbar: '3.5rem'
+  rail: '15rem'
+components:
+  button-primary:
+    backgroundColor: '{colors.primary}'
+    textColor: '{colors.surface}'
+    rounded: '{rounded.md}'
+    padding: '0.5rem 0.625rem'
+    height: '2rem'
+  button-primary-hover:
+    backgroundColor: '{colors.primary-hover}'
+    textColor: '{colors.surface}'
+    rounded: '{rounded.md}'
+  button-outline:
+    backgroundColor: '{colors.surface}'
+    textColor: '{colors.foreground}'
+    rounded: '{rounded.md}'
+    padding: '0.5rem 0.625rem'
+  input:
+    backgroundColor: '{colors.surface}'
+    textColor: '{colors.foreground}'
+    rounded: '{rounded.lg}'
+    padding: '0.25rem 0.625rem'
+    height: '2rem'
+  card-surface:
+    backgroundColor: '{colors.surface}'
+    textColor: '{colors.foreground}'
+    rounded: '{rounded.lg}'
+  nav-active:
+    backgroundColor: '{colors.primary-soft}'
+    textColor: '{colors.nav-active-foreground}'
+    rounded: '{rounded.md}'
+  status-badge:
+    backgroundColor: '{colors.primary-soft}'
+    textColor: '{colors.nav-active-foreground}'
+    rounded: '9999px'
+---
 
-**Mode: Operate.** This is a subscription admin dashboard. Scanability, state
-clarity and fast repeated actions outrank expression. The visual identity lives
-in precise details: a calm neutral field, one deliberate green accent, and
-consistent focus/status semantics.
+# Design System: NovaDrive
 
-## Direction
+## Overview
 
-- **Neutral foundation:** near-black text, cool-neutral grays, white surfaces.
-- **Single accent:** green is reserved for the primary action, selection, focus
-  and success. It never decorates containers or headings.
-- **Rarity gives force:** at most one primary green action per view. Secondary
-  and ghost actions stay neutral.
-- **Composed dark mode:** not an inverted light theme. Surfaces are darker and
-  the accent switches to a brighter green with near-black foreground.
+**Creative North Star: "The Operator's Console."**
 
-## Token layers
+This is a compact, product-grade control surface in the lineage of Supabase and
+Vercel dashboards: near-white ground, paper-white panels, hairline separators,
+small radii, 14px type and almost no shadow. It is built for an owner checking
+records on a phone in short sessions, so the hierarchy is flattened and the
+frequent action stays close to the thumb. Brand expression is restricted to one
+green used for action, selection, focus and success.
 
-| Layer              | Location                                    | Rule                                                                                           |
-| ------------------ | ------------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| Primitives         | `:root` / `.dark` in `src/styles/index.css` | `--neutral-*` and `--brand-*`; never used directly by features                                 |
-| Semantic roles     | `:root` / `.dark`                           | `--canvas`, `--surface`, `--primary`, `--text-secondary`, `--danger-soft`, …                   |
-| Tailwind utilities | `@theme inline`                             | `bg-surface`, `text-muted-foreground`, `ring-ring`, `shadow-panel`, `bg-brand-700`             |
-| shadcn/ui bridge   | same file                                   | `bg-primary`, `bg-card`, `bg-popover`, `bg-destructive`, `border-input` map to the roles above |
+The system deliberately refuses the padded, floating-card dashboard and the
+desktop sidebar that simply vanishes on mobile. Navigation is always reachable:
+a 240px rail on large screens, the same content in a slide-in drawer below
+`lg`. Modules that are not implemented are labelled `Pronto` instead of
+pretending to work.
 
-Feature code consumes **semantic roles**. Use `--color-brand-*` only when a
-specific shade is genuinely required (charts, illustrations).
+**Key Characteristics:**
 
-## Color roles
+- Hairline-first surfaces, flat at rest, with depth reserved for overlays.
+- One accent green; neutral grays, black and white carry everything else.
+- Compact desktop density, 44px touch targets on phones, one primary action per view.
+- Honest navigation and text-labelled status in every state.
 
-| Role                      | Light                 | Dark                  | Use                                   |
-| ------------------------- | --------------------- | --------------------- | ------------------------------------- |
-| `canvas`                  | neutral-50 `#f9fbf9`  | neutral-950 `#070b08` | App background                        |
-| `surface`                 | neutral-0 `#ffffff`   | neutral-900 `#141915` | Cards, tables, panels                 |
-| `surface-raised`          | neutral-0             | neutral-800 `#222823` | Dialogs, popovers                     |
-| `surface-muted`           | neutral-100 `#f2f5f3` | neutral-800           | Secondary rows, chips                 |
-| `foreground`              | neutral-900 `#141915` | neutral-50            | Headings and body text                |
-| `muted-foreground`        | neutral-600 `#525853` | neutral-300 `#d1d5d2` | Supporting text, labels               |
-| `subtle-foreground`       | neutral-600           | neutral-400           | Placeholders                          |
-| `border`                  | neutral-200 `#e5e8e5` | neutral-700 `#3c423d` | Separators                            |
-| `border-strong` / `input` | neutral-300           | neutral-600           | Control outlines                      |
-| `primary`                 | brand-700 `#00722e`   | brand-400 `#45bb68`   | Primary action, focus, selected state |
-| `primary-hover`           | brand-800 `#005823`   | brand-300             | Hover only                            |
-| `primary-foreground`      | white                 | neutral-950           | Text on primary                       |
-| `primary-soft`            | brand-50 `#eafbec`    | dark green            | Selected rows, subtle chips           |
-| `success`                 | brand-700             | brand-400             | Completed/paid/active                 |
-| `warning`                 | amber-700 `#b45309`   | light amber           | Pending/needs attention               |
-| `danger`                  | red-700 `#b91c1c`     | light red             | Destructive/error                     |
-| `info`                    | blue-700 `#1d4ed8`    | light blue            | Neutral information                   |
+## Colors
 
-## Accessibility verification
+The palette is a near-monochrome neutral ramp with one saturated green voice.
 
-Measured with WCAG relative luminance. Body text requires 4.5:1; large text and
-focus/control surfaces require 3:1.
+### Primary
 
-| Pair                                        | Ratio                | Result |
-| ------------------------------------------- | -------------------- | ------ |
-| White on `primary` (light)                  | 6.08:1               | AA     |
-| `primary` on `canvas` (light)               | 5.83:1               | AA     |
-| `muted-foreground` on `canvas`              | 7.03:1               | AAA    |
-| `muted-foreground` on white                 | 7.34:1               | AAA    |
-| `success-soft-foreground` on `success-soft` | 8.06:1               | AAA    |
-| `warning-soft-foreground` on `warning-soft` | 6.68:1               | AA     |
-| `danger-soft-foreground` on `danger-soft`   | 7.60:1               | AAA    |
-| `info-soft-foreground` on `info-soft`       | 8.01:1               | AAA    |
-| White on `warning` / `danger` / `info`      | 5.02 / 6.47 / 6.70:1 | AA     |
-| `primary` with near-black foreground (dark) | 8.07:1               | AAA    |
-| `muted-foreground` on dark surface          | 11.96:1              | AAA    |
+- **Operator Green** (`#00722e`, `--brand-700`): Primary buttons, active nav rail, focus rings, success and selected states. White text on this green measures 6.09:1.
+- **Deep Green** (`#005823`, `--brand-800`): Hover for primary controls and foreground on soft green chips.
+- **Mint Wash** (`#eef9f1`, `--brand-50`): Active nav background, primary soft badges and selection.
 
-Focus rings use the full-strength `--ring` color, not a 50% alpha, so they stay
-above 3:1 against their background. Generated shadcn primitives were adjusted
-for this and for a tokenized `hover:bg-primary-hover`.
+### Neutral
 
-Color is never the only signal: status badges also carry text, and charts use
-distinct lightness/chroma plus labels or patterns.
+- **Near-White Canvas** (`#fafafa`): App background.
+- **Paper White** (`#ffffff`): Panels, tables, top bar and controls.
+- **Quiet Gray** (`#f5f6f7`): Hover rows, muted chips and avatar fills.
+- **Ink** (`#171717`): Titles and primary body text.
+- **Secondary Ink** (`#666666`): Supporting copy, labels and inactive nav.
+- **Placeholder Gray** (`#6b7280`): Placeholders and tertiary text.
+- **Hairline** (`#e6e8eb`): Default borders and row separators.
+- **Control Edge** (`#e2e5e8`): Input outlines and stronger separators.
 
-## Type, shape and motion
+### Signal colors
 
-- **Font:** Inter Variable, self-hosted. `--font-sans` and `--font-heading`.
-- **Headings:** `letter-spacing: -0.02em`, balanced wrapping. Never below
-  `-0.04em`.
-- **Body measure:** keep prose between 65–75ch.
-- **Numerals:** `tabular-data` on tables, dates, money and metrics.
-- **Radii:** `sm 6px`, `md 8px`, `lg 12px`, `xl 16px`, `2xl 20px`. Pills only for
-  small controls/badges.
-- **Elevation:** `shadow-panel` has a 1px offset plus soft blur;
-  `shadow-popover` is stronger. Declare one elevation per surface, not a border
-  plus a large halo.
-- **Motion:** one authored easing (`--ease-out`) at 120ms for controls, 180ms for
-  overlays. Reduced-motion is respected globally.
+- **Signal Red** (`#b91c1c`): Destructive and error states, always paired with text.
+- **Amber** (`#b45309`): Pending or attention-needed status.
+- **Signal Blue** (`#1d4ed8`): Neutral information only; never competes with green.
 
-## Component rules
+**The One Voice Rule.** Green is the only accent. Do not introduce a second
+brand hue for decoration; status colors are semantic exceptions with text
+labels, not alternate accents.
 
-| Element | Rule                                                                                                                |
-| ------- | ------------------------------------------------------------------------------------------------------------------- |
-| Button  | One `default` green per view. Others: `secondary`, `outline`, `ghost`. Hover uses `--primary-hover`, never opacity. |
-| Input   | `border-input` at rest, `--ring` at focus, `--danger` on error. Placeholder uses `--subtle-foreground`.             |
-| Card    | `surface-panel`: `bg-surface`, `border-border`, `radius-lg`, `shadow-panel`. No nested cards.                       |
-| Badge   | Soft background + matching dark foreground (`*-soft-foreground`). Status text is mandatory.                         |
-| Table   | `surface-panel` container, muted header, `tabular-data` numbers, 1px row separators.                                |
-| Dialog  | `surface-raised` + `shadow-popover`. Focus stays trapped; Escape closes.                                            |
-| Focus   | Keyboard focus must always be visible. Never `outline: none` without a replacement.                                 |
-| Error   | `--danger` border/ring plus a text message that names the problem and recovery.                                     |
+### Accessibility verification
 
-## Browser surfaces
+Measured with WCAG relative luminance against the shipped tokens.
 
-Selection, caret, placeholders, scrollbars and tabular numerals are themed from
-the palette. Do not reintroduce browser defaults in feature components.
+| Pair                        | Ratio | Result |
+| --------------------------- | ----- | ------ |
+| `foreground` on `canvas`    | 17.18 | AAA    |
+| `muted` on `white`          | 5.74  | AA     |
+| `muted` on `canvas`         | 5.50  | AA     |
+| `subtle` on `white`         | 4.83  | AA     |
+| `primary` on `white`        | 6.09  | AA     |
+| `primary` on `canvas`       | 5.84  | AA     |
+| `primary` on `primary-soft` | 5.55  | AA     |
+| White on `primary`          | 6.09  | AA     |
+| `Deep Green` on `white`     | 8.68  | AAA    |
+| White on `danger`           | 6.47  | AA     |
+| White on `success`          | 6.09  | AA     |
 
-## Adding a component
+Focus rings use the full-strength `--ring`/`--primary-ring` color, never a
+low-alpha outline. Status is always text plus color, never color alone.
 
-1. Add a shadcn primitive only if an existing one does not fit:
-   `npx shadcn@latest add <component>`.
-2. Replace opacity-based state colors with semantic tokens.
-3. Verify light **and** dark states: default, hover, focus, error, disabled, empty.
-4. Check contrast with the table above before merging.
-5. Document only non-obvious conventions here.
+## Typography
 
-See `src/styles/index.css` for the source of truth and `src/components/ui/README.md`
-for the primitive inventory.
+**Display / Body / Label Font:** Inter Variable, self-hosted, with
+`Inter, ui-sans-serif, system-ui, sans-serif` fallbacks.
+
+**Character:** Neutral, dense and interface-first. Tight tracking on headings,
+regular weight for data, and small uppercase kickers for navigation groups.
+
+### Hierarchy
+
+- **Page title:** 600, `1.25rem` / `1.5rem` at `sm`, line-height 1.3, `-0.02em` tracking.
+- **Panel title:** 600, `0.875rem`, line-height 1.25.
+- **Body:** 400, `0.875rem`, line-height 1.5.
+- **Label / kicker:** 500–600, `0.75rem` (12px), uppercase with `0.05em` tracking for group labels.
+- **Meta:** 500 at `0.625rem` (10px) for upcoming chips; 400 at `0.6875rem` (11px) for sidebar subtitles and email.
+- **Data:** numeric cells use `tabular-data` for aligned dates, phones and counts.
+- **Icons:** 16px stroke icons (`size-4`) inside controls and nav; 20px only for the menu trigger.
+
+## Layout
+
+`page-container` caps content at `80rem` with `1rem` / `1.5rem` / `2rem`
+inline padding at `sm` / `md` / `lg`. The app canvas sits behind white panels.
+
+- **Mobile first:** a sticky `56px` top bar carries the logo, a 44px hamburger
+  and the operator avatar. Page title and its single primary action stack, with
+  the action full-width. Client records render as one card per row with actions
+  inside thumb reach. `safe-bottom` respects the home indicator.
+- **`lg+`:** a fixed `240px` sidebar holds workspace, grouped navigation and the
+  user footer; content is offset by `lg:pl-60`. The top bar shows the section
+  label instead of the logo.
+- **Below `lg`:** the sidebar becomes a `280px` Radix drawer (`max-w-[85vw]`)
+  with overlay and focus trap. It closes on route change.
+- **At `md+`:** the client card list gives way to a dense table with the same
+  data and handlers.
+
+## Elevation & Depth
+
+The system is flat by default. Borders, not shadows, define panels; the canvas
+is slightly cooler than the white surface. Elevation appears only when content
+leaves the page: dialogs and the mobile drawer use `--elevation-popover`
+(`0 1px 2px oklch(0.15 0.01 150 / 0.06), 0 12px 32px oklch(0.15 0.01 150 / 0.12)`).
+Focus is conveyed by a 3px translucent ring derived from the primary color.
+
+**The Flat-By-Default Rule.** A resting panel gets one hairline border and no
+shadow. Never stack a border with a large ambient halo.
+
+## Shapes
+
+Radii are deliberately small: `4px` for tiny chips, `6px` for buttons and nav
+items, `8px` for panels and inputs, `10–12px` only for larger containers.
+Status badges are the exception and use a pill silhouette. The active nav item
+carries a `2px` green rail on its left edge, inset from the item bounds.
+
+## Components
+
+### Buttons
+
+- **Shape:** `6px` radius, compact `2rem` height on fine pointers; `44px`
+  minimum under `(pointer: coarse)`.
+- **Primary:** Operator Green background, white label, `hover` to Deep Green.
+- **Outline / Ghost:** white or transparent with hairline borders; neutral text
+  and a Quiet Gray hover. Destructive text uses Signal Red without a red fill.
+- **Focus:** 3px primary-derived ring; no translate-on-press for accessibility
+  unless the control is not in a dense table.
+
+### Inputs & Fields
+
+- **Style:** white background, Control Edge border, `8px` radius, `0.875rem` text.
+- **Focus:** border shifts to primary plus the focus ring.
+- **Error / Disabled:** destructive border and message; disabled controls reduce opacity and block pointer events.
+
+### Cards & Panels
+
+- **Corner Style:** `8px` radius via `.surface-panel`.
+- **Background:** Paper White on the Near-White Canvas.
+- **Border:** one `1px` Hairline border; no shadow.
+- **Internal Rhythm:** `1rem` list padding, `0.75rem` header row, `1px` row dividers.
+
+### Badges
+
+- **Style:** pill, soft green for active/success, Quiet Gray with Secondary Ink
+  for inactive. Always include the textual state.
+- **Upcoming nav chip:** small neutral `Pronto` tag, never a green promotional pill.
+
+### Navigation
+
+- **Desktop:** 36px high items, 16px icons, 14px labels; inactive text is
+  Secondary Ink, active text is Deep Green on Mint Wash with the 2px green rail.
+- **Mobile:** 44px high drawer items with the same visual states; focus remains
+  trapped until the drawer closes.
+- **Sign out:** icon-only button with an accessible name in the footer.
+
+### Client list
+
+- **Mobile:** stacked cards with name, email, status, phone, creation date and
+  two full-width outline actions.
+- **Desktop:** bordered table with muted headers, tabular dates and ghost
+  row actions.
+
+## Do's and Don'ts
+
+### Do:
+
+- **Do** use semantic utilities such as `bg-surface`, `text-muted-foreground`, `bg-primary` and `border-border`.
+- **Do** keep one primary green action per view and make it full-width on phones.
+- **Do** give every control a visible focus ring and every touch target at least 44px on coarse pointers.
+- **Do** label upcoming modules and empty states with plain Spanish copy.
+- **Do** use `tabular-data` for anything numeric or date-based.
+
+### Don't:
+
+- **Don't** add shadows to resting cards or panels; depth is for overlays only.
+- **Don't** use color alone for state, or introduce a second accent hue.
+- **Don't** hide navigation on mobile without providing the drawer equivalent.
+- **Don't** use raw `--brand-*` or `--neutral-*` values in feature code.
+- **Don't** claim an unimplemented module works; route it to the honest placeholder.

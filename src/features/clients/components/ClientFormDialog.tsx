@@ -109,11 +109,11 @@ export function ClientFormDialog({ open, onOpenChange, client }: ClientFormDialo
 
           <DialogFooter>
             <DialogClose asChild>
-              <Button type="button" variant="outline">
+              <Button type="button" variant="outline" className="h-11 sm:h-8">
                 Cancelar
               </Button>
             </DialogClose>
-            <Button type="submit" disabled={isSubmitting}>
+            <Button type="submit" disabled={isSubmitting} className="h-11 sm:h-8">
               {isSubmitting ? 'Guardando…' : 'Guardar'}
             </Button>
           </DialogFooter>
