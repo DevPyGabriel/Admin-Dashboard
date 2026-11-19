@@ -5,78 +5,223 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * Design tokens live in :root so the whole application can be re-themed
- * without touching component code. shadcn/ui variables are mapped to the same
- * neutral palette through @theme inline below.
+ * NovaDrive design tokens.
+ *
+ * Primitive ramps live in :root. Semantic roles are mapped from those ramps,
+ * then exposed to Tailwind/shadcn through @theme inline. Components should only
+ * consume semantic roles (--primary, --surface, --text-secondary, ...), never a
+ * raw ramp value. Re-theme by remapping roles, not by editing components.
  */
 :root {
-  --app-background: #f7f8fa;
-  --surface: #ffffff;
-  --surface-muted: #f1f2f4;
-  --text-primary: #18181b;
-  --text-secondary: #71717a;
-  --border: oklch(0.922 0 0);
-  --accent-primary: #3f3f46;
-  --accent-primary-ring: rgb(63 63 70 / 0.18);
-  --accent-primary-foreground: #ffffff;
-  --success: #15803d;
-  --warning: #b45309;
-  --danger: #b91c1c;
-
   color-scheme: light;
 
+  /* Neutral ramp: near-black, cool-neutral grays and white. */
+  --neutral-0: #ffffff;
+  --neutral-50: oklch(0.985 0.003 150);
+  --neutral-100: oklch(0.967 0.004 150);
+  --neutral-200: oklch(0.927 0.005 150);
+  --neutral-300: oklch(0.869 0.006 150);
+  --neutral-400: oklch(0.708 0.008 150);
+  --neutral-500: oklch(0.556 0.01 150);
+  --neutral-600: oklch(0.452 0.011 150);
+  --neutral-700: oklch(0.372 0.012 150);
+  --neutral-800: oklch(0.268 0.012 150);
+  --neutral-900: oklch(0.208 0.012 150);
+  --neutral-950: oklch(0.145 0.01 150);
+
+  /* Brand ramp: a single, purposeful green. */
+  --brand-50: oklch(0.971 0.026 150);
+  --brand-100: oklch(0.942 0.05 150);
+  --brand-200: oklch(0.886 0.09 150);
+  --brand-300: oklch(0.806 0.135 150);
+  --brand-400: oklch(0.706 0.16 150);
+  --brand-500: oklch(0.62 0.17 150);
+  --brand-600: oklch(0.56 0.155 150);
+  --brand-700: oklch(0.48 0.14 150);
+  --brand-800: oklch(0.4 0.115 150);
+  --brand-900: oklch(0.33 0.09 150);
+  --brand-950: oklch(0.24 0.065 150);
+
+  /* Semantic surfaces and text */
+  --canvas: var(--neutral-50);
+  --surface: var(--neutral-0);
+  --surface-raised: var(--neutral-0);
+  --surface-muted: var(--neutral-100);
+  --text-primary: var(--neutral-900);
+  --text-secondary: var(--neutral-600);
+  --text-tertiary: var(--neutral-600);
+  --text-inverted: var(--neutral-0);
+  --border: var(--neutral-200);
+  --border-strong: var(--neutral-300);
+
+  /* Action: green is reserved for primary action, selection and focus. */
+  --primary: var(--brand-700);
+  --primary-hover: var(--brand-800);
+  --primary-active: var(--brand-900);
+  --primary-foreground: var(--neutral-0);
+  --primary-soft: var(--brand-50);
+  --primary-soft-foreground: var(--brand-800);
+  --primary-ring: var(--brand-700);
+
+  /* Status */
+  --success: var(--brand-700);
+  --success-soft: var(--brand-50);
+  --success-soft-foreground: var(--brand-800);
+
+  --warning: #b45309;
+  --warning-soft: #fff7ed;
+  --warning-soft-foreground: #92400e;
+
+  --danger: #b91c1c;
+  --danger-soft: #fef2f2;
+  --danger-soft-foreground: #991b1b;
+
+  --info: #1d4ed8;
+  --info-soft: #eff6ff;
+  --info-soft-foreground: #1e40af;
+
+  /* Shape, elevation and motion */
+  --radius: 0.75rem;
+  --elevation-panel: 0 1px 2px oklch(0.2 0.02 150 / 0.05), 0 8px 24px oklch(0.2 0.02 150 / 0.04);
+  --elevation-popover: 0 10px 32px oklch(0.15 0.02 150 / 0.14);
+  --shadow-focus: 0 0 0 3px color-mix(in oklch, var(--primary-ring) 28%, transparent);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-fast: 120ms;
+  --duration-base: 180ms;
+
   /* shadcn/ui semantic variables */
-  --background: var(--app-background);
+  --background: var(--canvas);
   --foreground: var(--text-primary);
   --card: var(--surface);
   --card-foreground: var(--text-primary);
-  --popover: var(--surface);
+  --popover: var(--surface-raised);
   --popover-foreground: var(--text-primary);
-  --primary: var(--accent-primary);
-  --primary-foreground: var(--accent-primary-foreground);
   --secondary: var(--surface-muted);
   --secondary-foreground: var(--text-primary);
   --muted: var(--surface-muted);
   --muted-foreground: var(--text-secondary);
-  --accent: var(--surface-muted);
-  --accent-foreground: var(--text-primary);
+  --accent: var(--primary-soft);
+  --accent-foreground: var(--primary-soft-foreground);
   --destructive: var(--danger);
-  --input: var(--border);
-  --ring: var(--accent-primary);
+  --input: var(--border-strong);
+  --ring: var(--primary-ring);
 
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
+  /* Data visualization: distinct lightness/chroma, not color alone. */
+  --chart-1: var(--brand-600);
+  --chart-2: #2563eb;
+  --chart-3: #b45309;
+  --chart-4: var(--neutral-500);
+  --chart-5: #7c3aed;
 
-  --sidebar: oklch(0.985 0 0);
+  --sidebar: var(--neutral-100);
   --sidebar-foreground: var(--text-primary);
-  --sidebar-primary: var(--accent-primary);
-  --sidebar-primary-foreground: var(--accent-primary-foreground);
-  --sidebar-accent: var(--surface-muted);
-  --sidebar-accent-foreground: var(--text-primary);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: var(--primary-soft);
+  --sidebar-accent-foreground: var(--primary-soft-foreground);
   --sidebar-border: var(--border);
-  --sidebar-ring: var(--accent-primary);
+  --sidebar-ring: var(--primary-ring);
+}
+
+.dark {
+  color-scheme: dark;
+
+  --canvas: var(--neutral-950);
+  --surface: var(--neutral-900);
+  --surface-raised: var(--neutral-800);
+  --surface-muted: var(--neutral-800);
+  --text-primary: var(--neutral-50);
+  --text-secondary: var(--neutral-300);
+  --text-tertiary: var(--neutral-400);
+  --text-inverted: var(--neutral-950);
+  --border: var(--neutral-700);
+  --border-strong: var(--neutral-600);
+
+  --primary: var(--brand-400);
+  --primary-hover: var(--brand-300);
+  --primary-active: var(--brand-200);
+  --primary-foreground: var(--neutral-950);
+  --primary-soft: oklch(0.28 0.06 150);
+  --primary-soft-foreground: var(--brand-300);
+  --primary-ring: var(--brand-400);
+
+  --success: var(--brand-400);
+  --success-soft: oklch(0.28 0.06 150);
+  --success-soft-foreground: var(--brand-300);
+
+  --warning: oklch(0.82 0.13 75);
+  --warning-soft: oklch(0.3 0.07 75);
+  --warning-soft-foreground: oklch(0.88 0.1 75);
+
+  --danger: oklch(0.76 0.15 25);
+  --danger-soft: oklch(0.3 0.09 25);
+  --danger-soft-foreground: oklch(0.88 0.1 25);
+
+  --info: oklch(0.78 0.11 250);
+  --info-soft: oklch(0.29 0.07 250);
+  --info-soft-foreground: oklch(0.87 0.09 250);
+
+  --elevation-panel: 0 1px 2px oklch(0 0 0 / 0.4), 0 10px 28px oklch(0 0 0 / 0.24);
+  --elevation-popover: 0 14px 40px oklch(0 0 0 / 0.5);
+  --shadow-focus: 0 0 0 3px color-mix(in oklch, var(--primary-ring) 38%, transparent);
+
+  --chart-1: var(--brand-400);
+  --chart-2: #60a5fa;
+  --chart-3: #fbbf24;
+  --chart-4: var(--neutral-400);
+  --chart-5: #a78bfa;
+
+  --sidebar: var(--neutral-950);
 }
 
 @theme inline {
   --font-sans: 'Inter Variable', Inter, ui-sans-serif, system-ui, sans-serif;
   --font-heading: var(--font-sans);
 
-  /* Project semantic utilities */
-  --color-canvas: var(--app-background);
+  /* Raw brand ramp, when a deliberate shade is needed. */
+  --color-brand-50: var(--brand-50);
+  --color-brand-100: var(--brand-100);
+  --color-brand-200: var(--brand-200);
+  --color-brand-300: var(--brand-300);
+  --color-brand-400: var(--brand-400);
+  --color-brand-500: var(--brand-500);
+  --color-brand-600: var(--brand-600);
+  --color-brand-700: var(--brand-700);
+  --color-brand-800: var(--brand-800);
+  --color-brand-900: var(--brand-900);
+  --color-brand-950: var(--brand-950);
+
+  /* Semantic roles: the default choice in feature code. */
+  --color-canvas: var(--canvas);
   --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
   --color-surface-muted: var(--surface-muted);
   --color-foreground: var(--text-primary);
   --color-muted-foreground: var(--text-secondary);
+  --color-subtle-foreground: var(--text-tertiary);
+  --color-inverted: var(--text-inverted);
   --color-border: var(--border);
-  --color-primary: var(--accent-primary);
-  --color-primary-foreground: var(--accent-primary-foreground);
+  --color-border-strong: var(--border-strong);
+
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-active: var(--primary-active);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-soft: var(--primary-soft);
+  --color-primary-soft-foreground: var(--primary-soft-foreground);
+
   --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-success-soft-foreground: var(--success-soft-foreground);
   --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-warning-soft-foreground: var(--warning-soft-foreground);
   --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-danger-soft-foreground: var(--danger-soft-foreground);
+  --color-info: var(--info);
+  --color-info-soft: var(--info-soft);
+  --color-info-soft-foreground: var(--info-soft-foreground);
 
   /* shadcn/ui utilities */
   --color-background: var(--background);
@@ -106,13 +251,14 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
+  --radius-xl: 1rem;
+  --radius-2xl: 1.25rem;
+
+  --shadow-panel: var(--elevation-panel);
+  --shadow-popover: var(--elevation-popover);
 }
 
 @layer base {
@@ -120,11 +266,11 @@
   ::before,
   ::after {
     border-color: var(--color-border);
-    @apply outline-ring/50;
   }
 
   html {
     font-family: var(--font-sans);
+    scrollbar-color: var(--border-strong) transparent;
   }
 
   body {
@@ -135,6 +281,36 @@
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
+    caret-color: var(--color-primary);
+  }
+
+  ::selection {
+    background-color: var(--color-primary-soft);
+    color: var(--color-primary-soft-foreground);
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--color-subtle-foreground);
+    opacity: 1;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+    letter-spacing: -0.02em;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    ::before,
+    ::after {
+      scroll-behavior: auto !important;
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+    }
   }
 }
 
@@ -156,8 +332,8 @@
 @utility surface-panel {
   background-color: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: 0.75rem;
-  box-shadow: 0 1px 2px rgb(0 0 0 / 0.04);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--elevation-panel);
 }
 
 @utility focus-ring {
@@ -180,8 +356,8 @@
 
 @utility interactive {
   transition-property: color, background-color, border-color, box-shadow, opacity, transform;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
+  transition-timing-function: var(--ease-out);
+  transition-duration: var(--duration-fast);
 
   @media (prefers-reduced-motion: reduce) {
     transition-duration: 0ms;
@@ -191,8 +367,8 @@
 @utility control-base {
   width: 100%;
   padding: 0.5rem 0.75rem;
-  border: 1px solid var(--color-border);
-  border-radius: 0.5rem;
+  border: 1px solid var(--color-input);
+  border-radius: var(--radius-md);
   background-color: var(--color-surface);
   color: var(--color-foreground);
   font-family: inherit;
@@ -201,18 +377,23 @@
   outline: none;
 
   &::placeholder {
-    color: var(--color-muted-foreground);
+    color: var(--color-subtle-foreground);
   }
 
   &:focus-visible {
     border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px var(--accent-primary-ring);
+    box-shadow: var(--shadow-focus);
   }
 
   &:disabled {
     cursor: not-allowed;
     opacity: 0.6;
   }
+}
+
+@utility tabular-data {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
 }
 
 @utility content-auto {

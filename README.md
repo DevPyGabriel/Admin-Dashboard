@@ -9,6 +9,7 @@ logic have been implemented yet.
 - React + TypeScript (strict mode)
 - Vite with the `@` → `src/` alias
 - Tailwind CSS v4 via `@tailwindcss/vite` (CSS-first configuration)
+- Accessible neutral + green design system documented in `DESIGN.md`
 - shadcn/ui primitives (Radix base, Nova preset) in `src/components/ui`
 - Inter Variable, self-hosted through `@fontsource-variable/inter`
 - TanStack Query for server state, React Router for routing

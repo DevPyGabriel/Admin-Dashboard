@@ -110,11 +110,19 @@ export default function ClientsPage() {
                       <TableCell>{client.email}</TableCell>
                       <TableCell>{client.phone ?? '—'}</TableCell>
                       <TableCell>
-                        <Badge variant={client.status === 'active' ? 'default' : 'secondary'}>
+                        <Badge
+                          className={
+                            client.status === 'active'
+                              ? 'bg-success-soft text-success-soft-foreground border-transparent'
+                              : 'bg-surface-muted text-muted-foreground border-transparent'
+                          }
+                        >
                           {client.status}
                         </Badge>
                       </TableCell>
-                      <TableCell>{format(new Date(client.created_at), 'dd/MM/yyyy')}</TableCell>
+                      <TableCell className="tabular-data">
+                        {format(new Date(client.created_at), 'dd/MM/yyyy')}
+                      </TableCell>
                       <TableCell className="space-x-2 text-right">
                         <Button variant="ghost" size="sm" onClick={() => openEdit(client)}>
                           Editar
