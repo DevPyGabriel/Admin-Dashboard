@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { cn } from 'cn'
 import { Dialog as DialogPrimitive } from 'radix-ui'
 
 import { Button } from '@/components/ui/button'
@@ -28,10 +27,12 @@ function DialogOverlay({
   return (
     <DialogPrimitive.Overlay
       data-slot="dialog-overlay"
-      className={cn(
+      className={[
         'data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0 bg-overlay fixed inset-0 isolate z-50 duration-100 supports-backdrop-filter:backdrop-blur-xs',
         className,
-      )}
+      ]
+        .filter(Boolean)
+        .join(' ')}
       {...props}
     />
   )
@@ -50,10 +51,12 @@ function DialogContent({
       <DialogOverlay />
       <DialogPrimitive.Content
         data-slot="dialog-content"
-        className={cn(
+        className={[
           'bg-popover text-popover-foreground ring-foreground/10 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 fixed top-1/2 left-1/2 z-50 grid w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-4 rounded-xl p-4 text-sm ring-1 duration-100 outline-none sm:max-w-sm',
           className,
-        )}
+        ]
+          .filter(Boolean)
+          .join(' ')}
         {...props}
       >
         {children}
@@ -72,7 +75,11 @@ function DialogContent({
 
 function DialogHeader({ className, ...props }: React.ComponentProps<'div'>) {
   return (
-    <div data-slot="dialog-header" className={cn('flex flex-col gap-2', className)} {...props} />
+    <div
+      data-slot="dialog-header"
+      className={['flex flex-col gap-2', className].filter(Boolean).join(' ')}
+      {...props}
+    />
   )
 }
 
@@ -87,10 +94,12 @@ function DialogFooter({
   return (
     <div
       data-slot="dialog-footer"
-      className={cn(
+      className={[
         'bg-muted/50 -mx-4 -mb-4 flex flex-col-reverse gap-2 rounded-b-xl border-t p-4 sm:flex-row sm:justify-end',
         className,
-      )}
+      ]
+        .filter(Boolean)
+        .join(' ')}
       {...props}
     >
       {children}
@@ -109,7 +118,9 @@ function DialogTitle({ className, ...props }: React.ComponentProps<typeof Dialog
   return (
     <DialogPrimitive.Title
       data-slot="dialog-title"
-      className={cn('font-heading text-base leading-none font-medium', className)}
+      className={['font-heading text-base leading-none font-medium', className]
+        .filter(Boolean)
+        .join(' ')}
       {...props}
     />
   )
@@ -122,10 +133,12 @@ function DialogDescription({
   return (
     <DialogPrimitive.Description
       data-slot="dialog-description"
-      className={cn(
+      className={[
         'text-secondary *:[a]:hover:text-foreground text-sm *:[a]:underline *:[a]:underline-offset-3',
         className,
-      )}
+      ]
+        .filter(Boolean)
+        .join(' ')}
       {...props}
     />
   )
