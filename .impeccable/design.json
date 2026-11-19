@@ -264,7 +264,7 @@
       }
     ],
     "dos": [
-      "Do use semantic utilities such as bg-surface, text-muted-foreground, bg-primary and border-border.",
+      "Do use semantic utilities such as bg-surface, text-secondary, bg-primary and border-border.",
       "Do keep one primary green action per view and make it full-width on phones.",
       "Do give every control a visible focus ring and every touch target at least 44px on coarse pointers.",
       "Do label upcoming modules and empty states with plain Spanish copy.",

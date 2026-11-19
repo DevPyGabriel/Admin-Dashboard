@@ -92,8 +92,7 @@ export function ClientFormDialog({ open, onOpenChange, service }: ClientFormDial
 
           <div className="space-y-2">
             <Label htmlFor="email">
-              Correo electrónico{' '}
-              <span className="text-muted-foreground font-normal">(opcional)</span>
+              Correo electrónico <span className="text-secondary font-normal">(opcional)</span>
             </Label>
             <Input
               id="email"
@@ -135,8 +134,7 @@ export function ClientFormDialog({ open, onOpenChange, service }: ClientFormDial
 
           <div className="space-y-2">
             <Label htmlFor="due_date">
-              Fecha de vencimiento{' '}
-              <span className="text-muted-foreground font-normal">(opcional)</span>
+              Fecha de vencimiento <span className="text-secondary font-normal">(opcional)</span>
             </Label>
             <Input
               id="due_date"
@@ -151,7 +149,7 @@ export function ClientFormDialog({ open, onOpenChange, service }: ClientFormDial
 
           <div className="space-y-2">
             <Label htmlFor="description">
-              Descripción <span className="text-muted-foreground font-normal">(opcional)</span>
+              Descripción <span className="text-secondary font-normal">(opcional)</span>
             </Label>
             <Textarea
               id="description"

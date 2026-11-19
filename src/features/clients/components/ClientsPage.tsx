@@ -56,7 +56,7 @@ const stateBadgeTone: Record<ServicePaymentState, string> = {
 
 const countdownTone: Record<ServicePaymentState, string> = {
   paid: 'text-success',
-  pending: 'text-muted-foreground',
+  pending: 'text-secondary',
   overdue: 'text-danger',
 }
 
@@ -217,7 +217,7 @@ export default function ClientsPage() {
             <div key={label} className="surface-panel flex items-center gap-3 p-3">
               <Icon className={cn('size-4 shrink-0', tone)} aria-hidden="true" />
               <div className="min-w-0">
-                <p className="text-muted-foreground truncate text-xs">{label}</p>
+                <p className="text-secondary truncate text-xs">{label}</p>
                 <p className="tabular-data text-lg leading-tight font-semibold">{value}</p>
               </div>
             </div>
@@ -228,7 +228,7 @@ export default function ClientsPage() {
           <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
             <div className="relative w-full lg:max-w-xs">
               <Search
-                className="text-muted-foreground pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2"
+                className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-neutral-400"
                 aria-hidden="true"
               />
               <Input
@@ -237,12 +237,12 @@ export default function ClientsPage() {
                 onChange={(event) => setQuery(event.target.value)}
                 placeholder="Buscar cliente, servicio o estado"
                 aria-label="Buscar cliente, servicio o estado"
-                className="pl-8"
+                className="pl-8 text-[13px] placeholder:text-neutral-400"
               />
             </div>
 
             <div className="flex items-center gap-2">
-              <CalendarDays className="text-muted-foreground size-4 shrink-0" aria-hidden="true" />
+              <CalendarDays className="text-secondary size-4 shrink-0" aria-hidden="true" />
               <Input
                 type="date"
                 value={date}
@@ -264,7 +264,7 @@ export default function ClientsPage() {
             </div>
 
             <div className="flex items-center gap-2 lg:ml-auto">
-              <label htmlFor="service-sort" className="text-muted-foreground text-xs">
+              <label htmlFor="service-sort" className="text-secondary text-xs">
                 Ordenar
               </label>
               <select
@@ -305,27 +305,25 @@ export default function ClientsPage() {
         <section className="surface-panel overflow-hidden" aria-label="Listado de clientes">
           <div className="border-border flex items-center justify-between border-b px-4 py-3">
             <h2 className="text-sm font-semibold">Listado</h2>
-            <span className="text-muted-foreground tabular-data text-xs">
+            <span className="text-secondary tabular-data text-xs">
               {visible.length} de {services.length}{' '}
               {services.length === 1 ? 'servicio' : 'servicios'}
             </span>
           </div>
 
           {isLoading ? (
-            <p className="text-muted-foreground p-6 text-sm">Cargando…</p>
+            <p className="text-secondary p-6 text-sm">Cargando…</p>
           ) : services.length === 0 ? (
             <div className="flex flex-col items-center px-6 py-14 text-center">
-              <UsersRound className="text-muted-foreground size-5" aria-hidden="true" />
+              <UsersRound className="text-secondary size-5" aria-hidden="true" />
               <p className="mt-3 text-sm font-medium">Aún no hay clientes</p>
-              <p className="text-muted-foreground mt-1 text-xs">
-                Crea el primero con «Nuevo cliente».
-              </p>
+              <p className="text-secondary mt-1 text-xs">Crea el primero con «Nuevo cliente».</p>
             </div>
           ) : visible.length === 0 ? (
             <div className="flex flex-col items-center px-6 py-14 text-center">
-              <Search className="text-muted-foreground size-5" aria-hidden="true" />
+              <Search className="text-secondary size-5" aria-hidden="true" />
               <p className="mt-3 text-sm font-medium">Sin resultados</p>
-              <p className="text-muted-foreground mt-1 text-xs">
+              <p className="text-secondary mt-1 text-xs">
                 Prueba con otra búsqueda o quita los filtros.
               </p>
               <Button
@@ -349,7 +347,7 @@ export default function ClientsPage() {
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0">
                           <p className="truncate font-medium">{service.clientName}</p>
-                          <p className="text-muted-foreground truncate text-xs">
+                          <p className="text-secondary truncate text-xs">
                             {service.email || 'Sin correo'}
                           </p>
                         </div>
@@ -358,22 +356,22 @@ export default function ClientsPage() {
 
                       <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 text-xs">
                         <div className="min-w-0">
-                          <dt className="text-muted-foreground">Servicio</dt>
+                          <dt className="text-secondary">Servicio</dt>
                           <dd className="truncate">{service.serviceType}</dd>
                         </div>
                         <div className="min-w-0">
-                          <dt className="text-muted-foreground">Monto</dt>
+                          <dt className="text-secondary">Monto</dt>
                           <dd className="tabular-data truncate">{formatServiceAmount(service)}</dd>
                         </div>
                         <div className="col-span-2 min-w-0">
-                          <dt className="text-muted-foreground">Vencimiento</dt>
+                          <dt className="text-secondary">Vencimiento</dt>
                           <dd>
                             <DueDate service={service} state={state} today={today} />
                           </dd>
                         </div>
                         {service.description && (
                           <div className="col-span-2 min-w-0">
-                            <dt className="text-muted-foreground">Descripción</dt>
+                            <dt className="text-secondary">Descripción</dt>
                             <dd className="break-words whitespace-pre-wrap">
                               {service.description}
                             </dd>
@@ -433,7 +431,7 @@ export default function ClientsPage() {
                           <TableCell>
                             <div className="min-w-0">
                               <p className="font-medium">{service.clientName}</p>
-                              <p className="text-muted-foreground truncate text-xs">
+                              <p className="text-secondary truncate text-xs">
                                 {service.email || 'Sin correo'}
                               </p>
                             </div>
@@ -442,7 +440,7 @@ export default function ClientsPage() {
                             <div className="min-w-0">
                               <p>{service.serviceType}</p>
                               {service.description && (
-                                <p className="text-muted-foreground max-w-48 truncate text-xs">
+                                <p className="text-secondary max-w-48 truncate text-xs">
                                   {service.description}
                                 </p>
                               )}

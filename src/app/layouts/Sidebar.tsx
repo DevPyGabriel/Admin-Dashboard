@@ -28,7 +28,7 @@ export function Sidebar({ compact = false, email, onNavigate, onSignOut }: Sideb
         </div>
         <div className="min-w-0">
           <p className="truncate text-sm leading-tight font-semibold">NovaDrive</p>
-          <p className="text-muted-foreground truncate text-[11px] leading-tight">
+          <p className="text-secondary truncate text-[11px] leading-tight">
             Panel de suscripciones
           </p>
         </div>
@@ -38,7 +38,7 @@ export function Sidebar({ compact = false, email, onNavigate, onSignOut }: Sideb
         aria-label="Navegación principal"
         className="scrollbar-hidden min-h-0 flex-1 overflow-y-auto px-2 py-4"
       >
-        <p className="text-muted-foreground mb-2 px-2 text-[10px] font-semibold tracking-wider uppercase">
+        <p className="text-secondary mb-2 px-2 text-[10px] font-semibold tracking-wider uppercase">
           General
         </p>
         <ul className="space-y-0.5">
@@ -55,14 +55,14 @@ export function Sidebar({ compact = false, email, onNavigate, onSignOut }: Sideb
                     compact ? 'h-8' : 'h-9',
                     isActive
                       ? 'bg-nav-active/60 text-nav-active-foreground font-medium'
-                      : 'text-muted-foreground hover:text-foreground',
+                      : 'text-secondary hover:text-foreground',
                   )
                 }
               >
                 <Icon className="size-4 shrink-0" aria-hidden="true" />
                 <span className="min-w-0 flex-1 truncate text-[13px]">{label}</span>
                 {upcoming && (
-                  <span className="text-muted-foreground bg-surface-muted shrink-0 rounded px-1.5 py-0.5 text-[10px] font-medium">
+                  <span className="text-secondary bg-surface-muted shrink-0 rounded px-1.5 py-0.5 text-[10px] font-medium">
                     Pronto
                   </span>
                 )}
@@ -79,7 +79,7 @@ export function Sidebar({ compact = false, email, onNavigate, onSignOut }: Sideb
           </div>
           <div className="min-w-0 flex-1">
             <p className="truncate text-xs font-medium">Operador</p>
-            <p className="text-muted-foreground truncate text-[11px]" title={email}>
+            <p className="text-secondary truncate text-[11px]" title={email}>
               {email ?? '—'}
             </p>
           </div>
@@ -88,7 +88,7 @@ export function Sidebar({ compact = false, email, onNavigate, onSignOut }: Sideb
             onClick={onSignOut}
             aria-label="Cerrar sesión"
             title="Cerrar sesión"
-            className="text-muted-foreground hover:bg-surface-muted hover:text-foreground focus-visible:ring-foreground/60 flex size-9 shrink-0 items-center justify-center rounded-md outline-none focus-visible:ring-2"
+            className="text-secondary hover:bg-surface-muted hover:text-foreground focus-visible:ring-foreground/60 flex size-9 shrink-0 items-center justify-center rounded-md outline-none focus-visible:ring-2"
           >
             <LogOut className="size-4" aria-hidden="true" />
           </button>

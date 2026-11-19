@@ -11,23 +11,21 @@ export default function LoginPage() {
           </div>
           <div>
             <p className="text-sm leading-tight font-semibold">NovaDrive</p>
-            <p className="text-muted-foreground text-xs leading-tight">Panel de suscripciones</p>
+            <p className="text-secondary text-xs leading-tight">Panel de suscripciones</p>
           </div>
         </div>
 
         <Card className="surface-panel">
           <CardContent className="p-6">
             <h1 className="text-xl font-semibold tracking-tight">Acceso al panel</h1>
-            <p className="text-muted-foreground mt-1 text-sm">
-              Inicia sesión con un usuario operador.
-            </p>
+            <p className="text-secondary mt-1 text-sm">Inicia sesión con un usuario operador.</p>
             <div className="mt-6">
               <LoginForm />
             </div>
           </CardContent>
         </Card>
 
-        <p className="text-muted-foreground mt-4 text-center text-xs">NovaDrive · Uso interno</p>
+        <p className="text-secondary mt-4 text-center text-xs">NovaDrive · Uso interno</p>
       </div>
     </main>
   )

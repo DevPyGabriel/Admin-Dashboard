@@ -225,7 +225,7 @@
   --color-topbar: var(--topbar);
   --color-sidebar: var(--sidebar);
   --color-foreground: var(--text-primary);
-  --color-muted-foreground: var(--text-secondary);
+  --color-secondary: var(--text-secondary);
   --color-subtle-foreground: var(--text-tertiary);
   --color-inverted: var(--text-inverted);
   --color-border: var(--border);
@@ -263,7 +263,6 @@
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
-  --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
   --color-accent: var(--accent);

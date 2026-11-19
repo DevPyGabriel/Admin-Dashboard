@@ -19,8 +19,11 @@ Key utilities:
 
 Shell-specific roles live here too: `--topbar`, `--sidebar`, `--nav-active-bg`,
 `--nav-active-foreground` and `--drawer-width`. Feature code consumes semantic
-utilities (`bg-surface`, `text-muted-foreground`, `bg-primary`, `border-border`)
-and never raw `--neutral-*` / `--brand-*` values.
+utilities (`bg-surface`, `text-secondary`, `bg-primary`, `border-border`)
+and never raw `--neutral-*` / `--brand-*` values. `text-secondary` reads
+`--text-secondary` (`#9ca3af` in the shipped dark ramp); it replaces the old
+`text-muted-foreground` alias, which is no longer used. Surface fills stay on
+`bg-surface-muted`.
 
 The full system, contrast table and component rules live in
 [`DESIGN.md`](../../DESIGN.md) at the project root.

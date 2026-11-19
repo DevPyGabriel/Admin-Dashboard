@@ -19,7 +19,7 @@ export default function PlaceholderPage() {
           {Icon && <Icon className="size-5" aria-hidden="true" />}
         </div>
         <h2 className="mt-4 text-base font-semibold">Próximamente</h2>
-        <p className="text-muted-foreground mt-1 max-w-sm text-sm">
+        <p className="text-secondary mt-1 max-w-sm text-sm">
           Este módulo todavía no está disponible. Clientes ya funciona y puedes seguir probando el
           CRUD allí.
         </p>

@@ -65,12 +65,12 @@ export default function DashboardLayout() {
           </div>
 
           <div className="hidden min-w-0 lg:block">
-            <p className="text-muted-foreground text-xs">Panel</p>
+            <p className="text-secondary text-xs">Panel</p>
             <p className="truncate text-sm font-medium">{current?.label ?? 'Clientes'}</p>
           </div>
 
           <div className="ml-auto flex min-w-0 items-center gap-2">
-            <span className="text-muted-foreground hidden max-w-48 truncate text-xs sm:block">
+            <span className="text-secondary hidden max-w-48 truncate text-xs sm:block">
               {email}
             </span>
             <div

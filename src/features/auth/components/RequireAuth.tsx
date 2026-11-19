@@ -10,7 +10,7 @@ export function RequireAuth({ children }: RequireAuthProps) {
   const { loading, user } = useAuthSession()
 
   if (loading) {
-    return <p className="text-muted-foreground p-8 text-sm">Cargando sesión…</p>
+    return <p className="text-secondary p-8 text-sm">Cargando sesión…</p>
   }
 
   if (!user) {
