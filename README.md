@@ -132,6 +132,9 @@ and local seed data, then `npm run supabase:db:types` to regenerate
 
 The initial single-tenant schema creates `company_settings`, `operators`,
 `clients`, `subscriptions` (free-text `plan_name`), `payments` and
-`reminder_logs`, all protected by RLS. Configure private backend secrets with
-`supabase secrets set ...`; they are never part of the frontend bundle. Edge
-Functions live under `supabase/functions/` and use the Deno runtime.
+`reminder_logs`, all protected by RLS. A follow-up migration grants the
+`authenticated` role the Data API privileges those policies need; without the
+grants, Postgres returns `permission denied for table ...` before RLS runs.
+Configure private backend secrets with `supabase secrets set ...`; they are
+never part of the frontend bundle. Edge Functions live under
+`supabase/functions/` and use the Deno runtime.
