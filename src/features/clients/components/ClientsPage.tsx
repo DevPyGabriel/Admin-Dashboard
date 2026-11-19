@@ -8,6 +8,7 @@ import {
   Package,
   Plus,
   Search,
+  Trash2,
   Truck,
   UsersRound,
   X,
@@ -48,6 +49,7 @@ import {
 import {
   useClientServices,
   useDeleteClient,
+  useDeleteClientService,
   useRegisterPayment,
   useUnregisterPayment,
 } from '@/features/clients/hooks/useClients'
@@ -162,6 +164,7 @@ function groupByClient(services: ClientService[]): ClientGroup[] {
 export default function ClientsPage() {
   const { data: services = [], isLoading, error } = useClientServices()
   const deleteClient = useDeleteClient()
+  const deleteService = useDeleteClientService()
   const registerPayment = useRegisterPayment()
   const unregisterPayment = useUnregisterPayment()
 
@@ -239,6 +242,26 @@ export default function ClientsPage() {
       setNotice({
         text:
           paymentError instanceof Error ? paymentError.message : 'No se pudo actualizar el pago',
+        tone: 'danger',
+      })
+    }
+  }
+
+  const handleDeleteService = async (service: ClientService) => {
+    if (
+      !window.confirm(`¿Eliminar el servicio ${service.serviceType} de "${service.clientName}"?`)
+    ) {
+      return
+    }
+
+    setNotice(null)
+    try {
+      await deleteService.mutateAsync(service)
+      setNotice({ text: 'Servicio eliminado correctamente.', tone: 'success' })
+    } catch (serviceError) {
+      setNotice({
+        text:
+          serviceError instanceof Error ? serviceError.message : 'No se pudo eliminar el servicio',
         tone: 'danger',
       })
     }
@@ -475,14 +498,25 @@ export default function ClientsPage() {
                                 </div>
                               )}
                             </dl>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="w-full"
-                              onClick={() => void handleTogglePayment(service)}
-                            >
-                              {state === 'paid' ? 'Marcar sin pagar' : 'Marcar pagado'}
-                            </Button>
+                            <div className="flex gap-2">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="flex-1"
+                                onClick={() => void handleTogglePayment(service)}
+                              >
+                                {state === 'paid' ? 'Marcar sin pagar' : 'Marcar pagado'}
+                              </Button>
+                              <Button
+                                variant="destructive"
+                                size="sm"
+                                className="flex-1"
+                                onClick={() => void handleDeleteService(service)}
+                              >
+                                <Trash2 aria-hidden="true" />
+                                Eliminar servicio
+                              </Button>
+                            </div>
                           </li>
                         )
                       })}
@@ -581,13 +615,24 @@ export default function ClientsPage() {
                                       {getServiceCountdown(service, today)}
                                     </p>
                                   </div>
-                                  <Button
-                                    variant="ghost"
-                                    size="xs"
-                                    onClick={() => void handleTogglePayment(service)}
-                                  >
-                                    {state === 'paid' ? 'Sin pagar' : 'Marcar pagado'}
-                                  </Button>
+                                  <div className="flex items-center gap-1">
+                                    <Button
+                                      variant="ghost"
+                                      size="xs"
+                                      onClick={() => void handleTogglePayment(service)}
+                                    >
+                                      {state === 'paid' ? 'Sin pagar' : 'Marcar pagado'}
+                                    </Button>
+                                    <Button
+                                      variant="destructive"
+                                      size="xs"
+                                      aria-label={`Eliminar servicio ${service.serviceType} de ${service.clientName}`}
+                                      onClick={() => void handleDeleteService(service)}
+                                    >
+                                      <Trash2 aria-hidden="true" />
+                                      Eliminar
+                                    </Button>
+                                  </div>
                                 </li>
                               )
                             })}

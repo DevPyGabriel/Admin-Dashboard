@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   createClientService,
   deleteClient,
+  deleteClientService,
   listClientServices,
   registerPayment,
   saveClientWithServices,
@@ -41,6 +42,14 @@ export function useCreateClientService() {
   return useMutation({
     mutationFn: ({ clientId, service }: { clientId: string; service: ClientServiceValues }) =>
       createClientService(clientId, service),
+    onSuccess: invalidate,
+  })
+}
+
+export function useDeleteClientService() {
+  const invalidate = useInvalidateServices()
+  return useMutation({
+    mutationFn: (service: ClientService) => deleteClientService(service),
     onSuccess: invalidate,
   })
 }

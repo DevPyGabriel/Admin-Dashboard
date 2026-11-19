@@ -16,7 +16,10 @@ due date and optional description. `save_client_with_services` writes the client
 and all of its services in one transaction, so adding or removing rows from the
 form cannot leave a partial save. Payments remain on `payments`, so RLS and
 history are unchanged. The list groups services by client and offers **Agregar
-servicio** both in the form and as a quick action on each client.
+servicio** both in the form and as a quick action on each client. Each service
+row also has **Eliminar**, which removes only that subscription (and its
+cascaded payments/reminders) without opening the form. The last service of a
+client cannot be removed this way; use **Eliminar cliente** instead.
 
 | Label en la UI       | Columna                                                      |
 | -------------------- | ------------------------------------------------------------ |

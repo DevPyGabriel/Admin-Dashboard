@@ -112,14 +112,25 @@ export function ClientFormDialog({
           <div className="grid gap-3 sm:grid-cols-2">
             <div className="space-y-1.5">
               <Label htmlFor="client-full-name">Nombre completo</Label>
-              <Input id="client-full-name" autoComplete="name" {...register('full_name')} />
+              <Input
+                id="client-full-name"
+                className="text-[13px]"
+                autoComplete="name"
+                {...register('full_name')}
+              />
               {errors.full_name && (
                 <p className="text-destructive text-xs">{errors.full_name.message}</p>
               )}
             </div>
             <div className="space-y-1.5">
-              <Label htmlFor="client-email">Correo electrÃ³nico</Label>
-              <Input id="client-email" type="email" autoComplete="email" {...register('email')} />
+              <Label htmlFor="client-email">Correo electrónico</Label>
+              <Input
+                id="client-email"
+                className="text-[13px]"
+                type="email"
+                autoComplete="email"
+                {...register('email')}
+              />
               {errors.email && <p className="text-destructive text-xs">{errors.email.message}</p>}
             </div>
           </div>
@@ -168,6 +179,7 @@ export function ClientFormDialog({
                     <Label htmlFor={`service-type-${index}`}>Tipo</Label>
                     <Select
                       id={`service-type-${index}`}
+                      className="text-[13px]"
                       {...register(`services.${index}.service_type`)}
                     >
                       {serviceTypes.map((type) => (
@@ -186,6 +198,7 @@ export function ClientFormDialog({
                     <Label htmlFor={`service-amount-${index}`}>Monto</Label>
                     <Input
                       id={`service-amount-${index}`}
+                      className="text-[13px]"
                       type="number"
                       min="0"
                       step="0.01"
@@ -202,6 +215,7 @@ export function ClientFormDialog({
                     <Label htmlFor={`service-due-${index}`}>Vencimiento</Label>
                     <Input
                       id={`service-due-${index}`}
+                      className="text-[13px]"
                       type="date"
                       {...register(`services.${index}.due_date`)}
                     />
@@ -209,9 +223,10 @@ export function ClientFormDialog({
                 </div>
 
                 <div className="mt-3 space-y-1.5">
-                  <Label htmlFor={`service-description-${index}`}>DescripciÃ³n (opcional)</Label>
+                  <Label htmlFor={`service-description-${index}`}>Descripción (opcional)</Label>
                   <Textarea
                     id={`service-description-${index}`}
+                    className="text-[13px]"
                     rows={2}
                     placeholder="Detalle del servicio"
                     {...register(`services.${index}.description`)}
@@ -238,7 +253,7 @@ export function ClientFormDialog({
               </Button>
             </DialogClose>
             <Button type="submit" disabled={saveClient.isPending}>
-              {saveClient.isPending ? 'Guardandoâ€¦' : 'Guardar cambios'}
+              {saveClient.isPending ? 'Guardando…' : 'Guardar cambios'}
             </Button>
           </DialogFooter>
         </form>

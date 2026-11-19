@@ -78,6 +78,26 @@ export async function createClientService(
   })
 }
 
+/** Deletes one service while preserving the rest of the client's services. */
+export async function deleteClientService(service: ClientService): Promise<void> {
+  const remaining = (await listClientServicesFor(service.clientId)).filter(
+    (item) => item.id !== service.id,
+  )
+
+  if (remaining.length === 0) {
+    throw new Error(
+      'El cliente debe mantener al menos un servicio. Usa «Eliminar cliente» si ya no lo necesitas.',
+    )
+  }
+
+  const client = await fetchClient(service.clientId)
+  await saveClientWithServices({
+    full_name: client.full_name,
+    email: client.email ?? '',
+    services: remaining.map(fromClientService),
+  })
+}
+
 /** Updates one service without touching the rest of the client's services. */
 export async function updateClientService(service: ClientService): Promise<void> {
   const client = await fetchClient(service.clientId)
