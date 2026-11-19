@@ -13,10 +13,10 @@ colors:
   surface-raised: '#262626'
   surface-muted: '#262626'
   foreground: '#fafafa'
-  muted: '#9ca3af'
-  subtle: '#9ca3af'
+  muted: '#a3a3a3'
+  subtle: '#a3a3a3'
   border: '#262626'
-  border-strong: '#444444'
+  border-strong: '#404040'
   success: '#45bb68'
   warning: 'oklch(0.82 0.13 75)'
   danger: 'oklch(0.76 0.15 25)'
@@ -151,14 +151,20 @@ The light ramp in `:root` remains a compatibility fallback; `.dark` is applied t
 
 ### Neutral
 
+The `--neutral-*` primitives follow Tailwind CSS's Neutral scale:
+`50 #fafafa`, `100 #f5f5f5`, `200 #e5e5e5`, `300 #d4d4d4`, `400 #a3a3a3`,
+`500 #737373`, `600 #525252`, `700 #404040`, `800 #262626`, `900 #171717` and
+`950 #0a0a0a`. `--neutral-0` is white.
+
 - **Near-Black Canvas** (`#0a0a0a`): App background and top bar.
 - **Charcoal Surface** (`#171717`): Panels, tables and controls.
 - **Raised Charcoal** (`#262626`): Hover rows, muted chips, inputs and avatars.
 - **Soft White** (`#fafafa`): Titles and primary body text.
-- **Muted Gray** (`#9ca3af`): Supporting copy, labels, placeholders and
-  inactive nav.
+- **Muted Gray** (`#a3a3a3` in dark mode): Supporting copy, labels, placeholders
+  and inactive nav. The light fallback uses darker neutral shades for text
+  contrast.
 - **Hairline** (`#262626`): Default borders and row separators.
-- **Control Edge** (`#444444`): Input outlines and stronger separators.
+- **Control Edge** (`#404040`): Input outlines and stronger separators.
 
 ### Signal colors
 
@@ -179,8 +185,10 @@ Measured with WCAG relative luminance against the shipped dark and light tokens.
 | Pair                                            | Ratio | Result |
 | ----------------------------------------------- | ----- | ------ |
 | `foreground` on `canvas`                        | 18.97 | AAA    |
-| `muted` on `surface`                            | 7.06  | AA     |
-| `muted` on `canvas`                             | 7.80  | AA     |
+| `muted` on `surface`                            | 7.11  | AA     |
+| `muted` on `canvas`                             | 7.85  | AA     |
+| Light `muted` on canvas                         | 7.49  | AA     |
+| Light `subtle` on canvas                        | 4.54  | AA     |
 | `primary` on `surface`                          | 8.98  | AA     |
 | `primary` on `canvas`                           | 9.92  | AA     |
 | Light `primary` on white                        | 5.33  | AA     |

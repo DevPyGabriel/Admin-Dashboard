@@ -64,12 +64,6 @@ const stateBadgeTone: Record<ServicePaymentState, string> = {
   overdue: 'bg-danger-soft text-danger-soft-foreground',
 }
 
-const countdownTone: Record<ServicePaymentState, string> = {
-  paid: 'text-success',
-  pending: 'text-secondary',
-  overdue: 'text-danger',
-}
-
 const serviceTypeTone: Record<ServiceType, string> = {
   transporte: 'bg-info-soft text-info-soft-foreground',
   taxi: 'bg-warning-soft text-warning-soft-foreground',
@@ -116,13 +110,18 @@ function DueDate({
   today: Date
 }) {
   return (
-    <div className="min-w-0">
-      <p className="tabular-data text-sm">
+    <div className="min-w-0 space-y-2">
+      <p className="tabular-data text-sm font-semibold">
         {service.dueDate ? format(parseISO(service.dueDate), 'dd/MM/yyyy') : '—'}
       </p>
-      <p className={cn('mt-0.5 text-xs', countdownTone[state])}>
+      <span
+        className={cn(
+          'inline-flex max-w-full rounded-md px-2 py-1 text-xs leading-4 font-medium',
+          stateBadgeTone[state],
+        )}
+      >
         {getServiceCountdown(service, today)}
-      </p>
+      </span>
     </div>
   )
 }
@@ -272,7 +271,7 @@ export default function ClientsPage() {
                 onChange={(event) => setQuery(event.target.value)}
                 placeholder="Buscar cliente, servicio o estado"
                 aria-label="Buscar cliente, servicio o estado"
-                className="pl-8 placeholder:text-neutral-400"
+                className="pl-8 text-[13px]"
               />
             </div>
 
@@ -283,7 +282,7 @@ export default function ClientsPage() {
                 value={date}
                 onChange={(event) => setDate(event.target.value)}
                 aria-label="Filtrar por fecha de vencimiento"
-                className="w-full sm:w-44"
+                className="w-full text-[13px] sm:w-44"
               />
               {date && (
                 <Button
@@ -306,7 +305,7 @@ export default function ClientsPage() {
                 id="service-sort"
                 value={sort}
                 onChange={(event) => setSort(event.target.value as ServiceSort)}
-                className="w-auto"
+                className="w-auto text-[13px]"
               >
                 {(Object.keys(serviceSortLabels) as ServiceSort[]).map((key) => (
                   <option key={key} value={key}>
@@ -378,9 +377,9 @@ export default function ClientsPage() {
                 {visible.map((service) => {
                   const state = getServiceState(service, today)
                   return (
-                    <li key={service.id} className="p-4">
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="min-w-0">
+                    <li key={service.id} className="space-y-4 p-4">
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="min-w-0 space-y-1">
                           <p className="truncate font-medium">{service.clientName}</p>
                           <p className="text-secondary truncate text-xs">
                             {service.email || 'Sin correo'}
@@ -389,34 +388,36 @@ export default function ClientsPage() {
                         <StateBadge state={state} />
                       </div>
 
-                      <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 text-xs">
+                      <dl className="grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
                         <div className="min-w-0">
-                          <dt className="text-secondary">Servicio</dt>
+                          <dt className="text-secondary pb-1 text-xs font-medium">Servicio</dt>
                           <dd>
                             <ServiceTypeTag type={service.serviceType} />
                           </dd>
                         </div>
                         <div className="min-w-0">
-                          <dt className="text-secondary">Monto</dt>
-                          <dd className="tabular-data truncate">{formatServiceAmount(service)}</dd>
+                          <dt className="text-secondary pb-1 text-xs font-medium">Monto</dt>
+                          <dd className="tabular-data truncate font-medium">
+                            {formatServiceAmount(service)}
+                          </dd>
                         </div>
                         <div className="col-span-2 min-w-0">
-                          <dt className="text-secondary">Vencimiento</dt>
+                          <dt className="text-secondary pb-1 text-xs font-medium">Vencimiento</dt>
                           <dd>
                             <DueDate service={service} state={state} today={today} />
                           </dd>
                         </div>
                         {service.description && (
                           <div className="col-span-2 min-w-0">
-                            <dt className="text-secondary">Descripción</dt>
-                            <dd className="break-words whitespace-pre-wrap">
+                            <dt className="text-secondary pb-1 text-xs font-medium">Descripción</dt>
+                            <dd className="text-sm break-words whitespace-pre-wrap">
                               {service.description}
                             </dd>
                           </div>
                         )}
                       </dl>
 
-                      <div className="mt-3 flex flex-wrap gap-2">
+                      <div className="flex flex-wrap gap-2">
                         <Button
                           variant="outline"
                           size="sm"
@@ -428,15 +429,15 @@ export default function ClientsPage() {
                         <Button
                           variant="outline"
                           size="sm"
-                          className="flex-1"
+                          className="flex-1 px-4"
                           onClick={() => void handleTogglePayment(service)}
                         >
                           {state === 'paid' ? 'Marcar sin pagar' : 'Marcar pagado'}
                         </Button>
                         <Button
-                          variant="outline"
+                          variant="destructive"
                           size="sm"
-                          className="text-destructive flex-1"
+                          className="flex-1"
                           onClick={() => void handleDelete(service)}
                         >
                           Eliminar
@@ -504,9 +505,9 @@ export default function ClientsPage() {
                               {state === 'paid' ? 'Sin pagar' : 'Marcar pagado'}
                             </Button>
                             <Button
-                              variant="ghost"
+                              variant="destructive"
                               size="sm"
-                              className="text-destructive"
+                              className=""
                               onClick={() => void handleDelete(service)}
                             >
                               Eliminar
