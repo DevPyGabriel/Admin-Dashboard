@@ -62,10 +62,10 @@ export function ClientFormDialog({ open, onOpenChange, client }: ClientFormDialo
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-lg">
+      <DialogContent className="sm:max-w-lg py-8">
         <DialogHeader>
           <DialogTitle>{client ? 'Editar cliente' : 'Nuevo cliente'}</DialogTitle>
-          <DialogDescription>
+          <DialogDescription className='text-xs pt-2 pb-2'>
             Los cambios se guardan directamente en Supabase y se reflejan al instante.
           </DialogDescription>
         </DialogHeader>
@@ -113,7 +113,7 @@ export function ClientFormDialog({ open, onOpenChange, client }: ClientFormDialo
                 Cancelar
               </Button>
             </DialogClose>
-            <Button type="submit" size="sm" disabled={isSubmitting}>
+            <Button type="submit" size="sm" variant="white" disabled={isSubmitting}>
               {isSubmitting ? 'Guardando…' : 'Guardar'}
             </Button>
           </DialogFooter>

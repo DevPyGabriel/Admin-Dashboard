@@ -39,7 +39,7 @@ One company, one dataset, one identity boundary: every table is protected by RLS
 
 - Product name: NovaDrive.
 - The user pinned the visual reference: the interface should be as similar as possible to the UI of Supabase and Vercel, adapted to this dashboard.
-- Green is the single accent color, used for primary action, focus, selection and success; a dark neutral ramp forms the foundation.
+- Supabase green (`#3ecf8e`) is the brand accent for primary action, focus and selection; success remains a separate semantic token. A dark neutral ramp forms the foundation.
 
 ## Evidence on Hand
 
@@ -54,7 +54,7 @@ One company, one dataset, one identity boundary: every table is protected by RLS
 1. Mobile is the primary context: short sessions, big touch targets, one-handed reach, immediate readability.
 2. Identity and RLS are the product boundary; never trade them for visual convenience.
 3. Honest navigation: only working modules act like working modules.
-4. One accent, one primary action per view; state is communicated by text plus color, never color alone.
+4. One green accent, one primary action per view; state is communicated by text plus color, never color alone.
 5. Semantic tokens only in feature code, so the system can change without touching screens.
 
 ## Accessibility & Inclusion

@@ -6,7 +6,7 @@ export default function LoginPage() {
     <main className="page-container flex min-h-screen items-center justify-center py-10">
       <div className="w-full max-w-sm">
         <div className="mb-6 flex items-center gap-2.5">
-          <div className="bg-primary text-primary-foreground flex size-8 items-center justify-center rounded-md text-sm font-bold">
+          <div className="bg-foreground text-background flex size-8 items-center justify-center rounded-md text-sm font-bold">
             N
           </div>
           <div>

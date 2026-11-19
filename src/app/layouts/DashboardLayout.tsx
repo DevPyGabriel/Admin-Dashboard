@@ -51,14 +51,14 @@ export default function DashboardLayout() {
             <button
               type="button"
               aria-label="Abrir menú"
-              className="focus-visible:ring-ring -ml-1 flex size-11 shrink-0 items-center justify-center rounded-md outline-none focus-visible:ring-2 lg:hidden"
+              className="focus-visible:ring-ring flex size-9 shrink-0 items-center justify-center rounded-md outline-none focus-visible:ring-2 lg:hidden hover:bg-surface-muted/40 transition-colors duration-200"
             >
               <Menu className="size-5" aria-hidden="true" />
             </button>
           </DialogPrimitive.Trigger>
 
           <div className="flex min-w-0 items-center gap-2 lg:hidden">
-            <span className="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded text-xs font-bold">
+            <span className="bg-foreground text-background flex size-6 items-center justify-center rounded text-xs font-bold">
               N
             </span>
             <span className="truncate text-sm font-semibold">NovaDrive</span>

@@ -4,14 +4,16 @@ import { cn } from '@/lib/utils/cn'
 import { Slot } from 'radix-ui'
 
 const buttonVariants = cva(
-  "group/button inline-flex shrink-0 items-center justify-center gap-1.5 rounded-md border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-colors outline-none select-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-2 aria-invalid:ring-destructive/30 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  "group/button inline-flex shrink-0 items-center justify-center gap-1.5 rounded-xl border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-colors outline-none select-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-2 aria-invalid:ring-destructive/30 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 hover:scale-95 transition-transform duration-200",
   {
     variants: {
       variant: {
         default:
-          'bg-primary text-primary-foreground hover:bg-primary-hover active:bg-primary-active',
+          'bg-primary text-primary-foreground hover:bg-primary/80 active:bg-primary-active',
+        white:
+          'bg-neutral-50 text-primary-foreground active:bg-primary-active',
         outline:
-          'border-border bg-surface text-foreground hover:bg-surface-muted hover:text-foreground active:bg-border aria-expanded:bg-surface-muted aria-expanded:text-foreground',
+          'border-border bg-canvas text-foreground hover:bg-surface hover:text-foreground active:bg-border aria-expanded:bg-surface-muted aria-expanded:text-foreground',
         secondary:
           'bg-surface-muted text-foreground hover:bg-border active:bg-border-strong aria-expanded:bg-surface-muted aria-expanded:text-foreground',
         ghost:

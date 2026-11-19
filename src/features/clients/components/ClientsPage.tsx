@@ -75,7 +75,11 @@ export default function ClientsPage() {
           title="Clientes"
           description="Administra los clientes de tu negocio y su estado."
           actions={
-            <Button size="sm" className="w-full sm:w-auto" onClick={openCreate}>
+            <Button
+              size="sm"
+              className="bg-neutral-50 transition-all duration-200 hover:scale-95 hover:bg-neutral-50 focus-visible:ring-neutral-50"
+              onClick={openCreate}
+            >
               Nuevo cliente
             </Button>
           }

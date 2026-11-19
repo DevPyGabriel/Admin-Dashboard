@@ -23,7 +23,7 @@ export function Sidebar({ compact = false, email, onNavigate, onSignOut }: Sideb
           compact ? 'h-14' : 'h-16',
         )}
       >
-        <div className="bg-primary text-primary-foreground flex size-7 shrink-0 items-center justify-center rounded-md text-sm font-bold">
+        <div className="bg-brand-500 text-background flex size-7 shrink-0 items-center justify-center rounded-md text-sm font-bold">
           N
         </div>
         <div className="min-w-0">
@@ -51,16 +51,16 @@ export function Sidebar({ compact = false, email, onNavigate, onSignOut }: Sideb
                   cn(
                     'before:absolute before:inset-y-1.5 before:left-0 before:w-0.5 before:rounded-full before:bg-transparent',
                     'relative flex items-center gap-2.5 rounded-md px-2.5 text-sm outline-none',
-                    'hover:bg-surface-muted focus-visible:ring-ring focus-visible:ring-2',
-                    compact ? 'h-9' : 'h-11',
+                    'hover:bg-surface-muted/40 focus-visible:ring-foreground/60 focus-visible:ring-2',
+                    compact ? 'h-8' : 'h-9',
                     isActive
-                      ? 'bg-nav-active text-nav-active-foreground before:bg-primary font-medium'
+                      ? 'bg-nav-active/60 text-nav-active-foreground font-medium'
                       : 'text-muted-foreground hover:text-foreground',
                   )
                 }
               >
                 <Icon className="size-4 shrink-0" aria-hidden="true" />
-                <span className="min-w-0 flex-1 truncate">{label}</span>
+                <span className="min-w-0 flex-1 truncate text-[13px]">{label}</span>
                 {upcoming && (
                   <span className="text-muted-foreground bg-surface-muted shrink-0 rounded px-1.5 py-0.5 text-[10px] font-medium">
                     Pronto
@@ -88,7 +88,7 @@ export function Sidebar({ compact = false, email, onNavigate, onSignOut }: Sideb
             onClick={onSignOut}
             aria-label="Cerrar sesión"
             title="Cerrar sesión"
-            className="text-muted-foreground hover:bg-surface-muted hover:text-foreground focus-visible:ring-ring flex size-9 shrink-0 items-center justify-center rounded-md outline-none focus-visible:ring-2"
+            className="text-muted-foreground hover:bg-surface-muted hover:text-foreground focus-visible:ring-foreground/60 flex size-9 shrink-0 items-center justify-center rounded-md outline-none focus-visible:ring-2"
           >
             <LogOut className="size-4" aria-hidden="true" />
           </button>

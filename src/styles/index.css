@@ -32,18 +32,18 @@
   --neutral-900: #171717;
   --neutral-950: #0a0a0a;
 
-  /* Single brand ramp: green for action, focus, selection and success. */
-  --brand-50: #eef9f1;
-  --brand-100: #d8f0df;
-  --brand-200: #b3e4c2;
-  --brand-300: #7bd890;
-  --brand-400: #45bb68;
-  --brand-500: #00a34a;
-  --brand-600: #008a3e;
-  --brand-700: #00722e;
-  --brand-800: #005823;
-  --brand-900: #01421a;
-  --brand-950: #01270d;
+  /* Supabase green ramp: signature green in dark mode, deeper shades for light-mode contrast. */
+  --brand-50: #effdf6;
+  --brand-100: #d3f8e5;
+  --brand-200: #a6edca;
+  --brand-300: #72dfa9;
+  --brand-400: #3ecf8e;
+  --brand-500: #22b978;
+  --brand-600: #008f68;
+  --brand-700: #007a5c;
+  --brand-800: #00634b;
+  --brand-900: #004a38;
+  --brand-950: #003326;
 
   /* Surfaces and text */
   --canvas: var(--neutral-50);
@@ -59,9 +59,9 @@
   --border: var(--neutral-200);
   --border-strong: var(--neutral-300);
 
-  /* Navigation */
-  --nav-active-bg: var(--brand-50);
-  --nav-active-foreground: var(--brand-800);
+  /* Navigation: neutral by design, even in the light fallback. */
+  --nav-active-bg: var(--neutral-100);
+  --nav-active-foreground: var(--neutral-900);
 
   /* Action */
   --primary: var(--brand-700);
@@ -73,9 +73,9 @@
   --primary-ring: var(--brand-700);
 
   /* Status */
-  --success: var(--brand-700);
-  --success-soft: var(--brand-50);
-  --success-soft-foreground: var(--brand-800);
+  --success: #00722e;
+  --success-soft: #eef9f1;
+  --success-soft-foreground: #005823;
 
   --warning: #b45309;
   --warning-soft: #fff7ed;
@@ -155,20 +155,21 @@
   --border: var(--neutral-800);
   --border-strong: var(--neutral-700);
 
-  --nav-active-bg: oklch(0.26 0.055 150);
-  --nav-active-foreground: var(--brand-300);
+  --nav-active-bg: var(--neutral-800);
+  --nav-active-foreground: var(--neutral-50);
 
   --primary: var(--brand-400);
   --primary-hover: var(--brand-300);
   --primary-active: var(--brand-200);
   --primary-foreground: var(--neutral-950);
-  --primary-soft: oklch(0.26 0.055 150);
-  --primary-soft-foreground: var(--brand-300);
+  --primary-soft: oklch(0.26 0.055 155);
+  --primary-soft-foreground: var(--brand-200);
   --primary-ring: var(--brand-400);
 
-  --success: var(--brand-400);
+  /* Success remains a separate semantic role from the primary action. */
+  --success: #45bb68;
   --success-soft: oklch(0.26 0.055 150);
-  --success-soft-foreground: var(--brand-300);
+  --success-soft-foreground: #7bd890;
 
   --warning: oklch(0.82 0.13 75);
   --warning-soft: oklch(0.3 0.07 75);

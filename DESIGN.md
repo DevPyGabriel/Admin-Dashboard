@@ -2,10 +2,12 @@
 name: NovaDrive
 description: Dark-first compact Supabase/Vercel-style admin shell for subscription operations.
 colors:
-  primary: '#45bb68'
-  primary-hover: '#7bd890'
-  primary-soft: 'oklch(0.26 0.055 150)'
-  nav-active-foreground: '#7bd890'
+  primary: '#3ecf8e'
+  primary-hover: '#72dfa9'
+  primary-active: '#a6edca'
+  primary-soft: 'oklch(0.26 0.055 155)'
+  nav-active-bg: '#262626'
+  nav-active-foreground: '#fafafa'
   canvas: '#0a0a0a'
   surface: '#171717'
   surface-raised: '#262626'
@@ -91,12 +93,12 @@ components:
     textColor: '{colors.foreground}'
     rounded: '{rounded.lg}'
   nav-active:
-    backgroundColor: '{colors.primary-soft}'
+    backgroundColor: '{colors.nav-active-bg}'
     textColor: '{colors.nav-active-foreground}'
     rounded: '{rounded.md}'
   status-badge:
     backgroundColor: '{colors.primary-soft}'
-    textColor: '{colors.nav-active-foreground}'
+    textColor: '{colors.primary-soft-foreground}'
     rounded: '9999px'
 ---
 
@@ -112,8 +114,9 @@ small radii, 14px type and almost no shadow. Dark is the shipped default — the
 `dark` class lives on `<html>` — so the light ramp remains a compatibility
 fallback, not a second product theme. It is built for an owner checking records
 on a phone in short sessions, so the hierarchy is flattened and the frequent
-action stays close to the thumb. Brand expression is restricted to one brighter
-green used for action, selection, focus and success.
+action stays close to the thumb. Brand expression is restricted to Supabase's characteristic green used for
+action, selection and focus; the sidebar itself stays strictly
+neutral.
 
 The system deliberately refuses the padded, floating-card dashboard and the
 desktop sidebar that simply vanishes on mobile. Navigation is always reachable:
@@ -125,26 +128,26 @@ pretending to work.
 
 - Dark-first surfaces with near-black canvas and charcoal panels.
 - Hairline-first surfaces, flat at rest, with depth reserved for overlays.
-- One brighter accent green; neutral grays carry everything else.
+- One Supabase green accent; neutral grays carry everything else.
 - Compact desktop density, 44px touch targets on phones, one primary action per view.
 - Honest navigation and text-labelled status in every state.
 
 ## Colors
 
-The shipped palette is a near-black neutral ramp with one brighter green voice.
+The shipped palette is a near-black neutral ramp with Supabase green as its
+action accent.
 The light ramp in `:root` remains a compatibility fallback; `.dark` is applied to
 `<html>` and owns every value below.
 
 ### Primary
 
-- **Operator Green** (`#45bb68`, `--brand-400`): Primary buttons, active nav
-  rail, focus rings, success and selected states. Near-black label text on this
-  green measures 8.07:1.
-- **Light Green** (`#7bd890`, `--brand-300`): Hover for primary controls and
-  foreground on soft green chips.
-- **Pale Green** (`#b3e4c2`, `--brand-200`): Pressed primary state.
-- **Deep Green Wash** (`oklch(0.26 0.055 150)`): Active nav background and
-  primary soft badges.
+- **Supabase Green** (`#3ecf8e`, `--brand-400`): Primary buttons and focus rings
+  in dark mode. Near-black label text on this green measures 9.92:1.
+- **Soft Green** (`#72dfa9`, `--brand-300`): Hover for primary controls.
+- **Pale Green** (`#a6edca`, `--brand-200`): Pressed primary state and foreground
+  on dark green surfaces.
+- **Deep Green Wash** (`oklch(0.26 0.055 155)`): Selection and primary soft badges;
+  active navigation remains neutral.
 
 ### Neutral
 
@@ -162,32 +165,36 @@ The light ramp in `:root` remains a compatibility fallback; `.dark` is applied t
 - **Signal Red** (`oklch(0.76 0.15 25)`): Destructive and error states, always
   paired with text. As text on charcoal it measures 7.76:1.
 - **Amber** (`oklch(0.82 0.13 75)`): Pending or attention-needed status.
-- **Signal Blue** (`oklch(0.78 0.11 250)`): Neutral information only; never
-  competes with green.
+- **Signal Blue** (`oklch(0.78 0.11 250)`): Informational status only; it is a
+  semantic role, not a second brand accent.
 
-**The One Voice Rule.** Green is the only accent. Do not introduce a second
+**The One Voice Rule.** Green is the only brand accent. Do not introduce a second
 brand hue for decoration; status colors are semantic exceptions with text
 labels, not alternate accents.
 
 ### Accessibility verification
 
-Measured with WCAG relative luminance against the shipped dark tokens.
+Measured with WCAG relative luminance against the shipped dark and light tokens.
 
-| Pair                              | Ratio | Result |
-| --------------------------------- | ----- | ------ |
-| `foreground` on `canvas`          | 18.97 | AAA    |
-| `muted` on `surface`              | 7.06  | AA     |
-| `muted` on `canvas`               | 7.80  | AA     |
-| `primary` on `surface`            | 7.31  | AA     |
-| `primary` on `canvas`             | 8.07  | AA     |
-| Active nav text on nav background | 8.79  | AA     |
-| `primary-foreground` on `primary` | 8.07  | AA     |
-| Signal Red on `surface`           | 7.76  | AA     |
-| Soft-red text on soft-red chip    | 8.96  | AA     |
-| Soft-red text on danger hover     | 7.77  | AA     |
-| Soft-red text on danger active    | 6.15  | AA     |
-| Amber text on soft-amber chip     | 9.48  | AA     |
-| Info text on soft-info chip       | 9.39  | AA     |
+| Pair                                            | Ratio | Result |
+| ----------------------------------------------- | ----- | ------ |
+| `foreground` on `canvas`                        | 18.97 | AAA    |
+| `muted` on `surface`                            | 7.06  | AA     |
+| `muted` on `canvas`                             | 7.80  | AA     |
+| `primary` on `surface`                          | 8.98  | AA     |
+| `primary` on `canvas`                           | 9.92  | AA     |
+| Light `primary` on white                        | 5.33  | AA     |
+| Light `primary-foreground` on primary           | 5.33  | AA     |
+| Light `primary-soft-foreground` on primary-soft | 6.95  | AA     |
+| Active nav text on nav background               | 8.79  | AA     |
+| `primary-foreground` on `primary`               | 9.92  | AA     |
+| `primary-soft-foreground` on primary-soft       | 11.31 | AA     |
+| Signal Red on `surface`                         | 7.76  | AA     |
+| Soft-red text on soft-red chip                  | 8.96  | AA     |
+| Soft-red text on danger hover                   | 7.77  | AA     |
+| Soft-red text on danger active                  | 6.15  | AA     |
+| Amber text on soft-amber chip                   | 9.48  | AA     |
+| Info text on soft-info chip                     | 9.39  | AA     |
 
 Focus rings use a `2px` full-strength `--ring`/`--primary-ring` outline with a
 `2px` canvas offset, never a low-alpha halo. Status is always text plus color,
@@ -245,8 +252,8 @@ shadow. Never stack a border with a large ambient halo.
 Radii are deliberately small: `4px` for tiny chips, `6px` for buttons, inputs
 and nav items, `8px` for panels, `10–12px` only for larger containers.
 Status badges and the active nav rail use the documented `9999px` pill radius.
-The active nav item carries a `2px` green rail on its left edge, inset from the
-item bounds.
+The active nav item uses a neutral Raised Charcoal surface and Soft White label;
+the green accent stays reserved for actions and focus.
 
 ## Components
 
@@ -255,14 +262,14 @@ item bounds.
 - **Shape:** `6px` radius. `sm` is the default size everywhere: `2rem` height,
   `0.75rem` horizontal padding and `0.875rem` label text. `xs`/`lg` are reserved
   for dense toolbars and page-level emphasis; icon sizes stay square.
-- **Primary:** Operator Green background, near-black label; `hover` to Light
-  Green and `active` to Pale Green.
+- **Primary:** Supabase Green background, near-black label; `hover` to Soft Green
+  and `active` to Pale Green.
 - **Outline / Ghost:** charcoal or transparent with hairline borders; soft-white
   text, Raised Charcoal hover and Hairline active fill. Destructive text uses
   Signal Red, or a soft-red chip with lighter red text on hover and press; no
   solid red fill.
 - **Focus:** 2px primary ring with a 2px canvas offset. No translate-on-press;
-  state changes come from color only.
+  keyboard focus remains explicit.
 
 ### Inputs & Fields
 
@@ -280,15 +287,14 @@ item bounds.
 
 ### Badges
 
-- **Style:** pill, soft green for active/success, Raised Charcoal with Muted Gray
-  for inactive. Always include the textual state.
+- **Style:** pill, soft green for selected and success,
+  Raised Charcoal with Muted Gray for inactive. Always include the textual state.
 - **Upcoming nav chip:** small neutral `Pronto` tag, never a green promotional pill.
 
 ### Navigation
 
 - **Desktop:** 36px high items, 16px icons, 14px labels; inactive text is
-  Muted Gray, active text is Light Green on Deep Green Wash with the 2px green
-  rail.
+  Muted Gray and active items use the neutral active-navigation surface.
 - **Mobile:** 44px high drawer items with the same visual states; focus remains
   trapped until the drawer closes.
 - **Sign out:** icon-only button with an accessible name in the footer.
