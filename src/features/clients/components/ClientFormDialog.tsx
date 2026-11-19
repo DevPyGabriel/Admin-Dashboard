@@ -13,10 +13,16 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Select } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import type { ClientService } from '@/features/clients/api/clients.api'
 import { useCreateClientService, useUpdateClientService } from '@/features/clients/hooks/useClients'
-import { clientSchema, type ClientFormValues } from '@/features/clients/schemas/client.schema'
+import {
+  clientSchema,
+  serviceTypeLabels,
+  serviceTypes,
+  type ClientFormValues,
+} from '@/features/clients/schemas/client.schema'
 
 interface ClientFormDialogProps {
   open: boolean
@@ -29,6 +35,9 @@ export function ClientFormDialog({ open, onOpenChange, service }: ClientFormDial
   const createService = useCreateClientService()
   const updateService = useUpdateClientService()
 
+  // Legacy rows may hold a free-text plan; force an explicit choice when editing.
+  const initialServiceType = serviceTypes.find((type) => type === service?.serviceType)
+
   const {
     register,
     handleSubmit,
@@ -38,7 +47,7 @@ export function ClientFormDialog({ open, onOpenChange, service }: ClientFormDial
     defaultValues: {
       full_name: service?.clientName ?? '',
       email: service?.email ?? '',
-      service_type: service?.serviceType ?? '',
+      service_type: initialServiceType,
       amount: service?.amount ?? 0,
       due_date: service?.dueDate ?? '',
       description: service?.description ?? '',
@@ -107,12 +116,18 @@ export function ClientFormDialog({ open, onOpenChange, service }: ClientFormDial
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
               <Label htmlFor="service_type">Tipo de servicio</Label>
-              <Input
+              <Select
                 id="service_type"
-                placeholder="Ej. Plan Pro mensual"
                 aria-invalid={!!errors.service_type}
                 {...register('service_type')}
-              />
+              >
+                <option value="">Selecciona un tipo de servicio</option>
+                {serviceTypes.map((type) => (
+                  <option key={type} value={type}>
+                    {serviceTypeLabels[type]}
+                  </option>
+                ))}
+              </Select>
               {errors.service_type && (
                 <p className="text-destructive text-xs">{errors.service_type.message}</p>
               )}

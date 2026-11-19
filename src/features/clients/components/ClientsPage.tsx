@@ -13,6 +13,7 @@ import { PageHeader } from '@/components/shared/PageHeader'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Select } from '@/components/ui/select'
 import {
   Table,
   TableBody,
@@ -59,9 +60,6 @@ const countdownTone: Record<ServicePaymentState, string> = {
   pending: 'text-secondary',
   overdue: 'text-danger',
 }
-
-const selectClassName =
-  'border-border bg-canvas text-foreground h-8 rounded-md border px-2 text-sm outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background'
 
 function StateBadge({ state }: { state: ServicePaymentState }) {
   return (
@@ -237,7 +235,7 @@ export default function ClientsPage() {
                 onChange={(event) => setQuery(event.target.value)}
                 placeholder="Buscar cliente, servicio o estado"
                 aria-label="Buscar cliente, servicio o estado"
-                className="pl-8 text-[13px] placeholder:text-neutral-400"
+                className="pl-8 placeholder:text-neutral-400"
               />
             </div>
 
@@ -267,18 +265,18 @@ export default function ClientsPage() {
               <label htmlFor="service-sort" className="text-secondary text-xs">
                 Ordenar
               </label>
-              <select
+              <Select
                 id="service-sort"
                 value={sort}
                 onChange={(event) => setSort(event.target.value as ServiceSort)}
-                className={selectClassName}
+                className="w-auto"
               >
                 {(Object.keys(serviceSortLabels) as ServiceSort[]).map((key) => (
                   <option key={key} value={key}>
                     {serviceSortLabels[key]}
                   </option>
                 ))}
-              </select>
+              </Select>
             </div>
           </div>
 

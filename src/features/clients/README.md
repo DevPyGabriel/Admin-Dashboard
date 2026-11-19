@@ -14,14 +14,14 @@ The form stores the client name and optional email on `clients`, and the service
 type, optional due date, amount and optional description on `subscriptions`.
 Payments remain on `payments`, so RLS and history are unchanged.
 
-| Label en la UI       | Columna                                      |
-| -------------------- | -------------------------------------------- |
-| Nombre del cliente   | `clients.full_name`                          |
-| Correo electrónico   | `clients.email` (nullable)                   |
-| Tipo de servicio     | `subscriptions.plan_name`                    |
-| Monto                | `subscriptions.amount`                       |
-| Fecha de vencimiento | `subscriptions.next_billing_date` (nullable) |
-| Descripción          | `subscriptions.description`                  |
+| Label en la UI       | Columna                                                      |
+| -------------------- | ------------------------------------------------------------ |
+| Nombre del cliente   | `clients.full_name`                                          |
+| Correo electrónico   | `clients.email` (nullable)                                   |
+| Tipo de servicio     | `subscriptions.plan_name` (`transporte`, `taxi`, `delivery`) |
+| Monto                | `subscriptions.amount`                                       |
+| Fecha de vencimiento | `subscriptions.next_billing_date` (nullable)                 |
+| Descripción          | `subscriptions.description`                                  |
 
 ## States
 
