@@ -29,7 +29,7 @@ export default function DashboardLayout() {
 
       <DialogPrimitive.Root open={menuOpen} onOpenChange={setMenuOpen}>
         <DialogPrimitive.Portal>
-          <DialogPrimitive.Overlay className="data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0 fixed inset-0 z-40 bg-black/40 duration-200 lg:hidden" />
+          <DialogPrimitive.Overlay className="data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0 bg-overlay fixed inset-0 z-40 duration-200 lg:hidden" />
           <DialogPrimitive.Content
             aria-describedby={undefined}
             className="border-border bg-sidebar shadow-popover data-open:animate-in data-open:slide-in-from-left-4 data-closed:animate-out data-closed:slide-out-to-left-4 fixed inset-y-0 left-0 z-50 flex w-[17.5rem] max-w-[85vw] flex-col border-r duration-200 outline-none lg:hidden"

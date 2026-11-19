@@ -4,9 +4,9 @@ Target: the authenticated dashboard shell, sidebar and client list. Mode: Operat
 
 ## Direction contract
 
-THESIS: A Supabase/Vercel-grade admin shell — hairline borders, compact type, small radii, near-white ground — rebuilt for one-handed phone use. It refuses the padded, shadowed card dashboard and the desktop sidebar that merely disappears on mobile.
+THESIS: A Supabase/Vercel-grade dark admin shell — hairline borders, compact type, small radii, near-black ground — rebuilt for one-handed phone use. It refuses the padded, shadowed card dashboard and the desktop sidebar that merely disappears on mobile.
 
-OWN-WORLD: `#fafafa` canvas, white surfaces, `#e6e8eb` hairlines, `#171717` / `#666` type, 8px radii, almost no elevation. One accessible green for primary action, selection and status; a 2px green rail marks the active nav item. Inter at fixed rem steps, 16px stroke icons.
+OWN-WORLD: `#0a0a0a` canvas, `#171717` surfaces, `#262626` hairlines, `#fafafa` / `#9ca3af` type, 8px radii, almost no elevation. One brighter accessible green for primary action, selection and status; a 2px green rail marks the active nav item. Inter at fixed rem steps, 16px stroke icons.
 
 STORY: The owner opens the panel on a phone, knows the section instantly, reaches the frequent action in one tap. Every module is visible; unimplemented ones are honestly labelled upcoming.
 

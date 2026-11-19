@@ -4,14 +4,16 @@
 neutral and green ramps in `:root`/`.dark`, maps semantic roles through
 `@theme inline`, and declares the reusable `@utility` helpers.
 
-The shipped language is a compact Supabase/Vercel-like shell: `#fafafa` canvas,
-white surfaces, `#e6e8eb` hairlines, `#171717`/`#666666` type, `8px` panel radii
-and no resting shadows. Green (`#00722e`) is the only accent.
+The shipped language is a dark, compact Supabase/Vercel-like shell: `#0a0a0a`
+canvas, `#171717` surfaces, `#262626` hairlines, `#fafafa`/`#9ca3af` type, `8px`
+panel radii and no resting shadows. Green (`#45bb68`) is the only accent. The
+`.dark` class on `<html>` selects this ramp; the light values in `:root` remain
+a compatibility fallback.
 
 Key utilities:
 
 - `page-container` — responsive max-width and inline gutters.
-- `surface-panel` — white, hairline-bordered, `8px` panel.
+- `surface-panel` — charcoal, hairline-bordered, `8px` panel.
 - `focus-ring`, `control-base` — accessible interactive treatments.
 - `tabular-data`, `scrollbar-hidden`, `interactive`, `safe-bottom`.
 

@@ -39,7 +39,7 @@ One company, one dataset, one identity boundary: every table is protected by RLS
 
 - Product name: NovaDrive.
 - The user pinned the visual reference: the interface should be as similar as possible to the UI of Supabase and Vercel, adapted to this dashboard.
-- Green is the single accent color, used for primary action, focus, selection and success; grays/black/white form the foundation.
+- Green is the single accent color, used for primary action, focus, selection and success; a dark neutral ramp forms the foundation.
 
 ## Evidence on Hand
 

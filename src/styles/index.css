@@ -12,7 +12,7 @@
  * code consumes semantic roles only; a raw --brand-* value is reserved for
  * deliberate cases such as charts.
  *
- * The visual language follows Supabase/Vercel dashboards: near-white ground,
+ * The visual language follows Supabase/Vercel dashboards: dark-first surfaces,
  * hairline borders, compact type, small radii and almost no elevation.
  */
 :root {
@@ -84,6 +84,10 @@
   --danger: #b91c1c;
   --danger-soft: #fef2f2;
   --danger-soft-foreground: #991b1b;
+  --danger-hover: var(--danger);
+  --danger-hover-foreground: var(--neutral-0);
+  --danger-active: var(--danger-soft-foreground);
+  --danger-active-foreground: var(--neutral-0);
 
   --info: #1d4ed8;
   --info-soft: #eff6ff;
@@ -94,6 +98,7 @@
   --topbar-height: 3.5rem;
   --sidebar-width: 15rem;
   --drawer-width: 17.5rem;
+  --overlay: rgb(0 0 0 / 0.1);
   --elevation-popover:
     0 1px 2px oklch(0.15 0.01 150 / 0.06), 0 12px 32px oklch(0.15 0.01 150 / 0.12);
   --shadow-focus: 0 0 0 2px var(--canvas), 0 0 0 4px var(--primary-ring);
@@ -172,18 +177,23 @@
   --danger: oklch(0.76 0.15 25);
   --danger-soft: oklch(0.3 0.09 25);
   --danger-soft-foreground: oklch(0.88 0.1 25);
+  --danger-hover: oklch(0.34 0.1 25);
+  --danger-hover-foreground: var(--danger-soft-foreground);
+  --danger-active: oklch(0.4 0.11 25);
+  --danger-active-foreground: var(--danger-soft-foreground);
 
   --info: oklch(0.78 0.11 250);
   --info-soft: oklch(0.29 0.07 250);
   --info-soft-foreground: oklch(0.87 0.09 250);
 
+  --overlay: rgb(0 0 0 / 0.6);
   --elevation-popover: 0 1px 2px oklch(0 0 0 / 0.4), 0 14px 40px oklch(0 0 0 / 0.5);
   --shadow-focus: 0 0 0 2px var(--canvas), 0 0 0 4px var(--primary-ring);
 
   --chart-1: var(--brand-400);
   --chart-2: #60a5fa;
   --chart-3: #fbbf24;
-  --chart-4: var(--neutral-500);
+  --chart-4: var(--neutral-400);
   --chart-5: #a78bfa;
 
   --sidebar: var(--neutral-950);
@@ -238,6 +248,10 @@
   --color-danger: var(--danger);
   --color-danger-soft: var(--danger-soft);
   --color-danger-soft-foreground: var(--danger-soft-foreground);
+  --color-danger-hover: var(--danger-hover);
+  --color-danger-hover-foreground: var(--danger-hover-foreground);
+  --color-danger-active: var(--danger-active);
+  --color-danger-active-foreground: var(--danger-active-foreground);
   --color-info: var(--info);
   --color-info-soft: var(--info-soft);
   --color-info-soft-foreground: var(--info-soft-foreground);
@@ -275,6 +289,7 @@
   --radius-xl: 0.625rem;
   --radius-2xl: 0.75rem;
 
+  --color-overlay: var(--overlay);
   --shadow-popover: var(--elevation-popover);
 }
 

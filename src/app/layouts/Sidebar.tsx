@@ -50,11 +50,11 @@ export function Sidebar({ compact = false, email, onNavigate, onSignOut }: Sideb
                 className={({ isActive }) =>
                   cn(
                     'before:absolute before:inset-y-1.5 before:left-0 before:w-0.5 before:rounded-full before:bg-transparent',
-                    'relative flex items-center gap-2.5 rounded-md px-2.5 text-sm font-medium outline-none',
+                    'relative flex items-center gap-2.5 rounded-md px-2.5 text-sm outline-none',
                     'hover:bg-surface-muted focus-visible:ring-ring focus-visible:ring-2',
                     compact ? 'h-9' : 'h-11',
                     isActive
-                      ? 'bg-nav-active text-nav-active-foreground before:bg-primary'
+                      ? 'bg-nav-active text-nav-active-foreground before:bg-primary font-medium'
                       : 'text-muted-foreground hover:text-foreground',
                   )
                 }

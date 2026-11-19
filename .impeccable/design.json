@@ -7,7 +7,7 @@
       "primary": {
         "role": "primary",
         "displayName": "Operator Green",
-        "canonical": "#00722e",
+        "canonical": "#45bb68",
         "tonalRamp": [
           "#01270d",
           "#01421a",
@@ -24,8 +24,8 @@
       },
       "canvas": {
         "role": "neutral",
-        "displayName": "Near-White Canvas",
-        "canonical": "#fafafa",
+        "displayName": "Near-Black Canvas",
+        "canonical": "#0a0a0a",
         "tonalRamp": [
           "#0a0a0a",
           "#171717",
@@ -42,8 +42,8 @@
       },
       "surface": {
         "role": "neutral",
-        "displayName": "Paper White",
-        "canonical": "#ffffff",
+        "displayName": "Charcoal Surface",
+        "canonical": "#171717",
         "tonalRamp": [
           "#0a0a0a",
           "#171717",
@@ -60,8 +60,8 @@
       },
       "foreground": {
         "role": "neutral",
-        "displayName": "Ink",
-        "canonical": "#171717",
+        "displayName": "Soft White",
+        "canonical": "#fafafa",
         "tonalRamp": [
           "#0a0a0a",
           "#171717",
@@ -78,8 +78,8 @@
       },
       "muted": {
         "role": "neutral",
-        "displayName": "Secondary Ink",
-        "canonical": "#666666",
+        "displayName": "Muted Gray",
+        "canonical": "#9ca3af",
         "tonalRamp": [
           "#0a0a0a",
           "#171717",
@@ -97,7 +97,7 @@
       "border": {
         "role": "neutral",
         "displayName": "Hairline",
-        "canonical": "#e6e8eb",
+        "canonical": "#262626",
         "tonalRamp": [
           "#0a0a0a",
           "#171717",
@@ -115,7 +115,7 @@
       "danger": {
         "role": "semantic",
         "displayName": "Signal Red",
-        "canonical": "#b91c1c",
+        "canonical": "oklch(0.76 0.15 25)",
         "tonalRamp": [
           "#450a0a",
           "#7f1d1d",
@@ -151,8 +151,8 @@
     "shadows": [
       {
         "name": "popover",
-        "value": "0 1px 2px oklch(0.15 0.01 150 / 0.06), 0 12px 32px oklch(0.15 0.01 150 / 0.12)",
-        "purpose": "Dialogs and the mobile navigation drawer only."
+        "value": "0 1px 2px oklch(0 0 0 / 0.4), 0 14px 40px oklch(0 0 0 / 0.5)",
+        "purpose": "Dialogs and the mobile navigation drawer only, over a dark overlay."
       },
       {
         "name": "focus",
@@ -190,13 +190,13 @@
       "refersTo": "button-primary",
       "description": "The single green action on a dashboard view.",
       "html": "<button class=\"ds-btn-primary\" type=\"button\">Nuevo cliente</button>",
-      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 0.375rem; height: 2rem; padding: 0 0.75rem; border: 1px solid transparent; border-radius: 6px; background: var(--primary); color: var(--surface); font: 500 14px/1.25 'Inter Variable', Inter, sans-serif; cursor: pointer; transition: background-color 120ms cubic-bezier(0.22, 1, 0.36, 1); } .ds-btn-primary:hover { background: var(--primary-hover); } .ds-btn-primary:active { background: var(--primary-active); } .ds-btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--canvas), 0 0 0 4px var(--primary-ring); } @media (pointer: coarse) { .ds-btn-primary { min-height: 44px; } }"
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 0.375rem; height: 2rem; padding: 0 0.75rem; border: 1px solid transparent; border-radius: 6px; background: var(--primary); color: var(--primary-foreground); font: 500 14px/1.25 'Inter Variable', Inter, sans-serif; cursor: pointer; transition: background-color 120ms cubic-bezier(0.22, 1, 0.36, 1); } .ds-btn-primary:hover { background: var(--primary-hover); } .ds-btn-primary:active { background: var(--primary-active); } .ds-btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--canvas), 0 0 0 4px var(--primary-ring); } @media (pointer: coarse) { .ds-btn-primary { min-height: 44px; } }"
     },
     {
       "name": "Outline Button",
       "kind": "button",
       "refersTo": "button-outline",
-      "description": "Secondary and row actions on white panels.",
+      "description": "Secondary and row actions on charcoal panels.",
       "html": "<button class=\"ds-btn-outline\" type=\"button\">Editar</button>",
       "css": ".ds-btn-outline { display: inline-flex; align-items: center; justify-content: center; height: 2rem; padding: 0 0.75rem; border: 1px solid var(--border); border-radius: 6px; background: var(--surface); color: var(--text-primary); font: 500 14px/1.25 'Inter Variable', Inter, sans-serif; cursor: pointer; transition: background-color 120ms cubic-bezier(0.22, 1, 0.36, 1); } .ds-btn-outline:hover { background: var(--surface-muted); } .ds-btn-outline:active { background: var(--border); } .ds-btn-outline:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--canvas), 0 0 0 4px var(--primary-ring); } @media (pointer: coarse) { .ds-btn-outline { min-height: 44px; } }"
     },
@@ -243,10 +243,11 @@
   ],
   "narrative": {
     "northStar": "The Operator's Console",
-    "overview": "This is a compact, product-grade control surface in the lineage of Supabase and Vercel dashboards: near-white ground, paper-white panels, hairline separators, small radii, 14px type and almost no shadow. It is built for an owner checking records on a phone in short sessions, so the hierarchy is flattened and the frequent action stays close to the thumb. Brand expression is restricted to one green used for action, selection, focus and success.\n\nThe system deliberately refuses the padded, floating-card dashboard and the desktop sidebar that simply vanishes on mobile. Navigation is always reachable: a 240px rail on large screens, the same content in a slide-in drawer below lg. Modules that are not implemented are labelled Pronto instead of pretending to work.",
+    "overview": "This is a compact, product-grade dark control surface in the lineage of Supabase and Vercel dashboards: near-black ground, charcoal panels, hairline separators, small radii, 14px type and almost no shadow. Dark is the shipped default - the dark class lives on the html element - so the light ramp remains a compatibility fallback, not a second product theme. It is built for an owner checking records on a phone in short sessions, so the hierarchy is flattened and the frequent action stays close to the thumb. Brand expression is restricted to one brighter green used for action, selection, focus and success.\n\nThe system deliberately refuses the padded, floating-card dashboard and the desktop sidebar that simply vanishes on mobile. Navigation is always reachable: a 240px rail on large screens, the same content in a slide-in drawer below lg. Modules that are not implemented are labelled Pronto instead of pretending to work.",
     "keyCharacteristics": [
+      "Dark-first surfaces with a near-black canvas and charcoal panels.",
       "Hairline-first surfaces, flat at rest, with depth reserved for overlays.",
-      "One accent green; neutral grays, black and white carry everything else.",
+      "One brighter accent green; neutral grays carry everything else.",
       "Compact desktop density, 44px touch targets on phones, one primary action per view.",
       "Honest navigation and text-labelled status in every state."
     ],
