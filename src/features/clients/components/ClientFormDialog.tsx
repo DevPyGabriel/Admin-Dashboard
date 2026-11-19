@@ -92,7 +92,7 @@ export function ClientFormDialog({ open, onOpenChange, service }: ClientFormDial
         </DialogHeader>
 
         <form onSubmit={onSubmit} className="flex min-h-0 flex-1 flex-col" noValidate>
-          <div className="min-h-0 flex-1 space-y-4 overflow-y-auto overscroll-contain pr-1">
+          <div className="min-h-0 flex-1 space-y-4 overflow-y-auto overscroll-contain pr-4">
             <div className="space-y-2">
               <Label htmlFor="full_name">Nombre del cliente</Label>
               <Input
