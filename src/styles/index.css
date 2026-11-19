@@ -96,7 +96,7 @@
   --drawer-width: 17.5rem;
   --elevation-popover:
     0 1px 2px oklch(0.15 0.01 150 / 0.06), 0 12px 32px oklch(0.15 0.01 150 / 0.12);
-  --shadow-focus: 0 0 0 3px color-mix(in oklch, var(--primary-ring) 28%, transparent);
+  --shadow-focus: 0 0 0 2px var(--canvas), 0 0 0 4px var(--primary-ring);
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --duration-fast: 120ms;
   --duration-base: 180ms;
@@ -178,7 +178,7 @@
   --info-soft-foreground: oklch(0.87 0.09 250);
 
   --elevation-popover: 0 1px 2px oklch(0 0 0 / 0.4), 0 14px 40px oklch(0 0 0 / 0.5);
-  --shadow-focus: 0 0 0 3px color-mix(in oklch, var(--primary-ring) 38%, transparent);
+  --shadow-focus: 0 0 0 2px var(--canvas), 0 0 0 4px var(--primary-ring);
 
   --chart-1: var(--brand-400);
   --chart-2: #60a5fa;
@@ -334,8 +334,13 @@
   /* Touch devices get larger controls without changing the desktop density. */
   @media (pointer: coarse) {
     button,
-    a[role='button'] {
+    a[role='button'],
+    [data-slot='button'] {
       min-height: 2.75rem;
+    }
+
+    [data-slot='button'][data-size^='icon'] {
+      min-width: 2.75rem;
     }
   }
 }

@@ -23,7 +23,7 @@ export default function PlaceholderPage() {
           Este módulo todavía no está disponible. Clientes ya funciona y puedes seguir probando el
           CRUD allí.
         </p>
-        <Button asChild variant="outline" className="mt-5">
+        <Button asChild variant="outline" size="sm" className="mt-5">
           <Link to="/clients">
             Ir a Clientes
             <ArrowRight className="size-4" aria-hidden="true" />

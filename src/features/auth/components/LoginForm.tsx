@@ -59,7 +59,7 @@ export function LoginForm() {
         </p>
       )}
 
-      <Button type="submit" className="h-11 w-full" disabled={isSubmitting}>
+      <Button type="submit" size="sm" className="w-full" disabled={isSubmitting}>
         {isSubmitting ? 'Entrando…' : 'Entrar'}
       </Button>
     </form>

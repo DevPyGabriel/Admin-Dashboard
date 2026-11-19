@@ -75,7 +75,7 @@ export default function ClientsPage() {
           title="Clientes"
           description="Administra los clientes de tu negocio y su estado."
           actions={
-            <Button className="h-11 w-full sm:h-8 sm:w-auto" onClick={openCreate}>
+            <Button size="sm" className="w-full sm:w-auto" onClick={openCreate}>
               Nuevo cliente
             </Button>
           }
@@ -142,7 +142,7 @@ export default function ClientsPage() {
                       <Button
                         variant="outline"
                         size="sm"
-                        className="h-11 flex-1"
+                        className="flex-1"
                         onClick={() => openEdit(client)}
                       >
                         Editar
@@ -150,7 +150,7 @@ export default function ClientsPage() {
                       <Button
                         variant="outline"
                         size="sm"
-                        className="text-danger h-11 flex-1"
+                        className="text-destructive flex-1"
                         onClick={() => void handleDelete(client)}
                       >
                         Eliminar

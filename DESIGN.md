@@ -65,7 +65,7 @@ components:
     backgroundColor: '{colors.primary}'
     textColor: '{colors.surface}'
     rounded: '{rounded.md}'
-    padding: '0.5rem 0.625rem'
+    padding: '0 0.75rem'
     height: '2rem'
   button-primary-hover:
     backgroundColor: '{colors.primary-hover}'
@@ -75,11 +75,11 @@ components:
     backgroundColor: '{colors.surface}'
     textColor: '{colors.foreground}'
     rounded: '{rounded.md}'
-    padding: '0.5rem 0.625rem'
+    padding: '0 0.75rem'
   input:
     backgroundColor: '{colors.surface}'
     textColor: '{colors.foreground}'
-    rounded: '{rounded.lg}'
+    rounded: '{rounded.md}'
     padding: '0.25rem 0.625rem'
     height: '2rem'
   card-surface:
@@ -171,8 +171,9 @@ Measured with WCAG relative luminance against the shipped tokens.
 | White on `danger`           | 6.47  | AA     |
 | White on `success`          | 6.09  | AA     |
 
-Focus rings use the full-strength `--ring`/`--primary-ring` color, never a
-low-alpha outline. Status is always text plus color, never color alone.
+Focus rings use a `2px` full-strength `--ring`/`--primary-ring` outline with a
+`2px` canvas offset, never a low-alpha halo. Status is always text plus color,
+never color alone.
 
 ## Typography
 
@@ -215,15 +216,15 @@ The system is flat by default. Borders, not shadows, define panels; the canvas
 is slightly cooler than the white surface. Elevation appears only when content
 leaves the page: dialogs and the mobile drawer use `--elevation-popover`
 (`0 1px 2px oklch(0.15 0.01 150 / 0.06), 0 12px 32px oklch(0.15 0.01 150 / 0.12)`).
-Focus is conveyed by a 3px translucent ring derived from the primary color.
+Focus is conveyed by a 2px primary ring with a 2px canvas offset.
 
 **The Flat-By-Default Rule.** A resting panel gets one hairline border and no
 shadow. Never stack a border with a large ambient halo.
 
 ## Shapes
 
-Radii are deliberately small: `4px` for tiny chips, `6px` for buttons and nav
-items, `8px` for panels and inputs, `10–12px` only for larger containers.
+Radii are deliberately small: `4px` for tiny chips, `6px` for buttons, inputs
+and nav items, `8px` for panels, `10–12px` only for larger containers.
 Status badges are the exception and use a pill silhouette. The active nav item
 carries a `2px` green rail on its left edge, inset from the item bounds.
 
@@ -231,18 +232,21 @@ carries a `2px` green rail on its left edge, inset from the item bounds.
 
 ### Buttons
 
-- **Shape:** `6px` radius, compact `2rem` height on fine pointers; `44px`
-  minimum under `(pointer: coarse)`.
-- **Primary:** Operator Green background, white label, `hover` to Deep Green.
-- **Outline / Ghost:** white or transparent with hairline borders; neutral text
-  and a Quiet Gray hover. Destructive text uses Signal Red without a red fill.
-- **Focus:** 3px primary-derived ring; no translate-on-press for accessibility
-  unless the control is not in a dense table.
+- **Shape:** `6px` radius. `sm` is the default size everywhere: `2rem` height,
+  `0.75rem` horizontal padding and `0.875rem` label text. `xs`/`lg` are reserved
+  for dense toolbars and page-level emphasis; icon sizes stay square.
+- **Primary:** Operator Green background, white label; `hover` to Deep Green,
+  `active` to the darker primary-active green.
+- **Outline / Ghost:** white or transparent with hairline borders; neutral text,
+  Quiet Gray hover and Hairline active fill. Destructive text uses Signal Red
+  without a red fill.
+- **Focus:** 2px primary ring with a 2px canvas offset. No translate-on-press;
+  state changes come from color only.
 
 ### Inputs & Fields
 
-- **Style:** white background, Control Edge border, `8px` radius, `0.875rem` text.
-- **Focus:** border shifts to primary plus the focus ring.
+- **Style:** white background, Control Edge border, `6px` radius, `0.875rem` text.
+- **Focus:** border shifts to primary plus the same 2px offset ring used by buttons.
 - **Error / Disabled:** destructive border and message; disabled controls reduce opacity and block pointer events.
 
 ### Cards & Panels
