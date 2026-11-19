@@ -13,6 +13,7 @@ Private configuration lives in Supabase Secrets, never in the client bundle:
 Operator-triggered calls use the normal Supabase session JWT. A request body of
 `{ "testEmail": "someone@example.com" }` sends a single sample email to that
 address instead of the client's address and does not write a reminder log.
+Test mode includes services with `auto_remind = false`; the scheduled job does not.
 
 The cron job runs at 09:00 UTC and calls this function with `verify_jwt = false`
 so the shared secret is evaluated inside the function.

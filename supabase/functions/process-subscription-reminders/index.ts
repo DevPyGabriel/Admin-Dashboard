@@ -20,6 +20,7 @@ interface SubscriptionRow {
   amount: number
   currency: string
   next_billing_date: string | null
+  auto_remind: boolean
   clients: { full_name: string; email: string | null }
   payments: Array<{ status: string; billing_date: string | null }>
 }
@@ -106,12 +107,18 @@ async function authorize(
   return { testEmail }
 }
 
-function buildTargets(rows: SubscriptionRow[], settings: SettingsRow): ReminderTarget[] {
+function buildTargets(
+  rows: SubscriptionRow[],
+  settings: SettingsRow,
+  includeDisabled: boolean,
+): ReminderTarget[] {
   const today = new Date().toISOString().slice(0, 10)
   const todayMs = Date.parse(`${today}T00:00:00Z`)
   const targets: ReminderTarget[] = []
 
   for (const row of rows) {
+    if (!row.auto_remind && !includeDisabled) continue
+
     const email = row.clients?.email
     const dueDate = row.next_billing_date
     if (!email || !dueDate) continue
@@ -238,14 +245,17 @@ Deno.serve(async (req) => {
   const { data: rows, error: rowsError } = await admin
     .from('subscriptions')
     .select(
-      'id, plan_name, amount, currency, next_billing_date, clients!inner(full_name, email), payments(status, billing_date)',
+      'id, plan_name, amount, currency, next_billing_date, auto_remind, clients!inner(full_name, email), payments(status, billing_date)',
     )
     .eq('status', 'active')
-    .eq('auto_remind', true)
 
   if (rowsError) return json(500, { error: 'No se pudieron cargar los servicios' })
 
-  const targets = buildTargets((rows ?? []) as unknown as SubscriptionRow[], config)
+  const targets = buildTargets(
+    (rows ?? []) as unknown as SubscriptionRow[],
+    config,
+    Boolean(auth.testEmail),
+  )
 
   if (auth.testEmail) {
     const target = targets[0]
