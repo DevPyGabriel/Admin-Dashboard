@@ -15,5 +15,5 @@ export const navigation: NavigationItem[] = [
   { label: 'Suscripciones', to: '/subscriptions', icon: CreditCard, upcoming: true },
   { label: 'Pagos', to: '/payments', icon: ReceiptText, upcoming: true },
   { label: 'Recordatorios', to: '/reminders', icon: Bell, upcoming: true },
-  { label: 'Configuración', to: '/settings', icon: Settings2, upcoming: true },
+  { label: 'Configuración', to: '/settings', icon: Settings2 },
 ]

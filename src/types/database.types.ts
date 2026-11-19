@@ -57,6 +57,7 @@ export type Database = {
           currency: string
           id: boolean
           reminder_days_before: number
+          sender_email: string | null
           support_email: string
           timezone: string
           updated_at: string
@@ -67,6 +68,7 @@ export type Database = {
           currency?: string
           id?: boolean
           reminder_days_before?: number
+          sender_email?: string | null
           support_email: string
           timezone?: string
           updated_at?: string
@@ -77,6 +79,7 @@ export type Database = {
           currency?: string
           id?: boolean
           reminder_days_before?: number
+          sender_email?: string | null
           support_email?: string
           timezone?: string
           updated_at?: string

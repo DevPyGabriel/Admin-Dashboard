@@ -83,7 +83,7 @@ project:
 /subscriptions  placeholder — upcoming module
 /payments       placeholder — upcoming module
 /reminders      placeholder — upcoming module
-/settings       placeholder — upcoming module
+/settings       company sender email and reminder delivery controls
 ```
 
 - `src/features/auth` provides `useAuthSession` and `RequireAuth`.
@@ -148,3 +148,29 @@ grants, Postgres returns `permission denied for table ...` before RLS runs.
 Configure private backend secrets with `supabase secrets set ...`; they are
 never part of the frontend bundle. Edge Functions live under
 `supabase/functions/` and use the Deno runtime.
+
+### Recordatorios por correo
+
+The `/settings` page stores the company name, support email and the verified
+Resend sender address in `company_settings.sender_email`. Configure the private
+credentials as Supabase Secrets (never in `VITE_*` or the frontend bundle):
+
+```bash
+npx supabase secrets set RESEND_API_KEY=re_... --project-ref <project-ref>
+npx supabase secrets set CRON_SECRET=<random-value> --project-ref <project-ref>
+```
+
+Deploy the daily job and schedule it at 09:00 UTC:
+
+```bash
+npx supabase functions deploy process-subscription-reminders --project-ref <project-ref>
+```
+
+The `pg_cron` job uses `pg_net` and reads both the function URL and `CRON_SECRET`
+from `supabase_vault`, so no credential is stored in the repository. The page's
+"Enviar correo de prueba" button invokes the same function with the operator's
+JWT and a `testEmail`, sending one sample without writing a `reminder_logs` row.
+
+Until a domain is verified in **Resend → Domains**, set `sender_email` to
+`onboarding@resend.dev`; Resend will only deliver to addresses verified on your
+Resend account.

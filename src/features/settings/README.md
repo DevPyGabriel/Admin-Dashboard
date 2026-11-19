@@ -1,10 +1,12 @@
 # Settings feature
 
-Company configuration.
+Company configuration and reminder delivery controls.
 
-- `components/` — settings-specific components
+- `components/` — settings page
 - `hooks/` — settings data hooks
-- `services/` — settings data access
+- `services/` / `api/` — Supabase data access
 - `schemas/` — Zod schemas for settings forms
 
-Nothing implemented yet.
+The `sender_email` column lives on the `company_settings` singleton. The Resend
+API key is never read by the browser: it stays in Supabase Secrets and is used
+by `supabase/functions/process-subscription-reminders`.

@@ -5,6 +5,7 @@ import PlaceholderPage from '@/app/layouts/PlaceholderPage'
 import { RequireAuth } from '@/features/auth/components/RequireAuth'
 import LoginPage from '@/features/auth/pages/LoginPage'
 import ClientsPage from '@/features/clients/components/ClientsPage'
+import SettingsPage from '@/features/settings/components/SettingsPage'
 
 /** Root router. Feature routes are registered here as they are built. */
 export const router = createBrowserRouter([
@@ -24,7 +25,7 @@ export const router = createBrowserRouter([
           { path: 'subscriptions', element: <PlaceholderPage /> },
           { path: 'payments', element: <PlaceholderPage /> },
           { path: 'reminders', element: <PlaceholderPage /> },
-          { path: 'settings', element: <PlaceholderPage /> },
+          { path: 'settings', element: <SettingsPage /> },
         ],
       },
       { path: '*', element: <Navigate to="/clients" replace /> },
