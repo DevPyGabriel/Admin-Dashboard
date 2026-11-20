@@ -174,12 +174,14 @@ configured operator inbox without writing a `reminder_logs` row. "Enviar todos
 ahora" runs the exact batch path used by the cron job, so it is the fastest way
 to test the automatic sender on demand.
 
-Every reminder is sent to the client and copied to `support_email` plus any
+Services due within `reminder_days_before` (3 days by default) and overdue
+services are grouped into one email per client address; overdue services are
+resent every 3 days until paid, while upcoming reminders are sent once per
+billing cycle. Every grouped reminder is copied to `support_email` plus any
 addresses in `company_settings.operator_emails` (comma-separated field in the
 settings page). Operator copies are deduplicated, exclude the client address and
 have the subject prefix `Copia operador:`. A failed operator copy is reported in
-the response but does not change the client's `reminder_logs` status, so retries
-never resend a reminder already recorded as sent.
+the response but does not change the client's `reminder_logs` status.
 
 Until a domain is verified in **Resend → Domains**, set `sender_email` to
 `onboarding@resend.dev`; Resend will only deliver to the email address associated

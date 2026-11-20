@@ -20,6 +20,7 @@ export const clientServiceSchema = z.object({
 
 /** One client can own several services, each with its own amount and due date. */
 export const clientSchema = z.object({
+  client_id: z.string().optional(),
   full_name: z.string().trim().min(2, 'El nombre debe tener al menos 2 caracteres'),
   email: z.union([z.email('Introduce un email válido'), z.literal('')]),
   services: z.array(clientServiceSchema).min(1, 'Agrega al menos un servicio'),

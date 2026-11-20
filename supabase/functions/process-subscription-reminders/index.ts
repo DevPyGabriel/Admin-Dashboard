@@ -14,6 +14,12 @@ interface ReminderTarget {
   daysUntilDue: number
 }
 
+interface ReminderGroup {
+  email: string
+  clientName: string
+  targets: ReminderTarget[]
+}
+
 interface SubscriptionRow {
   id: string
   plan_name: string
@@ -34,6 +40,11 @@ interface SettingsRow {
   reminder_days_before: number
 }
 
+interface LogRow {
+  status: string
+  sent_at: string
+}
+
 interface DeliveryResult {
   to: string
   ok: boolean
@@ -52,6 +63,8 @@ const serviceLabels: Record<string, string> = {
   taxi: 'Taxi',
   delivery: 'Delivery',
 }
+
+const overdueRepeatMs = 3 * 86_400_000
 
 const json = (status: number, body: unknown) =>
   new Response(JSON.stringify(body), {
@@ -170,43 +183,91 @@ function buildTargets(
   return targets.sort((a, b) => a.daysUntilDue - b.daysUntilDue)
 }
 
-function buildEmail(target: ReminderTarget, settings: SettingsRow, operatorCopy = false) {
-  const service = serviceLabels[target.serviceType] ?? target.serviceType
-  const amount = formatAmount(target.amount, target.currency)
-  const company = escapeHtml(settings.company_name || 'NovaDrive')
-  const baseSubject =
-    target.kind === 'payment_due'
-      ? `Recordatorio de pago: ${service} vencido`
-      : `Recordatorio: ${service} vence en ${target.daysUntilDue} ${
-          target.daysUntilDue === 1 ? 'día' : 'días'
-        }`
+/** One email per client address, containing every service that is due soon or overdue. */
+function groupTargets(targets: ReminderTarget[]): ReminderGroup[] {
+  const groups = new Map<string, ReminderGroup>()
+
+  for (const target of targets) {
+    const key = normalizeEmail(target.email)
+    const group = groups.get(key)
+    if (group) {
+      group.targets.push(target)
+      continue
+    }
+    groups.set(key, {
+      email: target.email,
+      clientName: target.clientName,
+      targets: [target],
+    })
+  }
+
+  return Array.from(groups.values())
+    .map((group) => ({
+      ...group,
+      targets: [...group.targets].sort((a, b) => a.daysUntilDue - b.daysUntilDue),
+    }))
+    .sort((a, b) => a.targets[0].daysUntilDue - b.targets[0].daysUntilDue)
+}
+
+function buildEmail(targets: ReminderTarget[], settings: SettingsRow, operatorCopy = false) {
+  const overdueCount = targets.filter((target) => target.kind === 'payment_due').length
+  const count = targets.length
+  const noun = count === 1 ? 'servicio' : 'servicios'
+  const baseSubject = overdueCount
+    ? `Recordatorio de pago: ${count} ${noun}`
+    : `Recordatorio: ${count} ${noun} por vencer`
   const subject = operatorCopy ? `Copia operador: ${baseSubject}` : baseSubject
 
-  const detail =
-    target.kind === 'payment_due'
-      ? `Su servicio de ${escapeHtml(service)} venció el ${escapeHtml(target.dueDate)} y aún no registramos el pago.`
-      : `Su servicio de ${escapeHtml(service)} vence el ${escapeHtml(target.dueDate)}.`
+  const detail = overdueCount
+    ? 'Incluimos los servicios que vencen en los próximos días y los que ya están vencidos y siguen sin pago. Los vencidos se recordarán cada 3 días hasta registrar el pago.'
+    : 'Incluimos los servicios que vencen en los próximos días y siguen sin pago.'
 
   const greeting = operatorCopy
-    ? `<p>Recordatorio enviado a <strong>${escapeHtml(target.email)}</strong>:</p>`
-    : `<p>Hola ${escapeHtml(target.clientName)},</p>`
+    ? `<p>Recordatorio enviado a <strong>${escapeHtml(targets[0].email)}</strong>:</p>`
+    : `<p>Hola ${escapeHtml(targets[0].clientName)},</p>`
 
+  const rowsHtml = targets
+    .map((target) => {
+      const service = serviceLabels[target.serviceType] ?? target.serviceType
+      const amount = formatAmount(target.amount, target.currency)
+      const status =
+        target.kind === 'payment_due'
+          ? `Vencido el ${target.dueDate}`
+          : `Vence en ${target.daysUntilDue} ${target.daysUntilDue === 1 ? 'día' : 'días'}`
+      return `<tr>
+    <td>${escapeHtml(service)}</td>
+    <td>${escapeHtml(amount)}</td>
+    <td>${escapeHtml(target.dueDate)}</td>
+    <td>${escapeHtml(status)}</td>
+  </tr>`
+    })
+    .join('\n  ')
+
+  const company = escapeHtml(settings.company_name || 'NovaDrive')
   const html = `<div style="font-family:Arial,sans-serif;line-height:1.5;color:#18181b">
   ${greeting}
   <p>${detail}</p>
   <table cellpadding="8" cellspacing="0" style="border-collapse:collapse;margin:16px 0">
-    <tr><td><strong>Servicio</strong></td><td>${escapeHtml(service)}</td></tr>
-    <tr><td><strong>Monto</strong></td><td>${escapeHtml(amount)}</td></tr>
-    <tr><td><strong>Vencimiento</strong></td><td>${escapeHtml(target.dueDate)}</td></tr>
+    <tr><th align="left">Servicio</th><th align="left">Monto</th><th align="left">Vencimiento</th><th align="left">Estado</th></tr>
+    ${rowsHtml}
   </table>
   <p>Si ya realizaste el pago, ignora este mensaje. Consultas: ${escapeHtml(settings.support_email)}.</p>
   <p>Saludos,<br />${company}</p>
 </div>`
 
   const textGreeting = operatorCopy
-    ? `Recordatorio enviado a ${target.email}:\n\n`
-    : `Hola ${target.clientName},\n\n`
-  const text = `${textGreeting}${detail}\n\nServicio: ${service}\nMonto: ${amount}\nVencimiento: ${target.dueDate}\n\nSi ya realizaste el pago, ignora este mensaje. Consultas: ${settings.support_email}.\n\nSaludos,\n${settings.company_name || 'NovaDrive'}`
+    ? `Recordatorio enviado a ${targets[0].email}:\n\n`
+    : `Hola ${targets[0].clientName},\n\n`
+  const lines = targets.map((target) => {
+    const service = serviceLabels[target.serviceType] ?? target.serviceType
+    const amount = formatAmount(target.amount, target.currency)
+    const status =
+      target.kind === 'payment_due'
+        ? `Vencido el ${target.dueDate}`
+        : `Vence en ${target.daysUntilDue} ${target.daysUntilDue === 1 ? 'día' : 'días'}`
+    return `- ${service}: ${amount} | Vencimiento: ${target.dueDate} | ${status}`
+  })
+  const text = `${textGreeting}${detail}\n\n${lines.join('\n')}\n\nSi ya realizaste el pago, ignora este mensaje. Consultas: ${settings.support_email}.\n\nSaludos,\n${settings.company_name || 'NovaDrive'}`
 
   return { subject, html, text }
 }
@@ -235,6 +296,15 @@ async function sendViaResend(
     return { ok: false, error: payload?.message ?? `Resend respondió HTTP ${response.status}` }
   }
   return { ok: true, id: payload?.id ?? null }
+}
+
+function shouldSend(target: ReminderTarget, previous: LogRow | null, nowMs: number): boolean {
+  if (!previous) return true
+  if (previous.status !== 'sent') return true
+  if (target.kind !== 'payment_due') return false
+
+  const sentAt = Date.parse(previous.sent_at)
+  return Number.isNaN(sentAt) || nowMs - sentAt >= overdueRepeatMs
 }
 
 Deno.serve(async (req) => {
@@ -290,10 +360,11 @@ Deno.serve(async (req) => {
     config,
     Boolean(auth.testEmail),
   )
+  const groups = groupTargets(targets)
 
   if (auth.testEmail) {
-    const target = targets[0]
-    if (!target) {
+    const group = groups[0]
+    if (!group) {
       return json(200, {
         scanned: 0,
         sent: 0,
@@ -303,7 +374,7 @@ Deno.serve(async (req) => {
       })
     }
 
-    const email = buildEmail(target, config)
+    const email = buildEmail(group.targets, config)
     const deliveries: DeliveryResult[] = []
     const clientResult = await sendViaResend(
       from,
@@ -319,7 +390,7 @@ Deno.serve(async (req) => {
     })
 
     for (const operator of getOperatorRecipients(config, auth.testEmail)) {
-      const operatorEmail = buildEmail(target, config, true)
+      const operatorEmail = buildEmail(group.targets, config, true)
       const result = await sendViaResend(
         from,
         operator,
@@ -336,13 +407,13 @@ Deno.serve(async (req) => {
 
     const sent = deliveries.filter((delivery) => delivery.ok).length
     return json(sent > 0 ? 200 : 502, {
-      scanned: targets.length,
+      scanned: group.targets.length,
       sent,
       failed: deliveries.length - sent,
       skipped: 0,
       test: true,
       recipient: auth.testEmail,
-      service: target.serviceType,
+      service: group.targets.map((target) => target.serviceType).join(', '),
       results: deliveries,
     })
   }
@@ -352,42 +423,55 @@ Deno.serve(async (req) => {
   let skipped = 0
   let operatorSent = 0
   let operatorFailed = 0
+  const nowMs = Date.now()
 
-  for (const target of targets) {
-    const { data: previous } = await admin
-      .from('reminder_logs')
-      .select('status')
-      .eq('subscription_id', target.id)
-      .eq('reminder_type', target.kind)
-      .eq('billing_date', target.dueDate)
-      .maybeSingle()
+  for (const group of groups) {
+    const sendable: ReminderTarget[] = []
 
-    if (previous && previous.status !== 'failed') {
-      skipped += 1
-      continue
+    for (const target of group.targets) {
+      const { data: previous } = await admin
+        .from('reminder_logs')
+        .select('status, sent_at')
+        .eq('subscription_id', target.id)
+        .eq('reminder_type', target.kind)
+        .eq('billing_date', target.dueDate)
+        .maybeSingle()
+
+      if (shouldSend(target, previous as LogRow | null, nowMs)) {
+        sendable.push(target)
+      } else {
+        skipped += 1
+      }
     }
 
-    const email = buildEmail(target, config)
-    const result = await sendViaResend(from, target.email, email.subject, email.html, email.text)
+    if (sendable.length === 0) continue
 
-    const { error: logError } = await admin.from('reminder_logs').upsert({
-      subscription_id: target.id,
-      reminder_type: target.kind,
-      billing_date: target.dueDate,
-      status: result.ok ? 'sent' : 'failed',
-      provider_id: result.ok ? result.id : null,
-      error: result.ok ? null : result.error,
-    })
+    const email = buildEmail(sendable, config)
+    const result = await sendViaResend(from, group.email, email.subject, email.html, email.text)
+    const sentAt = new Date().toISOString()
+
+    for (const target of sendable) {
+      const { error: logError } = await admin.from('reminder_logs').upsert(
+        {
+          subscription_id: target.id,
+          reminder_type: target.kind,
+          billing_date: target.dueDate,
+          status: result.ok ? 'sent' : 'failed',
+          provider_id: result.ok ? result.id : null,
+          error: result.ok ? null : result.error,
+          sent_at: sentAt,
+        },
+        { onConflict: 'subscription_id,reminder_type,billing_date' },
+      )
+
+      if (logError) console.error('No se pudo registrar el recordatorio:', logError.message)
+    }
 
     if (result.ok) sent += 1
     else failed += 1
 
-    if (logError) {
-      console.error('No se pudo registrar el recordatorio:', logError.message)
-    }
-
-    for (const operator of operatorRecipients) {
-      const operatorEmail = buildEmail(target, config, true)
+    for (const operator of getOperatorRecipients(config, group.email)) {
+      const operatorEmail = buildEmail(sendable, config, true)
       const operatorResult = await sendViaResend(
         from,
         operator,
@@ -406,6 +490,7 @@ Deno.serve(async (req) => {
 
   return json(200, {
     scanned: targets.length,
+    groups: groups.length,
     sent,
     failed,
     skipped,

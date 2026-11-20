@@ -50,7 +50,7 @@ function fromClientService(service: ClientService): ClientServiceValues {
 /** Creates or updates the client and all of its services in one transaction. */
 export async function saveClientWithServices(values: ClientFormValues): Promise<string> {
   const args = {
-    p_client_id: null,
+    p_client_id: values.client_id ?? null,
     p_full_name: values.full_name,
     p_email: values.email || null,
     p_services: values.services.map(toServicePayload),
@@ -69,6 +69,7 @@ export async function createClientService(
 ): Promise<void> {
   const client = await fetchClient(clientId)
   await saveClientWithServices({
+    client_id: clientId,
     full_name: client.full_name,
     email: client.email ?? '',
     services: [
@@ -92,6 +93,7 @@ export async function deleteClientService(service: ClientService): Promise<void>
 
   const client = await fetchClient(service.clientId)
   await saveClientWithServices({
+    client_id: service.clientId,
     full_name: client.full_name,
     email: client.email ?? '',
     services: remaining.map(fromClientService),
@@ -114,6 +116,7 @@ export async function updateClientService(service: ClientService): Promise<void>
   )
 
   await saveClientWithServices({
+    client_id: service.clientId,
     full_name: client.full_name,
     email: client.email ?? '',
     services,
