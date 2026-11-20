@@ -157,7 +157,7 @@ export function ClientFormDialog({
             {fields.map((field, index) => (
               <div
                 key={field.id}
-                className="border-border/70 bg-muted/20 rounded-xl border p-3 sm:p-4"
+                className="border-border/70 bg-muted/20 rounded-xl border"
               >
                 <div className="mb-3 flex items-center justify-between gap-3">
                   <p className="text-foreground text-sm font-medium">Servicio {index + 1}</p>
@@ -248,11 +248,11 @@ export function ClientFormDialog({
 
           <DialogFooter className="gap-2">
             <DialogClose asChild>
-              <Button type="button" variant="ghost">
+              <Button type="button" variant="outline">
                 Cancelar
               </Button>
             </DialogClose>
-            <Button type="submit" disabled={saveClient.isPending}>
+            <Button variant="white" type="submit" disabled={saveClient.isPending}>
               {saveClient.isPending ? 'Guardando…' : 'Guardar cambios'}
             </Button>
           </DialogFooter>

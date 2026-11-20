@@ -514,7 +514,7 @@ export default function ClientsPage() {
                                 onClick={() => void handleDeleteService(service)}
                               >
                                 <Trash2 aria-hidden="true" />
-                                Eliminar servicio
+                                Eliminar
                               </Button>
                             </div>
                           </li>
@@ -546,7 +546,7 @@ export default function ClientsPage() {
                         className="flex-1"
                         onClick={() => void handleDelete(group)}
                       >
-                        Eliminar
+                        Eliminar Cliente
                       </Button>
                     </div>
                   </li>
@@ -641,12 +641,13 @@ export default function ClientsPage() {
                         <TableCell className="text-right align-top whitespace-nowrap">
                           <div className="space-y-2">
                             <div>
-                              <Button variant="ghost" size="sm" onClick={() => openEdit(group)}>
+                              <Button className='w-full' variant="ghost" size="sm" onClick={() => openEdit(group)}>
                                 Editar cliente
                               </Button>
                             </div>
                             <div>
                               <Button
+                                className='w-full'
                                 variant="outline"
                                 size="sm"
                                 onClick={() => openAddService(group)}
@@ -657,11 +658,12 @@ export default function ClientsPage() {
                             </div>
                             <div>
                               <Button
+                                className='w-full'
                                 variant="destructive"
                                 size="sm"
                                 onClick={() => void handleDelete(group)}
                               >
-                                Eliminar
+                                Eliminar cliente
                               </Button>
                             </div>
                           </div>
