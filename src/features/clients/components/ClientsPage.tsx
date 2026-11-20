@@ -5,6 +5,7 @@ import {
   Car,
   CheckCircle2,
   Clock3,
+  Copy,
   Package,
   Plus,
   Search,
@@ -159,6 +160,24 @@ function groupByClient(services: ClientService[]): ClientGroup[] {
   return Array.from(groups.values())
 }
 
+/** WhatsApp reminder text for a single service, including its current payment state. */
+function buildReminderMessage(service: ClientService, state: ServicePaymentState): string {
+  const serviceLabel = serviceTypeLabels[service.serviceType as ServiceType] ?? service.serviceType
+  const dueDate = service.dueDate ? format(parseISO(service.dueDate), 'dd/MM/yyyy') : 'Sin fecha'
+
+  return [
+    `Hola ${service.clientName},`,
+    '',
+    'Te recordamos el pago de tu servicio:',
+    `Servicio: ${serviceLabel}`,
+    `Monto: ${formatServiceAmount(service)}`,
+    `Vencimiento: ${dueDate}`,
+    `Estado: ${serviceStateLabels[state]}`,
+    '',
+    'Si ya realizaste el pago, ignorá este mensaje. ¡Gracias!',
+  ].join('\n')
+}
+
 export default function ClientsPage() {
   const { data: services = [], isLoading, error } = useClientServices()
   const deleteClient = useDeleteClient()
@@ -261,6 +280,16 @@ export default function ClientsPage() {
           serviceError instanceof Error ? serviceError.message : 'No se pudo eliminar el servicio',
         tone: 'danger',
       })
+    }
+  }
+
+  const handleCopyReminder = async (service: ClientService) => {
+    const message = buildReminderMessage(service, getServiceState(service, today))
+    try {
+      await navigator.clipboard.writeText(message)
+      setNotice({ text: 'Mensaje de recordatorio copiado para WhatsApp.', tone: 'success' })
+    } catch {
+      setNotice({ text: 'No se pudo copiar el mensaje.', tone: 'danger' })
     }
   }
 
@@ -451,7 +480,17 @@ export default function ClientsPage() {
                           <li key={service.id} className="space-y-3 p-3">
                             <div className="flex flex-wrap items-center justify-between gap-2">
                               <ServiceTypeTag type={service.serviceType} />
-                              <StateBadge state={state} />
+                              <div className="flex items-center gap-2">
+                                <StateBadge state={state} />
+                                <Button
+                                  variant="ghost"
+                                  size="icon-sm"
+                                  aria-label={`Copiar recordatorio de ${service.serviceType}`}
+                                  onClick={() => void handleCopyReminder(service)}
+                                >
+                                  <Copy aria-hidden="true" />
+                                </Button>
+                              </div>
                             </div>
                             <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
                               <div>
@@ -516,15 +555,6 @@ export default function ClientsPage() {
                         Editar cliente
                       </Button>
                       <Button
-                        variant="outline"
-                        size="sm"
-                        className="flex-1"
-                        onClick={() => openAddService(group)}
-                      >
-                        <Plus aria-hidden="true" />
-                        Agregar servicio
-                      </Button>
-                      <Button
                         variant="destructive"
                         size="sm"
                         className="flex-1"
@@ -552,13 +582,23 @@ export default function ClientsPage() {
                       <TableRow key={group.id}>
                         <TableCell className="align-top">
                           <div className="min-w-0">
-                            <p className="font-medium" title={group.name}>
-                              <UserRound
-                                className="text-muted-foreground me-1.5 inline size-3.5"
-                                aria-hidden="true"
-                              />
-                              {group.name}
-                            </p>
+                            <div className="flex items-center gap-2">
+                              <p className="font-medium" title={group.name}>
+                                <UserRound
+                                  className="text-muted-foreground me-1.5 inline size-3.5"
+                                  aria-hidden="true"
+                                />
+                                {group.name}
+                              </p>
+                              <Button
+                                variant="ghost"
+                                size="icon-sm"
+                                aria-label={`Agregar servicio a ${group.name}`}
+                                onClick={() => openAddService(group)}
+                              >
+                                <Plus aria-hidden="true" />
+                              </Button>
+                            </div>
                             <p className="text-secondary tabular-data mt-1 text-xs">
                               {group.services.length}{' '}
                               {group.services.length === 1 ? 'servicio' : 'servicios'}
@@ -601,6 +641,14 @@ export default function ClientsPage() {
                                     <Button
                                       variant="ghost"
                                       size="xs"
+                                      aria-label={`Copiar recordatorio de ${service.serviceType} de ${service.clientName}`}
+                                      onClick={() => void handleCopyReminder(service)}
+                                    >
+                                      <Copy aria-hidden="true" />
+                                    </Button>
+                                    <Button
+                                      variant="ghost"
+                                      size="xs"
                                       onClick={() => void handleTogglePayment(service)}
                                     >
                                       {state === 'paid' ? 'Sin pagar' : 'Marcar pagado'}
@@ -630,17 +678,6 @@ export default function ClientsPage() {
                                 onClick={() => openEdit(group)}
                               >
                                 Editar cliente
-                              </Button>
-                            </div>
-                            <div>
-                              <Button
-                                className="w-full"
-                                variant="outline"
-                                size="sm"
-                                onClick={() => openAddService(group)}
-                              >
-                                <Plus aria-hidden="true" />
-                                Agregar servicio
                               </Button>
                             </div>
                             <div>
