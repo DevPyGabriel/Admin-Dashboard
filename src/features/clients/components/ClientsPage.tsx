@@ -474,6 +474,10 @@ export default function ClientsPage() {
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0 space-y-1">
                         <p className="truncate font-medium" title={group.name}>
+                          <UserRound
+                            className="text-muted-foreground me-1.5 inline size-3.5"
+                            aria-hidden="true"
+                          />
                           {group.name}
                         </p>
                         <p className="text-secondary truncate text-xs">
