@@ -3,6 +3,7 @@ import { format, parseISO } from 'date-fns'
 import {
   AlertCircle,
   Car,
+  CheckCircle2,
   Clock3,
   Package,
   Plus,
@@ -271,11 +272,24 @@ export default function ClientsPage() {
     setSort('urgency')
   }
 
-  const statsCards = [
+  const statsCards: Array<{
+    label: string
+    value: number
+    icon: LucideIcon
+    tone: string
+    className?: string
+  }> = [
     { label: 'Clientes', value: stats.clients, icon: UsersRound, tone: 'text-foreground' },
     { label: 'Servicios', value: stats.total, icon: Package, tone: 'text-primary' },
+    { label: 'Pagados', value: stats.paid, icon: CheckCircle2, tone: 'text-success' },
     { label: 'Pendientes', value: stats.pending, icon: Clock3, tone: 'text-warning' },
-    { label: 'Por cobrar', value: stats.overdue, icon: AlertCircle, tone: 'text-danger' },
+    {
+      label: 'Por cobrar',
+      value: stats.overdue,
+      icon: AlertCircle,
+      tone: 'text-danger',
+      className: 'col-span-2',
+    },
   ]
 
   return (
@@ -306,8 +320,8 @@ export default function ClientsPage() {
         )}
 
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-          {statsCards.map(({ label, value, icon: Icon, tone }) => (
-            <div key={label} className="surface-panel flex items-center gap-3 p-3">
+          {statsCards.map(({ label, value, icon: Icon, tone, className }) => (
+            <div key={label} className={cn('surface-panel flex items-center gap-3 p-3', className)}>
               <Icon className={cn('size-4 shrink-0', tone)} aria-hidden="true" />
               <div className="min-w-0">
                 <p className="text-secondary truncate text-xs">{label}</p>
