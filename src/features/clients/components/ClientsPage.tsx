@@ -63,7 +63,6 @@ interface Notice {
 interface ClientGroup {
   id: string
   name: string
-  email: string | null
   services: ClientService[]
 }
 
@@ -154,7 +153,6 @@ function groupByClient(services: ClientService[]): ClientGroup[] {
     groups.set(service.clientId, {
       id: service.clientId,
       name: service.clientName,
-      email: service.email,
       services: [service],
     })
   })
@@ -431,11 +429,8 @@ export default function ClientsPage() {
                         <p className="truncate font-medium" title={group.name}>
                           {group.name}
                         </p>
-                        <p
-                          className="text-secondary truncate text-xs"
-                          title={group.email ?? undefined}
-                        >
-                          {group.email || 'Sin correo'} · {group.services.length}{' '}
+                        <p className="text-secondary truncate text-xs">
+                          {group.services.length}{' '}
                           {group.services.length === 1 ? 'servicio' : 'servicios'}
                         </p>
                       </div>
@@ -563,12 +558,6 @@ export default function ClientsPage() {
                                 aria-hidden="true"
                               />
                               {group.name}
-                            </p>
-                            <p
-                              className="text-secondary max-w-48 truncate text-xs"
-                              title={group.email ?? undefined}
-                            >
-                              {group.email || 'Sin correo'}
                             </p>
                             <p className="text-secondary tabular-data mt-1 text-xs">
                               {group.services.length}{' '}

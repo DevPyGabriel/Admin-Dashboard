@@ -123,17 +123,8 @@ export function ClientFormDialog({
                 <p className="text-destructive text-xs">{errors.full_name.message}</p>
               )}
             </div>
-            <div className="space-y-1.5">
-              <Label htmlFor="client-email">Correo electrónico</Label>
-              <Input
-                id="client-email"
-                className="text-[13px]"
-                type="email"
-                autoComplete="email"
-                {...register('email')}
-              />
-              {errors.email && <p className="text-destructive text-xs">{errors.email.message}</p>}
-            </div>
+            {/* El correo ya no se edita aquí; se conserva para no borrarlo al editar el cliente. */}
+            <input type="hidden" {...register('email')} />
           </div>
 
           <div className="space-y-3">
