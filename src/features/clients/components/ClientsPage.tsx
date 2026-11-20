@@ -10,6 +10,7 @@ import {
   Search,
   Trash2,
   Truck,
+  UserRound,
   UsersRound,
   X,
   type LucideIcon,
@@ -569,6 +570,10 @@ export default function ClientsPage() {
                         <TableCell className="align-top">
                           <div className="min-w-0">
                             <p className="font-medium" title={group.name}>
+                              <UserRound
+                                className="text-muted-foreground me-1.5 inline size-3.5"
+                                aria-hidden="true"
+                              />
                               {group.name}
                             </p>
                             <p
@@ -641,13 +646,18 @@ export default function ClientsPage() {
                         <TableCell className="text-right align-top whitespace-nowrap">
                           <div className="space-y-2">
                             <div>
-                              <Button className='w-full' variant="ghost" size="sm" onClick={() => openEdit(group)}>
+                              <Button
+                                className="w-full"
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => openEdit(group)}
+                              >
                                 Editar cliente
                               </Button>
                             </div>
                             <div>
                               <Button
-                                className='w-full'
+                                className="w-full"
                                 variant="outline"
                                 size="sm"
                                 onClick={() => openAddService(group)}
@@ -658,7 +668,7 @@ export default function ClientsPage() {
                             </div>
                             <div>
                               <Button
-                                className='w-full'
+                                className="w-full"
                                 variant="destructive"
                                 size="sm"
                                 onClick={() => void handleDelete(group)}

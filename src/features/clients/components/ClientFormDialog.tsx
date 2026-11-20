@@ -155,10 +155,7 @@ export function ClientFormDialog({
             </div>
 
             {fields.map((field, index) => (
-              <div
-                key={field.id}
-                className="border-border/70 bg-muted/20 rounded-xl border"
-              >
+              <div key={field.id} className="border-border/70 bg-muted/20 rounded-xl border">
                 <div className="mb-3 flex items-center justify-between gap-3">
                   <p className="text-foreground text-sm font-medium">Servicio {index + 1}</p>
                   {fields.length > 1 && (
