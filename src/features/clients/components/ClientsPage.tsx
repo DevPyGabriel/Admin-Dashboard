@@ -364,7 +364,7 @@ export default function ClientsPage() {
           </p>
         )}
 
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
           {statsCards.map(({ label, value, icon: Icon, tone, className }) => (
             <div key={label} className={cn('surface-panel flex items-center gap-3 p-3', className)}>
               <Icon className={cn('size-4 shrink-0', tone)} aria-hidden="true" />
