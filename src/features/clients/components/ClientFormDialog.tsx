@@ -108,7 +108,7 @@ export function ClientFormDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={onSubmit} className="space-y-5" noValidate>
+        <form onSubmit={onSubmit} className="space-y-4" noValidate>
           <div className="grid gap-3 sm:grid-cols-2">
             <div className="space-y-1.5">
               <Label htmlFor="client-full-name">Nombre completo</Label>
@@ -136,15 +136,6 @@ export function ClientFormDialog({
           </div>
 
           <div className="space-y-3">
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <div>
-                <p className="text-foreground text-sm font-semibold">Servicios</p>
-                <p className="text-muted-foreground text-xs">
-                  Agrega todos los servicios de este cliente.
-                </p>
-              </div>
-            </div>
-
             {fields.map((field, index) => (
               <div key={field.id} className="border-border/70 bg-muted/20 rounded-xl border">
                 <div className="mb-3 flex items-center justify-between gap-3">
@@ -183,7 +174,7 @@ export function ClientFormDialog({
                     )}
                   </div>
                   <div className="space-y-1.5">
-                    <Label htmlFor={`service-amount-${index}`}>Monto</Label>
+                    <Label htmlFor={`service-amount-${index}`}>Monto (USD)</Label>
                     <Input
                       id={`service-amount-${index}`}
                       className="text-[13px]"
