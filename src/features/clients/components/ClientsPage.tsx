@@ -516,6 +516,9 @@ export default function ClientsPage() {
                                 <dd className="tabular-data font-medium">
                                   {formatServiceAmount(service)}
                                 </dd>
+                                <dd className="text-secondary text-xs">
+                                  = Bs {formatBsAmount(service.amount, bsExchangeRate)}
+                                </dd>
                               </div>
                               <div>
                                 <dt className="text-secondary pb-1 text-xs font-medium">
@@ -639,6 +642,9 @@ export default function ClientsPage() {
                                     <p className="text-secondary text-xs">Monto</p>
                                     <p className="tabular-data text-sm font-medium">
                                       {formatServiceAmount(service)}
+                                    </p>
+                                    <p className="text-secondary text-xs">
+                                      = Bs {formatBsAmount(service.amount, bsExchangeRate)}
                                     </p>
                                   </div>
                                   <div className="min-w-24">
