@@ -143,15 +143,6 @@ export function ClientFormDialog({
                   Agrega todos los servicios de este cliente.
                 </p>
               </div>
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => append(emptyService())}
-              >
-                <Plus className="size-4" aria-hidden="true" />
-                Agregar servicio
-              </Button>
             </div>
 
             {fields.map((field, index) => (
@@ -235,6 +226,16 @@ export function ClientFormDialog({
             {errors.services?.root && (
               <p className="text-destructive text-xs">{errors.services.root.message}</p>
             )}
+
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => append(emptyService())}
+            >
+              <Plus className="size-4" aria-hidden="true" />
+              Agregar servicio
+            </Button>
           </div>
 
           {saveClient.isError && (
