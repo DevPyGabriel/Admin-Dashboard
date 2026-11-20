@@ -18,11 +18,12 @@ Operator-triggered calls use the normal Supabase session JWT. A request body of
 `{ "testEmail": "someone@example.com" }` sends a single sample email to that
 address instead of the client's address and does not write a reminder log. The
 sample includes all services belonging to the first client with pending or
-overdue items. Test mode also sends a `Copia operador:` copy to `support_email`
-and every address in `operator_emails`, and includes services with
-`auto_remind = false`; the scheduled job does not. In normal mode each grouped
-reminder goes to the client and to those same operator inboxes, with
-deduplicated recipients.
+overdue items. Test mode also sends one consolidated `Copia operador:` summary
+to `support_email` and every address in `operator_emails`, listing every client
+with its services and amounts plus a grand subtotal when more than one service
+applies; it includes services with `auto_remind = false`, while the scheduled job
+does not. In normal mode each grouped reminder goes to its client, and a single
+summary goes to those same operator inboxes, with deduplicated recipients.
 
 The cron job runs at 09:00 UTC and calls this function with `verify_jwt = false`
 so the shared secret is evaluated inside the function.

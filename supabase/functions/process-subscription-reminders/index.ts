@@ -84,13 +84,17 @@ function normalizeEmail(value: string): string {
   return value.trim().toLowerCase()
 }
 
-function getOperatorRecipients(settings: SettingsRow, exclude?: string): string[] {
-  const excluded = exclude ? normalizeEmail(exclude) : ''
+function getOperatorRecipients(settings: SettingsRow, exclude?: string | string[]): string[] {
+  const excluded = new Set(
+    (Array.isArray(exclude) ? exclude : exclude ? [exclude] : [])
+      .map(normalizeEmail)
+      .filter(Boolean),
+  )
   return Array.from(
     new Set(
       [settings.support_email, ...(settings.operator_emails ?? [])]
         .map(normalizeEmail)
-        .filter((email) => email && email !== excluded),
+        .filter((email) => email && !excluded.has(email)),
     ),
   )
 }
@@ -272,6 +276,85 @@ function buildEmail(targets: ReminderTarget[], settings: SettingsRow, operatorCo
   return { subject, html, text }
 }
 
+/** One consolidated operator email with every client, their services and the grand subtotal. */
+function buildOperatorSummary(groups: ReminderGroup[], settings: SettingsRow) {
+  const clients = groups.filter((group) => group.targets.length > 0)
+  const targets = clients.flatMap((group) => group.targets)
+  if (targets.length === 0) return null
+
+  const serviceNoun = targets.length === 1 ? 'servicio' : 'servicios'
+  const clientNoun = clients.length === 1 ? 'cliente' : 'clientes'
+  const subject = `Copia operador: ${targets.length} ${serviceNoun} de ${clients.length} ${clientNoun}`
+
+  const subtotals = new Map<string, number>()
+  for (const target of targets) {
+    const currency = target.currency || settings.currency || 'USD'
+    subtotals.set(currency, (subtotals.get(currency) ?? 0) + target.amount)
+  }
+  const subtotalLabel =
+    targets.length > 1
+      ? Array.from(subtotals.entries())
+          .map(([currency, amount]) => escapeHtml(formatAmount(amount, currency)))
+          .join(' · ')
+      : ''
+  const subtotalHtml = subtotalLabel
+    ? `<p><strong>Subtotal de todos los servicios:</strong> ${subtotalLabel}</p>`
+    : ''
+
+  const clientSectionsHtml = clients
+    .map((group) => {
+      const rows = group.targets
+        .map((target) => {
+          const service = serviceLabels[target.serviceType] ?? target.serviceType
+          const amount = formatAmount(target.amount, target.currency)
+          const status =
+            target.kind === 'payment_due'
+              ? `Vencido el ${target.dueDate}`
+              : `Vence en ${target.daysUntilDue} ${target.daysUntilDue === 1 ? 'día' : 'días'}`
+          return `<tr>
+      <td>${escapeHtml(service)}</td>
+      <td>${escapeHtml(amount)}</td>
+      <td>${escapeHtml(target.dueDate)}</td>
+      <td>${escapeHtml(status)}</td>
+    </tr>`
+        })
+        .join('\n      ')
+      return `<h3 style="margin-bottom:4px">${escapeHtml(group.clientName)} <span style="font-weight:normal;color:#71717a">(${escapeHtml(group.email)})</span></h3>
+  <table cellpadding="8" cellspacing="0" style="border-collapse:collapse;margin:8px 0 16px">
+    <tr><th align="left">Servicio</th><th align="left">Monto</th><th align="left">Vencimiento</th><th align="left">Estado</th></tr>
+      ${rows}
+  </table>`
+    })
+    .join('\n  ')
+
+  const company = escapeHtml(settings.company_name || 'NovaDrive')
+  const html = `<div style="font-family:Arial,sans-serif;line-height:1.5;color:#18181b">
+  <p>Resumen de los recordatorios de pago enviados:</p>
+  ${clientSectionsHtml}
+  ${subtotalHtml}
+  <p>Saludos,<br />${company}</p>
+</div>`
+
+  const clientSectionsText = clients
+    .map((group) => {
+      const lines = group.targets.map((target) => {
+        const service = serviceLabels[target.serviceType] ?? target.serviceType
+        const amount = formatAmount(target.amount, target.currency)
+        const status =
+          target.kind === 'payment_due'
+            ? `Vencido el ${target.dueDate}`
+            : `Vence en ${target.daysUntilDue} ${target.daysUntilDue === 1 ? 'día' : 'días'}`
+        return `- ${service}: ${amount} | Vencimiento: ${target.dueDate} | ${status}`
+      })
+      return `${group.clientName} (${group.email})\n${lines.join('\n')}`
+    })
+    .join('\n\n')
+  const subtotalText = subtotalLabel ? `Subtotal de todos los servicios: ${subtotalLabel}\n\n` : ''
+  const text = `Resumen de los recordatorios de pago enviados:\n\n${clientSectionsText}\n\n${subtotalText}Saludos,\n${settings.company_name || 'NovaDrive'}`
+
+  return { subject, html, text }
+}
+
 async function sendViaResend(
   from: string,
   to: string,
@@ -344,7 +427,6 @@ Deno.serve(async (req) => {
 
   const fromAddress = config.sender_email?.trim() || 'onboarding@resend.dev'
   const from = `${config.company_name || 'NovaDrive'} <${fromAddress}>`
-  const operatorRecipients = getOperatorRecipients(config)
 
   const { data: rows, error: rowsError } = await admin
     .from('subscriptions')
@@ -361,6 +443,10 @@ Deno.serve(async (req) => {
     Boolean(auth.testEmail),
   )
   const groups = groupTargets(targets)
+  const operatorRecipients = getOperatorRecipients(
+    config,
+    groups.map((group) => group.email),
+  )
 
   if (auth.testEmail) {
     const group = groups[0]
@@ -389,14 +475,15 @@ Deno.serve(async (req) => {
       error: clientResult.ok ? null : clientResult.error,
     })
 
+    const summary = buildOperatorSummary(groups, config)
     for (const operator of getOperatorRecipients(config, auth.testEmail)) {
-      const operatorEmail = buildEmail(group.targets, config, true)
+      if (!summary) break
       const result = await sendViaResend(
         from,
         operator,
-        operatorEmail.subject,
-        operatorEmail.html,
-        operatorEmail.text,
+        summary.subject,
+        summary.html,
+        summary.text,
       )
       deliveries.push({
         to: operator,
@@ -424,6 +511,7 @@ Deno.serve(async (req) => {
   let operatorSent = 0
   let operatorFailed = 0
   const nowMs = Date.now()
+  const sentGroups: ReminderGroup[] = []
 
   for (const group of groups) {
     const sendable: ReminderTarget[] = []
@@ -470,14 +558,18 @@ Deno.serve(async (req) => {
     if (result.ok) sent += 1
     else failed += 1
 
-    for (const operator of getOperatorRecipients(config, group.email)) {
-      const operatorEmail = buildEmail(sendable, config, true)
+    sentGroups.push({ email: group.email, clientName: group.clientName, targets: sendable })
+  }
+
+  const summary = buildOperatorSummary(sentGroups, config)
+  if (summary) {
+    for (const operator of operatorRecipients) {
       const operatorResult = await sendViaResend(
         from,
         operator,
-        operatorEmail.subject,
-        operatorEmail.html,
-        operatorEmail.text,
+        summary.subject,
+        summary.html,
+        summary.text,
       )
       if (operatorResult.ok) {
         operatorSent += 1

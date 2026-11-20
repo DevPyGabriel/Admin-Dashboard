@@ -177,11 +177,13 @@ to test the automatic sender on demand.
 Services due within `reminder_days_before` (3 days by default) and overdue
 services are grouped into one email per client address; overdue services are
 resent every 3 days until paid, while upcoming reminders are sent once per
-billing cycle. Every grouped reminder is copied to `support_email` plus any
+billing cycle. A single operator summary is copied to `support_email` plus any
 addresses in `company_settings.operator_emails` (comma-separated field in the
-settings page). Operator copies are deduplicated, exclude the client address and
-have the subject prefix `Copia operador:`. A failed operator copy is reported in
-the response but does not change the client's `reminder_logs` status.
+settings page). It lists every client by name with its services and amounts, and
+includes a grand subtotal when more than one service applies. Operator copies are
+deduplicated, exclude client addresses and have the subject prefix
+`Copia operador:`. A failed operator copy is reported in the response but does
+not change the client's `reminder_logs` status.
 
 Until a domain is verified in **Resend → Domains**, set `sender_email` to
 `onboarding@resend.dev`; Resend will only deliver to the email address associated
