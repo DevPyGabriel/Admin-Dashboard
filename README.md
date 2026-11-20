@@ -158,6 +158,10 @@ credentials as Supabase Secrets (never in `VITE_*` or the frontend bundle):
 ```bash
 npx supabase secrets set RESEND_API_KEY=re_... --project-ref <project-ref>
 npx supabase secrets set CRON_SECRET=<random-value> --project-ref <project-ref>
+
+# Optional sandbox operator accounts (one Resend account per operator email)
+npx supabase secrets set RESEND_API_KEY_ASSISTANT=re_... --project-ref <project-ref>
+npx supabase secrets set RESEND_API_KEY_OWNER=re_... --project-ref <project-ref>
 ```
 
 Deploy the daily job and schedule it at 09:00 UTC:

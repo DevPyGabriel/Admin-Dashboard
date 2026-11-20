@@ -11,8 +11,17 @@ billing_date)` as the idempotency key.
 
 Private configuration lives in Supabase Secrets, never in the client bundle:
 
-- `RESEND_API_KEY` — Resend API key.
+- `RESEND_API_KEY` — main Resend API key (clients and fallback).
+- `RESEND_API_KEY_ASSISTANT` — API key of the Resend account owned by
+  `virginiarofe.05@gmail.com` (assistant operator copy).
+- `RESEND_API_KEY_OWNER` — API key of the Resend account owned by
+  `edwinfiu6b@gmail.com` (owner operator copy).
 - `CRON_SECRET` — shared secret used by the `pg_cron` job (`x-cron-secret` header).
+
+With the sandbox sender, each Resend account can only deliver to its own account
+email. The two operator secrets make the report reach both inboxes. If an
+operator secret is missing, the function falls back to `RESEND_API_KEY`, which
+Resend will reject for that recipient until the account is created.
 
 Operator-triggered calls use the normal Supabase session JWT. A request body of
 `{ "testEmail": "someone@example.com" }` sends a single sample email to that

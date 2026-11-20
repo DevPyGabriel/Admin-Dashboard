@@ -64,6 +64,15 @@ const serviceLabels: Record<string, string> = {
   delivery: 'Delivery',
 }
 
+/**
+ * Sandbox accounts may only deliver to their own Resend account email.
+ * Each operator therefore needs a separate Resend API key.
+ */
+const operatorResendSecrets: Record<string, string> = {
+  'virginiarofe.05@gmail.com': 'RESEND_API_KEY_ASSISTANT',
+  'edwinfiu6b@gmail.com': 'RESEND_API_KEY_OWNER',
+}
+
 const overdueRepeatMs = 3 * 86_400_000
 
 const json = (status: number, body: unknown) =>
@@ -97,6 +106,16 @@ function getOperatorRecipients(settings: SettingsRow, exclude?: string | string[
         .filter((email) => email && !excluded.has(email)),
     ),
   )
+}
+
+/** Uses the recipient's own sandbox account key when available, otherwise the main key. */
+function getResendApiKey(recipient: string): string {
+  const secretName = operatorResendSecrets[normalizeEmail(recipient)]
+  const operatorKey = secretName ? Deno.env.get(secretName)?.trim() : ''
+  if (secretName && !operatorKey) {
+    console.warn(`Falta ${secretName}; se usa RESEND_API_KEY para ${recipient}`)
+  }
+  return operatorKey || Deno.env.get('RESEND_API_KEY') || ''
 }
 
 function formatAmount(amount: number, currency: string): string {
@@ -361,11 +380,12 @@ async function sendViaResend(
   subject: string,
   html: string,
   text: string,
+  apiKey: string,
 ): Promise<{ ok: true; id: string | null } | { ok: false; error: string }> {
   const response = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: {
-      Authorization: `Bearer ${Deno.env.get('RESEND_API_KEY') ?? ''}`,
+      Authorization: `Bearer ${apiKey}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({ from, to: [to], subject, html, text }),
@@ -468,6 +488,7 @@ Deno.serve(async (req) => {
       email.subject,
       email.html,
       email.text,
+      getResendApiKey(auth.testEmail),
     )
     deliveries.push({
       to: auth.testEmail,
@@ -484,6 +505,7 @@ Deno.serve(async (req) => {
         summary.subject,
         summary.html,
         summary.text,
+        getResendApiKey(operator),
       )
       deliveries.push({
         to: operator,
@@ -535,7 +557,14 @@ Deno.serve(async (req) => {
     if (sendable.length === 0) continue
 
     const email = buildEmail(sendable, config)
-    const result = await sendViaResend(from, group.email, email.subject, email.html, email.text)
+    const result = await sendViaResend(
+      from,
+      group.email,
+      email.subject,
+      email.html,
+      email.text,
+      getResendApiKey(group.email),
+    )
     const sentAt = new Date().toISOString()
 
     for (const target of sendable) {
@@ -570,6 +599,7 @@ Deno.serve(async (req) => {
         summary.subject,
         summary.html,
         summary.text,
+        getResendApiKey(operator),
       )
       if (operatorResult.ok) {
         operatorSent += 1
