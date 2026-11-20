@@ -3,7 +3,6 @@ import { format, parseISO } from 'date-fns'
 import {
   AlertCircle,
   Car,
-  CheckCircle2,
   Clock3,
   Package,
   Plus,
@@ -275,7 +274,6 @@ export default function ClientsPage() {
   const statsCards = [
     { label: 'Clientes', value: stats.clients, icon: UsersRound, tone: 'text-foreground' },
     { label: 'Servicios', value: stats.total, icon: Package, tone: 'text-primary' },
-    { label: 'Pagados', value: stats.paid, icon: CheckCircle2, tone: 'text-success' },
     { label: 'Pendientes', value: stats.pending, icon: Clock3, tone: 'text-warning' },
     { label: 'Por cobrar', value: stats.overdue, icon: AlertCircle, tone: 'text-danger' },
   ]
