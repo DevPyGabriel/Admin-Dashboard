@@ -258,6 +258,7 @@ function buildEmail(targets: ReminderTarget[], settings: SettingsRow, operatorCo
           ? `Vencido el ${target.dueDate}`
           : `Vence en ${target.daysUntilDue} ${target.daysUntilDue === 1 ? 'día' : 'días'}`
       return `<tr>
+    <td>${escapeHtml(target.clientName)}</td>
     <td>${escapeHtml(service)}</td>
     <td>${escapeHtml(amount)}</td>
     <td>${escapeHtml(target.dueDate)}</td>
@@ -271,7 +272,7 @@ function buildEmail(targets: ReminderTarget[], settings: SettingsRow, operatorCo
   ${greeting}
   <p>${detail}</p>
   <table cellpadding="8" cellspacing="0" style="border-collapse:collapse;margin:16px 0">
-    <tr><th align="left">Servicio</th><th align="left">Monto</th><th align="left">Vencimiento</th><th align="left">Estado</th></tr>
+    <tr><th align="left">Cliente</th><th align="left">Servicio</th><th align="left">Monto</th><th align="left">Vencimiento</th><th align="left">Estado</th></tr>
     ${rowsHtml}
   </table>
   <p>Si ya realizaste el pago, ignora este mensaje. Consultas: ${escapeHtml(settings.support_email)}.</p>
@@ -288,7 +289,7 @@ function buildEmail(targets: ReminderTarget[], settings: SettingsRow, operatorCo
       target.kind === 'payment_due'
         ? `Vencido el ${target.dueDate}`
         : `Vence en ${target.daysUntilDue} ${target.daysUntilDue === 1 ? 'día' : 'días'}`
-    return `- ${service}: ${amount} | Vencimiento: ${target.dueDate} | ${status}`
+    return `- ${target.clientName} — ${service}: ${amount} | Vencimiento: ${target.dueDate} | ${status}`
   })
   const text = `${textGreeting}${detail}\n\n${lines.join('\n')}\n\nSi ya realizaste el pago, ignora este mensaje. Consultas: ${settings.support_email}.\n\nSaludos,\n${settings.company_name || 'NovaDrive'}`
 
