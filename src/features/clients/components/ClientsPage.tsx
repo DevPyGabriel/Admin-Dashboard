@@ -166,15 +166,18 @@ function buildReminderMessage(service: ClientService, state: ServicePaymentState
   const dueDate = service.dueDate ? format(parseISO(service.dueDate), 'dd/MM/yyyy') : 'Sin fecha'
 
   return [
-    `Hola ${service.clientName},`,
+    `Hola *${service.clientName}* 👋,`,
     '',
-    'Te recordamos el pago de tu servicio:',
-    `Servicio: ${serviceLabel}`,
-    `Monto: ${formatServiceAmount(service)}`,
-    `Vencimiento: ${dueDate}`,
-    `Estado: ${serviceStateLabels[state]}`,
+    'Te recordamos que tienes un pago pendiente por tu servicio:',
     '',
-    'Si ya realizaste el pago, ignorá este mensaje. ¡Gracias!',
+    `📌 *Servicio:* ${serviceLabel}`,
+    `💵 *Monto:* ${formatServiceAmount(service)}`,
+    `📅 *Vencimiento:* ${dueDate}`,
+    `⏳ *Estado:* ${serviceStateLabels[state]}`,
+    '',
+    'Por favor, envíanos el comprobante por este medio una vez realizado el pago.',
+    '',
+    '_Si ya cancelaste este monto, por favor haz caso omiso a este mensaje._ ¡Gracias!',
   ].join('\n')
 }
 
@@ -552,10 +555,10 @@ export default function ClientsPage() {
                         className="flex-1"
                         onClick={() => openEdit(group)}
                       >
-                        Editar cliente
+                        Editar
                       </Button>
                       <Button
-                        variant="destructive"
+                        variant="outline"
                         size="sm"
                         className="flex-1"
                         onClick={() => void handleDelete(group)}
