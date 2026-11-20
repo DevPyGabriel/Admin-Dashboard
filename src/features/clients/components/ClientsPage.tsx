@@ -612,7 +612,7 @@ export default function ClientsPage() {
                                 {group.name}
                               </p>
                               <Button
-                                variant="ghost"
+                                variant="outline"
                                 size="icon-sm"
                                 aria-label={`Agregar servicio a ${group.name}`}
                                 onClick={() => openAddService(group)}
@@ -697,7 +697,7 @@ export default function ClientsPage() {
                             <div>
                               <Button
                                 className="w-full"
-                                variant="ghost"
+                                variant="outline"
                                 size="sm"
                                 onClick={() => openEdit(group)}
                               >
