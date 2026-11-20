@@ -32,6 +32,7 @@ export default function SettingsPage() {
     resolver: zodResolver(companySettingsSchema),
     values: settingsQuery.data
       ? {
+          bs_exchange_rate: settingsQuery.data.bs_exchange_rate ?? 0,
           company_name: settingsQuery.data.company_name,
           support_email: settingsQuery.data.support_email,
           sender_email: settingsQuery.data.sender_email ?? '',
@@ -189,6 +190,27 @@ export default function SettingsPage() {
               />
               {form.formState.errors.currency && (
                 <p className="text-destructive text-xs">{form.formState.errors.currency.message}</p>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="bs_exchange_rate">Valor del Bs. (por 1 USD)</Label>
+              <Input
+                id="bs_exchange_rate"
+                type="number"
+                min={0}
+                step="0.01"
+                aria-describedby="bs_exchange_rate_help"
+                aria-invalid={!!form.formState.errors.bs_exchange_rate}
+                {...form.register('bs_exchange_rate', { valueAsNumber: true })}
+              />
+              <p id="bs_exchange_rate_help" className="text-secondary text-xs">
+                Se usa para mostrar el equivalente en bolívares en los mensajes de WhatsApp.
+              </p>
+              {form.formState.errors.bs_exchange_rate && (
+                <p className="text-destructive text-xs">
+                  {form.formState.errors.bs_exchange_rate.message}
+                </p>
               )}
             </div>
 

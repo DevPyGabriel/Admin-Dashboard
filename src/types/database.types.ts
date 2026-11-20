@@ -52,6 +52,7 @@ export type Database = {
       }
       company_settings: {
         Row: {
+          bs_exchange_rate: number
           company_name: string
           created_at: string
           currency: string
@@ -64,6 +65,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          bs_exchange_rate?: number
           company_name: string
           created_at?: string
           currency?: string
@@ -76,6 +78,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          bs_exchange_rate?: number
           company_name?: string
           created_at?: string
           currency?: string

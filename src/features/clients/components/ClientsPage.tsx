@@ -54,6 +54,7 @@ import {
   useRegisterPayment,
   useUnregisterPayment,
 } from '@/features/clients/hooks/useClients'
+import { useCompanySettings } from '@/features/settings/hooks/useSettings'
 import { cn } from '@/lib/utils/cn'
 
 interface Notice {
@@ -160,8 +161,20 @@ function groupByClient(services: ClientService[]): ClientGroup[] {
   return Array.from(groups.values())
 }
 
+/** Bolívar equivalent of a USD amount, using the rate from company settings. */
+function formatBsAmount(amount: number, rate: number): string {
+  return new Intl.NumberFormat('es-AR', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(amount * rate)
+}
+
 /** WhatsApp reminder text for a single service, including its current payment state. */
-function buildReminderMessage(service: ClientService, state: ServicePaymentState): string {
+function buildReminderMessage(
+  service: ClientService,
+  state: ServicePaymentState,
+  bsExchangeRate: number,
+): string {
   const serviceLabel = serviceTypeLabels[service.serviceType as ServiceType] ?? service.serviceType
   const dueDate = service.dueDate ? format(parseISO(service.dueDate), 'dd/MM/yyyy') : 'Sin fecha'
 
@@ -171,7 +184,7 @@ function buildReminderMessage(service: ClientService, state: ServicePaymentState
     'Te recordamos que tienes un pago pendiente por tu servicio:',
     '',
     `📌 *Servicio:* ${serviceLabel}`,
-    `💵 *Monto:* ${formatServiceAmount(service)}`,
+    `💵 *Monto:* ${formatServiceAmount(service)} = Bs ${formatBsAmount(service.amount, bsExchangeRate)}`,
     `📅 *Vencimiento:* ${dueDate}`,
     `⏳ *Estado:* ${serviceStateLabels[state]}`,
     '',
@@ -183,6 +196,8 @@ function buildReminderMessage(service: ClientService, state: ServicePaymentState
 
 export default function ClientsPage() {
   const { data: services = [], isLoading, error } = useClientServices()
+  const settingsQuery = useCompanySettings()
+  const bsExchangeRate = settingsQuery.data?.bs_exchange_rate ?? 0
   const deleteClient = useDeleteClient()
   const deleteService = useDeleteClientService()
   const registerPayment = useRegisterPayment()
@@ -287,7 +302,7 @@ export default function ClientsPage() {
   }
 
   const handleCopyReminder = async (service: ClientService) => {
-    const message = buildReminderMessage(service, getServiceState(service, today))
+    const message = buildReminderMessage(service, getServiceState(service, today), bsExchangeRate)
     try {
       await navigator.clipboard.writeText(message)
       setNotice({ text: 'Mensaje de recordatorio copiado para WhatsApp.', tone: 'success' })

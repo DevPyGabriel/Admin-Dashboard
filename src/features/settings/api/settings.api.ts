@@ -25,6 +25,7 @@ export async function updateCompanySettings(
     .from('company_settings')
     .update({
       id: true,
+      bs_exchange_rate: values.bs_exchange_rate,
       company_name: values.company_name,
       support_email: values.support_email,
       sender_email: values.sender_email || null,

@@ -10,6 +10,9 @@ const emailListSchema = z.string().refine((value) => {
 
 /** Editable company configuration shown on the settings page. */
 export const companySettingsSchema = z.object({
+  bs_exchange_rate: z
+    .number({ error: 'Introduce un valor válido' })
+    .min(0, 'El valor del Bs. no puede ser negativo'),
   company_name: z.string().trim().min(2, 'El nombre de la empresa es obligatorio'),
   support_email: z.email('Introduce un email válido'),
   sender_email: z.union([z.email('Introduce un email válido'), z.literal('')]),
