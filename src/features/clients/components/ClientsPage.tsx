@@ -2,7 +2,6 @@ import { useMemo, useState } from 'react'
 import { format, parseISO } from 'date-fns'
 import {
   AlertCircle,
-  CalendarDays,
   Car,
   CheckCircle2,
   Package,
@@ -12,7 +11,6 @@ import {
   Truck,
   UserRound,
   UsersRound,
-  X,
   type LucideIcon,
 } from 'lucide-react'
 import { PageHeader } from '@/components/shared/PageHeader'
@@ -172,14 +170,13 @@ export default function ClientsPage() {
   const [dialog, setDialog] = useState<DialogState | null>(null)
   const [notice, setNotice] = useState<Notice | null>(null)
   const [query, setQuery] = useState('')
-  const [date, setDate] = useState('')
   const [filter, setFilter] = useState<ServiceFilter>('all')
   const [sort, setSort] = useState<ServiceSort>('urgency')
   const [today] = useState(() => new Date())
 
   const visible = useMemo(
-    () => selectServices(services, { query, date, filter, sort }, today),
-    [services, query, date, filter, sort, today],
+    () => selectServices(services, { query, date: '', filter, sort }, today),
+    [services, query, filter, sort, today],
   )
   const groups = useMemo(() => groupByClient(visible), [visible])
 
@@ -270,7 +267,6 @@ export default function ClientsPage() {
 
   const clearFilters = () => {
     setQuery('')
-    setDate('')
     setFilter('all')
     setSort('urgency')
   }
@@ -336,28 +332,6 @@ export default function ClientsPage() {
                 aria-label="Buscar cliente, servicio o estado"
                 className="pl-8 text-[13px]"
               />
-            </div>
-
-            <div className="flex items-center gap-2">
-              <CalendarDays className="text-secondary size-4 shrink-0" aria-hidden="true" />
-              <Input
-                type="date"
-                value={date}
-                onChange={(event) => setDate(event.target.value)}
-                aria-label="Filtrar por fecha de vencimiento"
-                className="w-full text-[13px] sm:w-44"
-              />
-              {date && (
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon-xs"
-                  aria-label="Quitar filtro de fecha"
-                  onClick={() => setDate('')}
-                >
-                  <X aria-hidden="true" />
-                </Button>
-              )}
             </div>
 
             <div className="flex items-center gap-2 lg:ml-auto">

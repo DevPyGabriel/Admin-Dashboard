@@ -38,8 +38,8 @@ client cannot be removed this way; use **Eliminar cliente** instead.
 - **Sin pagar** — une pendientes y por cobrar.
 
 The default sort is priority (`por cobrar` → `pendiente` → `pagado`), then due
-date. Quick filters, search by client/service/state, exact due-date filtering
-and four sort modes are available above the table.
+date. Quick filters, search by client/service/state and four sort modes are
+available above the table.
 
 Rows are read/written through RLS as an authenticated operator. Use
 `supabase/seed.test.sql` to create clearly prefixed `TEST_` demo data.
